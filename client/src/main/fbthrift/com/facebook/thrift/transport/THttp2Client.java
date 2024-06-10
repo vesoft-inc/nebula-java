@@ -6,6 +6,7 @@
 package com.facebook.thrift.transport;
 
 import com.facebook.thrift.utils.Logger;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
@@ -16,6 +17,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,7 +25,8 @@ public class THttp2Client extends TTransport {
     private static final Logger LOGGER = Logger.getLogger(THttp2Client.class.getName());
 
     private final ByteArrayOutputStream requestBuffer = new ByteArrayOutputStream();
-    private ResponseBody responseBody = null;
+
+    private InputStream inputStream = null;
     private Map<String, String> customHeaders = null;
     private static final Map<String, String> defaultHeaders = getDefaultHeaders();
 
@@ -75,12 +78,8 @@ public class THttp2Client extends TTransport {
 
     public void close() {
         try {
-            if (responseBody != null) {
-                responseBody.close();
-                responseBody = null;
-            }
-
             requestBuffer.close();
+            inputStream.close();
         } catch (IOException e) {
             LOGGER.warn(e.getMessage());
         }
@@ -92,11 +91,11 @@ public class THttp2Client extends TTransport {
     }
 
     public int read(byte[] buf, int off, int len) throws TTransportException {
-        if (responseBody == null) {
+        if (inputStream == null) {
             throw new TTransportException("Response buffer is empty, no request.");
         }
         try {
-            int ret = responseBody.byteStream().read(buf, off, len);
+            int ret = inputStream.read(buf, off, len);
             if (ret == -1) {
                 throw new TTransportException("No more data available.");
             }
@@ -118,6 +117,7 @@ public class THttp2Client extends TTransport {
         // Extract request and reset buffer
         byte[] data = requestBuffer.toByteArray();
         requestBuffer.reset();
+        Response response = null;
         try {
 
             // Create request object
@@ -133,15 +133,22 @@ public class THttp2Client extends TTransport {
             Request request = requestBuilder.build();
 
             // Make the request
-            Response response = client.newCall(request).execute();
+            response = client.newCall(request).execute();
             if (!response.isSuccessful()) {
                 throw new TTransportException("HTTP Response code: " + response.code());
             }
 
+            if (response.body() == null) {
+                throw new TTransportException("response body is null");
+            }
             // Read the response
-            responseBody = response.body();
+            inputStream = new ByteArrayInputStream(response.body().bytes());
         } catch (IOException iox) {
             throw new TTransportException(iox);
+        } finally {
+            if (response != null) {
+                response.close();
+            }
         }
     }
 
