@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,17 +32,19 @@ public class StorageClient implements Serializable {
     private static final Logger LOGGER = LoggerFactory.getLogger(StorageClient.class);
 
     private final GraphStorageConnection connection;
-    private StorageConnPool pool;
-    private MetaManager metaManager;
-    private final List<HostAddress> addresses;
-    private int timeout = 10000; // ms
-    private int connectionRetry = 3;
-    private int executionRetry = 1;
+    private       StorageConnPool        pool;
+    private       MetaManager            metaManager;
+    private final List<HostAddress>      addresses;
+    private       int                    timeout         = 10000; // ms
+    private       int                    connectionRetry = 3;
+    private       int                    executionRetry  = 1;
 
-    private boolean enableSSL = false;
-    private SSLParam sslParam = null;
+    private boolean  enableSSL = false;
+    private SSLParam sslParam  = null;
 
-    private String user = null;
+    private Map<String, String> storageAddressMapping;
+
+    private String user     = null;
     private String password = null;
 
     /**
@@ -96,6 +99,20 @@ public class StorageClient implements Serializable {
     }
 
     /**
+     * The storage address translation relationship is set to convert the storage address that cannot be obtained by requesting the meta service
+     *
+     * @param storageAddressMapping sourceAddressFromMeta -> targetAddress,Format ip:port. eg: 127.0.0.1:9559 -> 10.1.1.2:9559，
+     *                              Translates the storage 127.0.0.1:9559 address obtained from the meta server to 10.1.1.2:9559.
+     *                              It will use 10.1.1.2:9559 to request storage.Instead of 27.0.0.1:9559
+     */
+    public void setStorageAddressMapping(Map<String, String> storageAddressMapping) {
+        this.storageAddressMapping = storageAddressMapping;
+        if (this.metaManager != null) {
+            this.metaManager.addStorageAddrMapping(storageAddressMapping);
+        }
+    }
+
+    /**
      * Connect to Nebula Storage server.
      *
      * @return true if connect successfully.
@@ -107,7 +124,8 @@ public class StorageClient implements Serializable {
         config.setSslParam(sslParam);
         pool = new StorageConnPool(config);
         metaManager = new MetaManager(addresses, timeout, connectionRetry, executionRetry,
-                enableSSL, sslParam);
+                                      enableSSL, sslParam);
+        metaManager.addStorageAddrMapping(storageAddressMapping);
         return true;
     }
 
@@ -198,7 +216,7 @@ public class StorageClient implements Serializable {
                                                List<String> returnCols,
                                                int limit) {
         return scanVertex(spaceName, tagName, returnCols, limit, DEFAULT_START_TIME,
-                DEFAULT_END_TIME);
+                          DEFAULT_END_TIME);
     }
 
     /**
@@ -219,7 +237,7 @@ public class StorageClient implements Serializable {
                                                List<String> returnCols,
                                                int limit) {
         return scanVertex(spaceName, part, tagName, returnCols, limit, DEFAULT_START_TIME,
-                DEFAULT_END_TIME);
+                          DEFAULT_END_TIME);
     }
 
     /**
@@ -254,7 +272,7 @@ public class StorageClient implements Serializable {
                                                String tagName,
                                                int limit) {
         return scanVertex(spaceName, part, tagName,
-                limit, DEFAULT_START_TIME, DEFAULT_END_TIME);
+                          limit, DEFAULT_START_TIME, DEFAULT_END_TIME);
     }
 
     /**
@@ -279,7 +297,7 @@ public class StorageClient implements Serializable {
                                                long startTime,
                                                long endTime) {
         return scanVertex(spaceName, tagName, returnCols, limit, startTime, endTime,
-                DEFAULT_ALLOW_PART_SUCCESS, DEFAULT_ALLOW_READ_FOLLOWER);
+                          DEFAULT_ALLOW_PART_SUCCESS, DEFAULT_ALLOW_READ_FOLLOWER);
     }
 
     /**
@@ -306,7 +324,7 @@ public class StorageClient implements Serializable {
                                                long startTime,
                                                long endTime) {
         return scanVertex(spaceName, part, tagName, returnCols, limit, startTime, endTime,
-                DEFAULT_ALLOW_PART_SUCCESS, DEFAULT_ALLOW_READ_FOLLOWER);
+                          DEFAULT_ALLOW_PART_SUCCESS, DEFAULT_ALLOW_READ_FOLLOWER);
     }
 
     /**
@@ -329,7 +347,7 @@ public class StorageClient implements Serializable {
                                                long startTime,
                                                long endTime) {
         return scanVertex(spaceName, tagName, limit, startTime, endTime,
-                DEFAULT_ALLOW_PART_SUCCESS, DEFAULT_ALLOW_READ_FOLLOWER);
+                          DEFAULT_ALLOW_PART_SUCCESS, DEFAULT_ALLOW_READ_FOLLOWER);
     }
 
     /**
@@ -353,14 +371,14 @@ public class StorageClient implements Serializable {
                                                long startTime,
                                                long endTime) {
         return scanVertex(spaceName,
-                part,
-                tagName,
-                new ArrayList<>(),
-                limit,
-                startTime,
-                endTime,
-                DEFAULT_ALLOW_PART_SUCCESS,
-                DEFAULT_ALLOW_READ_FOLLOWER);
+                          part,
+                          tagName,
+                          new ArrayList<>(),
+                          limit,
+                          startTime,
+                          endTime,
+                          DEFAULT_ALLOW_PART_SUCCESS,
+                          DEFAULT_ALLOW_READ_FOLLOWER);
     }
 
 
@@ -565,14 +583,14 @@ public class StorageClient implements Serializable {
         for (int part : parts) {
             HostAddr leader = metaManager.getLeader(spaceName, part);
             partScanInfoSet.add(new PartScanInfo(part, new HostAddress(leader.getHost(),
-                    leader.getPort())));
+                                                                       leader.getPort())));
         }
         List<HostAddress> addrs = new ArrayList<>();
         for (HostAddr addr : metaManager.listHosts()) {
             addrs.add(new HostAddress(addr.getHost(), addr.getPort()));
         }
 
-        long tag = metaManager.getTag(spaceName, tagName).getTag_id();
+        long         tag   = metaManager.getTag(spaceName, tagName).getTag_id();
         List<byte[]> props = new ArrayList<>();
         props.add("_vid".getBytes());
         if (!noColumns) {
@@ -587,9 +605,9 @@ public class StorageClient implements Serializable {
                 }
             }
         }
-        VertexProp vertexCols = new VertexProp((int) tag, props);
-        List<VertexProp> vertexProps = Arrays.asList(vertexCols);
-        ScanVertexRequest request = new ScanVertexRequest();
+        VertexProp        vertexCols  = new VertexProp((int) tag, props);
+        List<VertexProp>  vertexProps = Arrays.asList(vertexCols);
+        ScanVertexRequest request     = new ScanVertexRequest();
         request
                 .setSpace_id(getSpaceId(spaceName))
                 .setReturn_columns(vertexProps)
@@ -713,7 +731,7 @@ public class StorageClient implements Serializable {
     public ScanEdgeResultIterator scanEdge(String spaceName, String edgeName,
                                            List<String> returnCols, int limit) {
         return scanEdge(spaceName, edgeName, returnCols, limit, DEFAULT_START_TIME,
-                DEFAULT_END_TIME);
+                        DEFAULT_END_TIME);
     }
 
     /**
@@ -731,7 +749,7 @@ public class StorageClient implements Serializable {
     public ScanEdgeResultIterator scanEdge(String spaceName, int part, String edgeName,
                                            List<String> returnCols, int limit) {
         return scanEdge(spaceName, part, edgeName, returnCols, limit, DEFAULT_START_TIME,
-                DEFAULT_END_TIME);
+                        DEFAULT_END_TIME);
     }
 
     /**
@@ -784,7 +802,7 @@ public class StorageClient implements Serializable {
                                            long startTime,
                                            long endTime) {
         return scanEdge(spaceName, edgeName, returnCols, limit, startTime, endTime,
-                DEFAULT_ALLOW_PART_SUCCESS, DEFAULT_ALLOW_READ_FOLLOWER);
+                        DEFAULT_ALLOW_PART_SUCCESS, DEFAULT_ALLOW_READ_FOLLOWER);
     }
 
     /**
@@ -812,7 +830,7 @@ public class StorageClient implements Serializable {
                                            long startTime,
                                            long endTime) {
         return scanEdge(spaceName, part, edgeName, returnCols, limit, startTime, endTime,
-                DEFAULT_ALLOW_PART_SUCCESS, DEFAULT_ALLOW_READ_FOLLOWER);
+                        DEFAULT_ALLOW_PART_SUCCESS, DEFAULT_ALLOW_READ_FOLLOWER);
     }
 
     /**
@@ -836,7 +854,7 @@ public class StorageClient implements Serializable {
                                            long startTime,
                                            long endTime) {
         return scanEdge(spaceName, edgeName, limit, startTime, endTime,
-                DEFAULT_ALLOW_PART_SUCCESS, DEFAULT_ALLOW_READ_FOLLOWER);
+                        DEFAULT_ALLOW_PART_SUCCESS, DEFAULT_ALLOW_READ_FOLLOWER);
     }
 
     /**
@@ -862,7 +880,7 @@ public class StorageClient implements Serializable {
                                            long startTime,
                                            long endTime) {
         return scanEdge(spaceName, part, edgeName, limit, startTime, endTime,
-                DEFAULT_ALLOW_PART_SUCCESS, DEFAULT_ALLOW_READ_FOLLOWER);
+                        DEFAULT_ALLOW_PART_SUCCESS, DEFAULT_ALLOW_READ_FOLLOWER);
     }
 
 
@@ -899,7 +917,7 @@ public class StorageClient implements Serializable {
         }
 
         return scanEdge(spaceName, parts, edgeName, returnCols, false,
-                limit, startTime, endTime, allowPartSuccess, allowReadFromFollower);
+                        limit, startTime, endTime, allowPartSuccess, allowReadFromFollower);
     }
 
     /**
@@ -931,7 +949,7 @@ public class StorageClient implements Serializable {
                                            boolean allowPartSuccess,
                                            boolean allowReadFromFollower) {
         return scanEdge(spaceName, Arrays.asList(part), edgeName, returnCols, false,
-                limit, startTime, endTime, allowPartSuccess, allowReadFromFollower);
+                        limit, startTime, endTime, allowPartSuccess, allowReadFromFollower);
     }
 
 
@@ -966,7 +984,7 @@ public class StorageClient implements Serializable {
             throw new IllegalArgumentException("No valid part in space " + spaceName);
         }
         return scanEdge(spaceName, parts, edgeName, new ArrayList<>(), true,
-                limit, startTime, endTime, allowPartSuccess, allowReadFromFollower);
+                        limit, startTime, endTime, allowPartSuccess, allowReadFromFollower);
     }
 
 
@@ -998,7 +1016,7 @@ public class StorageClient implements Serializable {
                                            boolean allowPartSuccess,
                                            boolean allowReadFromFollower) {
         return scanEdge(spaceName, Arrays.asList(part), edgeName, new ArrayList<>(), true,
-                limit, startTime, endTime, allowPartSuccess, allowReadFromFollower);
+                        limit, startTime, endTime, allowPartSuccess, allowReadFromFollower);
     }
 
 
@@ -1026,7 +1044,7 @@ public class StorageClient implements Serializable {
         for (int part : parts) {
             HostAddr leader = metaManager.getLeader(spaceName, part);
             partScanInfoSet.add(new PartScanInfo(part, new HostAddress(leader.getHost(),
-                    leader.getPort())));
+                                                                       leader.getPort())));
         }
         List<HostAddress> addrs = new ArrayList<>();
         for (HostAddr addr : metaManager.listHosts()) {
@@ -1049,8 +1067,8 @@ public class StorageClient implements Serializable {
             }
         }
 
-        long edgeId = getEdgeId(spaceName, edgeName);
-        EdgeProp edgeCols = new EdgeProp((int) edgeId, props);
+        long           edgeId    = getEdgeId(spaceName, edgeName);
+        EdgeProp       edgeCols  = new EdgeProp((int) edgeId, props);
         List<EdgeProp> edgeProps = Arrays.asList(edgeCols);
 
         ScanEdgeRequest request = new ScanEdgeRequest();
@@ -1149,9 +1167,9 @@ public class StorageClient implements Serializable {
         return metaManager.getEdge(spaceName, edgeName).getEdge_type();
     }
 
-    private static final int DEFAULT_LIMIT = 1000;
-    private static final long DEFAULT_START_TIME = 0;
-    private static final long DEFAULT_END_TIME = Long.MAX_VALUE;
-    private static final boolean DEFAULT_ALLOW_PART_SUCCESS = false;
+    private static final int     DEFAULT_LIMIT               = 1000;
+    private static final long    DEFAULT_START_TIME          = 0;
+    private static final long    DEFAULT_END_TIME            = Long.MAX_VALUE;
+    private static final boolean DEFAULT_ALLOW_PART_SUCCESS  = false;
     private static final boolean DEFAULT_ALLOW_READ_FOLLOWER = true;
 }

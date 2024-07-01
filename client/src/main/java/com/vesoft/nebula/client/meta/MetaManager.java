@@ -16,6 +16,7 @@ import com.vesoft.nebula.meta.EdgeItem;
 import com.vesoft.nebula.meta.IdName;
 import com.vesoft.nebula.meta.SpaceItem;
 import com.vesoft.nebula.meta.TagItem;
+
 import java.io.Serializable;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -24,7 +25,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.stream.Collectors;
+
+import com.vesoft.nebula.util.NetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,25 +38,27 @@ import org.slf4j.LoggerFactory;
  */
 public class MetaManager implements MetaCache, Serializable {
     private class SpaceInfo {
-        private SpaceItem spaceItem = null;
-        private Map<String, TagItem> tagItems = new HashMap<>();
-        private Map<Integer, String> tagIdNames = new HashMap<>();
-        private Map<String, EdgeItem> edgeItems = new HashMap<>();
-        private Map<Integer, String> edgeTypeNames = new HashMap<>();
-        private Map<Integer, List<HostAddr>> partsAlloc = new HashMap<>();
+        private SpaceItem                    spaceItem     = null;
+        private Map<String, TagItem>         tagItems      = new HashMap<>();
+        private Map<Integer, String>         tagIdNames    = new HashMap<>();
+        private Map<String, EdgeItem>        edgeItems     = new HashMap<>();
+        private Map<Integer, String>         edgeTypeNames = new HashMap<>();
+        private Map<Integer, List<HostAddr>> partsAlloc    = new HashMap<>();
     }
 
-    private Map<String, MetaManager.SpaceInfo> spacesInfo = new HashMap<>();
+    private Map<String, MetaManager.SpaceInfo>  spacesInfo  = new HashMap<>();
     private Map<String, Map<Integer, HostAddr>> partLeaders = null;
+
+    private Map<HostAddr, HostAddr> storageAddressMapping = new ConcurrentHashMap<>();
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MetaManager.class);
 
-    private MetaClient metaClient;
+    private       MetaClient             metaClient;
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
-    private static final int DEFAULT_TIMEOUT_MS = 1000;
+    private static final int DEFAULT_TIMEOUT_MS            = 1000;
     private static final int DEFAULT_CONNECTION_RETRY_SIZE = 3;
-    private static final int DEFAULT_EXECUTION_RETRY_SIZE = 3;
+    private static final int DEFAULT_EXECUTION_RETRY_SIZE  = 3;
 
     /**
      * init the meta info cache
@@ -70,9 +77,35 @@ public class MetaManager implements MetaCache, Serializable {
                        int executionRetry, boolean enableSSL, SSLParam sslParam)
             throws TException, ClientServerIncompatibleException, UnknownHostException {
         metaClient = new MetaClient(address, timeout, connectionRetry, executionRetry, enableSSL,
-                sslParam);
+                                    sslParam);
         metaClient.connect();
         fillMetaInfo();
+    }
+
+    /**
+     * Add address mapping for storage.Used for change address of storage read from meta server.
+     *
+     * @param sourceAddr ip:port
+     * @param targetAddr ip:port
+     */
+    public void addStorageAddrMapping(String sourceAddr, String targetAddr) {
+        if (sourceAddr != null && targetAddr != null) {
+            storageAddressMapping.put(NetUtil.parseHostAddr(sourceAddr), NetUtil.parseHostAddr(targetAddr));
+        }
+    }
+
+    /**
+     * Add address mapping for storage.Used for change address of storage read from meta server.
+     *
+     * @param addressMap sourceAddr(ip:port) => targetAddr(ip:port)
+     */
+    public void addStorageAddrMapping(Map<String, String> addressMap) {
+        if (addressMap != null && !addressMap.isEmpty()) {
+            for (Map.Entry<String, String> et : addressMap.entrySet()) {
+                storageAddressMapping.put(NetUtil.parseHostAddr(et.getKey()),
+                                          NetUtil.parseHostAddr(et.getValue()));
+            }
+        }
     }
 
 
@@ -90,10 +123,10 @@ public class MetaManager implements MetaCache, Serializable {
     private void fillMetaInfo() {
         try {
             Map<String, MetaManager.SpaceInfo> tempSpacesInfo = new HashMap<>();
-            List<IdName> spaces = metaClient.getSpaces();
+            List<IdName>                       spaces         = metaClient.getSpaces();
             for (IdName space : spaces) {
                 SpaceInfo spaceInfo = new SpaceInfo();
-                String spaceName = new String(space.name);
+                String    spaceName = new String(space.name);
                 SpaceItem spaceItem = metaClient.getSpace(spaceName);
                 spaceInfo.spaceItem = spaceItem;
                 List<TagItem> tags = metaClient.getTags(spaceName);
@@ -129,10 +162,10 @@ public class MetaManager implements MetaCache, Serializable {
                         for (int partId : spacesInfo.get(spaceName).partsAlloc.keySet()) {
                             if (spacesInfo.get(spaceName).partsAlloc.get(partId).size() < 1) {
                                 LOGGER.error("space {} part {} has not allocation host.",
-                                        spaceName, partId);
+                                             spaceName, partId);
                             } else {
                                 partLeaders.get(spaceName).put(partId,
-                                        spacesInfo.get(spaceName).partsAlloc.get(partId).get(0));
+                                                               spacesInfo.get(spaceName).partsAlloc.get(partId).get(0));
                             }
 
                         }
@@ -280,7 +313,8 @@ public class MetaManager implements MetaCache, Serializable {
             if (!partLeaders.get(spaceName).containsKey(part)) {
                 throw new IllegalArgumentException("PartId:" + part + " does not exist.");
             }
-            return partLeaders.get(spaceName).get(part);
+            HostAddr hostAddr = partLeaders.get(spaceName).get(part);
+            return storageAddressMapping.getOrDefault(hostAddr, hostAddr);
         } finally {
             lock.readLock().unlock();
         }
@@ -313,7 +347,17 @@ public class MetaManager implements MetaCache, Serializable {
             if (!spacesInfo.containsKey(spaceName)) {
                 throw new IllegalArgumentException("Space:" + spaceName + " does not exist.");
             }
-            return spacesInfo.get(spaceName).partsAlloc;
+            Map<Integer, List<HostAddr>> partsAlloc = spacesInfo.get(spaceName).partsAlloc;
+            if (!storageAddressMapping.isEmpty()) {
+                // transform real address to special address by mapping
+                partsAlloc.keySet().forEach(partId -> {
+                    partsAlloc.computeIfPresent(partId, (k, addressList) -> addressList
+                            .stream()
+                            .map(hostAddr -> storageAddressMapping.getOrDefault(hostAddr, hostAddr))
+                            .collect(Collectors.toList()));
+                });
+            }
+            return partsAlloc;
         } finally {
             lock.readLock().unlock();
         }
@@ -354,6 +398,9 @@ public class MetaManager implements MetaCache, Serializable {
         Set<HostAddr> hosts = metaClient.listHosts();
         if (hosts == null) {
             return new HashSet<>();
+        }
+        if (!storageAddressMapping.isEmpty()) {
+            hosts = hosts.stream().map(hostAddr -> storageAddressMapping.getOrDefault(hostAddr, hostAddr)).collect(Collectors.toSet());
         }
         return hosts;
     }
