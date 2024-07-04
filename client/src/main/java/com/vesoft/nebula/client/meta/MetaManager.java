@@ -16,7 +16,7 @@ import com.vesoft.nebula.meta.EdgeItem;
 import com.vesoft.nebula.meta.IdName;
 import com.vesoft.nebula.meta.SpaceItem;
 import com.vesoft.nebula.meta.TagItem;
-
+import com.vesoft.nebula.util.NetUtil;
 import java.io.Serializable;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -28,8 +28,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
-
-import com.vesoft.nebula.util.NetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -90,7 +88,8 @@ public class MetaManager implements MetaCache, Serializable {
      */
     public void addStorageAddrMapping(String sourceAddr, String targetAddr) {
         if (sourceAddr != null && targetAddr != null) {
-            storageAddressMapping.put(NetUtil.parseHostAddr(sourceAddr), NetUtil.parseHostAddr(targetAddr));
+            storageAddressMapping.put(NetUtil.parseHostAddr(sourceAddr),
+                                      NetUtil.parseHostAddr(targetAddr));
         }
     }
 
@@ -102,7 +101,8 @@ public class MetaManager implements MetaCache, Serializable {
     public void addStorageAddrMapping(Map<String, String> addressMap) {
         if (addressMap != null && !addressMap.isEmpty()) {
             for (Map.Entry<String, String> et : addressMap.entrySet()) {
-                storageAddressMapping.put(NetUtil.parseHostAddr(et.getKey()), NetUtil.parseHostAddr(et.getValue()));
+                storageAddressMapping.put(NetUtil.parseHostAddr(et.getKey()),
+                                          NetUtil.parseHostAddr(et.getValue()));
             }
         }
     }
@@ -399,7 +399,10 @@ public class MetaManager implements MetaCache, Serializable {
             return new HashSet<>();
         }
         if (!storageAddressMapping.isEmpty()) {
-            hosts = hosts.stream().map(hostAddr -> storageAddressMapping.getOrDefault(hostAddr, hostAddr)).collect(Collectors.toSet());
+            hosts = hosts
+                    .stream()
+                    .map(hostAddr -> storageAddressMapping.getOrDefault(hostAddr, hostAddr))
+                    .collect(Collectors.toSet());
         }
         return hosts;
     }

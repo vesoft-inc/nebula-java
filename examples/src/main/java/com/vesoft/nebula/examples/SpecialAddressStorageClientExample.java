@@ -13,16 +13,16 @@ import com.vesoft.nebula.client.storage.scan.ScanEdgeResult;
 import com.vesoft.nebula.client.storage.scan.ScanEdgeResultIterator;
 import com.vesoft.nebula.client.storage.scan.ScanVertexResult;
 import com.vesoft.nebula.client.storage.scan.ScanVertexResultIterator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SpecialAddressStorageClientExample {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SpecialAddressStorageClientExample.class);
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(SpecialAddressStorageClientExample.class);
 
     public static void main(String[] args) {
         Map<String,String> storageAddressMapping = new HashMap<>();
