@@ -1,0 +1,4 @@
+<map id="setStorageAddressMapping" name="setStorageAddressMapping">
+<area shape="rect" id="node1" title="The storage address translation relationship is set to convert the storage address that cannot be obt..." alt="" coords="5,13,205,39"/>
+<area shape="rect" id="node2" href="$d7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager.html#ab25b4d597dba19fd6769b0c966bbc7c2" title="Add address mapping for storage.Used for change address of storage read from meta server." alt="" coords="253,5,528,47"/>
+</map>
