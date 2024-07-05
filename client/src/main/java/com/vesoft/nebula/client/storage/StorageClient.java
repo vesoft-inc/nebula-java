@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,8 +42,7 @@ public class StorageClient implements Serializable {
     private boolean enableSSL = false;
     private SSLParam sslParam = null;
 
-    private String user = null;
-    private String password = null;
+    private Map<String, String> storageAddressMapping;
 
     /**
      * Get a Nebula Storage client that executes the scan query to get NebulaGraph's data with
@@ -96,6 +96,23 @@ public class StorageClient implements Serializable {
     }
 
     /**
+     * The storage address translation relationship is set to convert the storage address
+     * that cannot be obtained by requesting the meta service
+     *
+     * @param storageAddressMapping sourceAddressFromMeta -> targetAddress,Format ip:port.
+     *                              eg: 127.0.0.1:9559 -> 10.1.1.2:9559，
+     *                              Translates the storage 127.0.0.1:9559 address obtained from the
+     *                              meta server to 10.1.1.2:9559. It will use 10.1.1.2:9559 to
+     *                              request storage. Instead of 27.0.0.1:9559
+     */
+    public void setStorageAddressMapping(Map<String, String> storageAddressMapping) {
+        this.storageAddressMapping = storageAddressMapping;
+        if (this.metaManager != null) {
+            this.metaManager.addStorageAddrMapping(storageAddressMapping);
+        }
+    }
+
+    /**
      * Connect to Nebula Storage server.
      *
      * @return true if connect successfully.
@@ -108,17 +125,8 @@ public class StorageClient implements Serializable {
         pool = new StorageConnPool(config);
         metaManager = new MetaManager(addresses, timeout, connectionRetry, executionRetry,
                 enableSSL, sslParam);
+        metaManager.addStorageAddrMapping(storageAddressMapping);
         return true;
-    }
-
-    public StorageClient setUser(String user) {
-        this.user = user;
-        return this;
-    }
-
-    public StorageClient setPassword(String password) {
-        this.password = password;
-        return this;
     }
 
 
@@ -632,8 +640,6 @@ public class StorageClient implements Serializable {
                 .withSpaceName(spaceName)
                 .withTagName(tagName)
                 .withPartSuccess(allowPartSuccess)
-                .withUser(user)
-                .withPassword(password)
                 .build();
     }
 
@@ -1096,8 +1102,6 @@ public class StorageClient implements Serializable {
                 .withSpaceName(spaceName)
                 .withEdgeName(edgeName)
                 .withPartSuccess(allowPartSuccess)
-                .withUser(user)
-                .withPassword(password)
                 .build();
     }
 
