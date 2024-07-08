@@ -117,6 +117,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -174,7 +175,7 @@ public class ValueParser {
 
         // Initialize cache for Node property information (max 1000 vectors)
         this.nodePropInfoCache = new LinkedHashMap<Integer,
-                Map<Integer, Map<Integer, Map<String, PropInfo>>>>(1000, 0.75f, true) {
+                        Map<Integer, Map<Integer, Map<String, PropInfo>>>>(1000, 0.75f, true) {
             @Override
             protected boolean removeEldestEntry(
                     Map.Entry<Integer, Map<Integer, Map<Integer, Map<String, PropInfo>>>> eldest) {
