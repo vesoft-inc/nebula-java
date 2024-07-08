@@ -128,12 +128,6 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager.html#a69e36d24ffc6e7f8c477f98055ffd0d6">MetaManager</a> (List&lt; <a class="el" href="../../d5/d82/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1data_1_1HostAddress.html">HostAddress</a> &gt; address, int timeout, int connectionRetry, int executionRetry, boolean enableSSL, <a class="el" href="../../dc/dbe/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1data_1_1SSLParam.html">SSLParam</a> sslParam)  throws TException, ClientServerIncompatibleException, UnknownHostException </td></tr>
 <tr class="memdesc:a69e36d24ffc6e7f8c477f98055ffd0d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">init the meta info cache with more config <br /></td></tr>
 <tr class="separator:a69e36d24ffc6e7f8c477f98055ffd0d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab25b4d597dba19fd6769b0c966bbc7c2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager.html#ab25b4d597dba19fd6769b0c966bbc7c2">addStorageAddrMapping</a> (String sourceAddr, String targetAddr)</td></tr>
-<tr class="memdesc:ab25b4d597dba19fd6769b0c966bbc7c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add address mapping for storage.Used for change address of storage read from meta server.  <a href="../../d7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager.html#ab25b4d597dba19fd6769b0c966bbc7c2">More...</a><br /></td></tr>
-<tr class="separator:ab25b4d597dba19fd6769b0c966bbc7c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab61a0d02b449eb474e4e9181335a502b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager.html#ab61a0d02b449eb474e4e9181335a502b">addStorageAddrMapping</a> (Map&lt; String, String &gt; addressMap)</td></tr>
-<tr class="memdesc:ab61a0d02b449eb474e4e9181335a502b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add address mapping for storage.Used for change address of storage read from meta server.  <a href="../../d7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager.html#ab61a0d02b449eb474e4e9181335a502b">More...</a><br /></td></tr>
-<tr class="separator:ab61a0d02b449eb474e4e9181335a502b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5ae591df94fc66ccb85cbb6565368bca"><td class="memItemLeft" align="right" valign="top"><a id="a5ae591df94fc66ccb85cbb6565368bca"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager.html#a5ae591df94fc66ccb85cbb6565368bca">close</a> ()</td></tr>
 <tr class="memdesc:a5ae591df94fc66ccb85cbb6565368bca"><td class="mdescLeft">&#160;</td><td class="mdescRight">close meta client <br /></td></tr>
@@ -185,87 +179,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>getExecutionRetry</b> 
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="../../d7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager.html" title="MetaManager is a manager for meta info, such as spaces,tags and edges.">MetaManager</a> is a manager for meta info, such as spaces,tags and edges. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../df/d34/MetaManager_8java_source.html#l00037">37</a> of file <a class="el" href="../../df/d34/MetaManager_8java_source.html">MetaManager.java</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../df/d34/MetaManager_8java_source.html#l00034">34</a> of file <a class="el" href="../../df/d34/MetaManager_8java_source.html">MetaManager.java</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="ab61a0d02b449eb474e4e9181335a502b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab61a0d02b449eb474e4e9181335a502b">&#9670;&nbsp;</a></span>addStorageAddrMapping() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void addStorageAddrMapping </td>
-          <td>(</td>
-          <td class="paramtype">Map&lt; String, String &gt;&#160;</td>
-          <td class="paramname"><em>addressMap</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Add address mapping for storage.Used for change address of storage read from meta server. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">addressMap</td><td>sourceAddr(ip:port) =&gt; targetAddr(ip:port) </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p class="definition">Definition at line <a class="el" href="../../df/d34/MetaManager_8java_source.html#l00101">101</a> of file <a class="el" href="../../df/d34/MetaManager_8java_source.html">MetaManager.java</a>.</p>
-
-</div>
-</div>
-<a id="ab25b4d597dba19fd6769b0c966bbc7c2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab25b4d597dba19fd6769b0c966bbc7c2">&#9670;&nbsp;</a></span>addStorageAddrMapping() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void addStorageAddrMapping </td>
-          <td>(</td>
-          <td class="paramtype">String&#160;</td>
-          <td class="paramname"><em>sourceAddr</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">String&#160;</td>
-          <td class="paramname"><em>targetAddr</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Add address mapping for storage.Used for change address of storage read from meta server. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">sourceAddr</td><td>ip:port </td></tr>
-    <tr><td class="paramname">targetAddr</td><td>ip:port </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p class="definition">Definition at line <a class="el" href="../../df/d34/MetaManager_8java_source.html#l00089">89</a> of file <a class="el" href="../../df/d34/MetaManager_8java_source.html">MetaManager.java</a>.</p>
-<div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-2-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-2-summary" class="dynsummary" style="display:block;">
-</div>
-<div id="dynsection-2-content" class="dyncontent" style="display:none;">
-<div class="center"><img src="../../d7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_ab25b4d597dba19fd6769b0c966bbc7c2_icgraph.png" border="0" usemap="#ad7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_ab25b4d597dba19fd6769b0c966bbc7c2_icgraph" alt=""/></div>
-<map name="ad7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_ab25b4d597dba19fd6769b0c966bbc7c2_icgraph" id="ad7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_ab25b4d597dba19fd6769b0c966bbc7c2_icgraph">
-<area shape="rect" title="Add address mapping for storage.Used for change address of storage read from meta server." alt="" coords="345,46,528,73"/>
-<area shape="rect" href="../../df/dfd/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1StorageClient.html#a621df7c195d03a5c6d79c1f0acf2667a" title="Connect to Nebula Storage server." alt="" coords="32,5,271,47"/>
-<area shape="rect" href="../../df/dfd/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1StorageClient.html#ad9b4d993939b56e62e7960256e0967e9" title="The storage address translation relationship is set to convert the storage address that cannot be obt..." alt="" coords="5,71,297,112"/>
-</map>
-</div>
-
-</div>
-</div>
 <a id="a4d5eba8eae54a31dde79a05c2eea5116"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4d5eba8eae54a31dde79a05c2eea5116">&#9670;&nbsp;</a></span>getEdge()</h2>
 
@@ -304,12 +219,12 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>getExecutionRetry</b> 
 
 <p>Implements <a class="el" href="../../d7/ddc/interfacecom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaCache.html">MetaCache</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../df/d34/MetaManager_8java_source.html#l00272">272</a> of file <a class="el" href="../../df/d34/MetaManager_8java_source.html">MetaManager.java</a>.</p>
-<div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-3-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-3-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="../../df/d34/MetaManager_8java_source.html#l00240">240</a> of file <a class="el" href="../../df/d34/MetaManager_8java_source.html">MetaManager.java</a>.</p>
+<div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-2-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-2-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-3-content" class="dyncontent" style="display:none;">
+<div id="dynsection-2-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_a4d5eba8eae54a31dde79a05c2eea5116_icgraph.png" border="0" usemap="#ad7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_a4d5eba8eae54a31dde79a05c2eea5116_icgraph" alt=""/></div>
 <map name="ad7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_a4d5eba8eae54a31dde79a05c2eea5116_icgraph" id="ad7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_a4d5eba8eae54a31dde79a05c2eea5116_icgraph">
 <area shape="rect" title="get Edge" alt="" coords="159,5,233,32"/>
@@ -355,12 +270,12 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>getExecutionRetry</b> 
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>long </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../df/d34/MetaManager_8java_source.html#l00260">260</a> of file <a class="el" href="../../df/d34/MetaManager_8java_source.html">MetaManager.java</a>.</p>
-<div id="dynsection-4" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-4-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-4-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="../../df/d34/MetaManager_8java_source.html#l00228">228</a> of file <a class="el" href="../../df/d34/MetaManager_8java_source.html">MetaManager.java</a>.</p>
+<div id="dynsection-3" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-3-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-3-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-4-content" class="dyncontent" style="display:none;">
+<div id="dynsection-3-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_ac9ffdd43fe08f1a502e71c1917a7384a_cgraph.png" border="0" usemap="#ad7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_ac9ffdd43fe08f1a502e71c1917a7384a_cgraph" alt=""/></div>
 <map name="ad7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_ac9ffdd43fe08f1a502e71c1917a7384a_cgraph" id="ad7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_ac9ffdd43fe08f1a502e71c1917a7384a_cgraph">
 <area shape="rect" title="get edge type" alt="" coords="5,5,111,32"/>
@@ -406,7 +321,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>getExecutionRetry</b> 
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>leader </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../df/d34/MetaManager_8java_source.html#l00298">298</a> of file <a class="el" href="../../df/d34/MetaManager_8java_source.html">MetaManager.java</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../df/d34/MetaManager_8java_source.html#l00266">266</a> of file <a class="el" href="../../df/d34/MetaManager_8java_source.html">MetaManager.java</a>.</p>
 
 </div>
 </div>
@@ -437,12 +352,12 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>getExecutionRetry</b> 
 
 <p>Implements <a class="el" href="../../d7/ddc/interfacecom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaCache.html">MetaCache</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../df/d34/MetaManager_8java_source.html#l00339">339</a> of file <a class="el" href="../../df/d34/MetaManager_8java_source.html">MetaManager.java</a>.</p>
-<div id="dynsection-5" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-5-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-5-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="../../df/d34/MetaManager_8java_source.html#l00306">306</a> of file <a class="el" href="../../df/d34/MetaManager_8java_source.html">MetaManager.java</a>.</p>
+<div id="dynsection-4" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-4-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-4-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-5-content" class="dyncontent" style="display:none;">
+<div id="dynsection-4-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_a3ee399a21679d629874d0453271a6e25_icgraph.png" border="0" usemap="#ad7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_a3ee399a21679d629874d0453271a6e25_icgraph" alt=""/></div>
 <map name="ad7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_a3ee399a21679d629874d0453271a6e25_icgraph" id="ad7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_a3ee399a21679d629874d0453271a6e25_icgraph">
 <area shape="rect" title="get all parts alloc of one space" alt="" coords="455,46,561,73"/>
@@ -481,12 +396,12 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>getExecutionRetry</b> 
 
 <p>Implements <a class="el" href="../../d7/ddc/interfacecom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaCache.html">MetaCache</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../df/d34/MetaManager_8java_source.html#l00199">199</a> of file <a class="el" href="../../df/d34/MetaManager_8java_source.html">MetaManager.java</a>.</p>
-<div id="dynsection-6" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-6-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-6-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="../../df/d34/MetaManager_8java_source.html#l00167">167</a> of file <a class="el" href="../../df/d34/MetaManager_8java_source.html">MetaManager.java</a>.</p>
+<div id="dynsection-5" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-5-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-5-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-6-content" class="dyncontent" style="display:none;">
+<div id="dynsection-5-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_acfaa0a7170893c73d2f9e39e5dda3d6a_icgraph.png" border="0" usemap="#ad7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_acfaa0a7170893c73d2f9e39e5dda3d6a_icgraph" alt=""/></div>
 <map name="ad7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_acfaa0a7170893c73d2f9e39e5dda3d6a_icgraph" id="ad7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_acfaa0a7170893c73d2f9e39e5dda3d6a_icgraph">
 <area shape="rect" title="get space item" alt="" coords="148,5,231,32"/>
@@ -521,12 +436,12 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>getExecutionRetry</b> 
 </dl>
 <dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../df/d34/MetaManager_8java_source.html#l00188">188</a> of file <a class="el" href="../../df/d34/MetaManager_8java_source.html">MetaManager.java</a>.</p>
-<div id="dynsection-7" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-7-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-7-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="../../df/d34/MetaManager_8java_source.html#l00156">156</a> of file <a class="el" href="../../df/d34/MetaManager_8java_source.html">MetaManager.java</a>.</p>
+<div id="dynsection-6" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-6-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-6-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-7-content" class="dyncontent" style="display:none;">
+<div id="dynsection-6-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_aae9551ba40661333f3037687e0ae61af_cgraph.png" border="0" usemap="#ad7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_aae9551ba40661333f3037687e0ae61af_cgraph" alt=""/></div>
 <map name="ad7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_aae9551ba40661333f3037687e0ae61af_cgraph" id="ad7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_aae9551ba40661333f3037687e0ae61af_cgraph">
 <area shape="rect" title="get space id" alt="" coords="5,5,100,32"/>
@@ -561,23 +476,23 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>getExecutionRetry</b> 
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Lsit </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../df/d34/MetaManager_8java_source.html#l00328">328</a> of file <a class="el" href="../../df/d34/MetaManager_8java_source.html">MetaManager.java</a>.</p>
-<div id="dynsection-8" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-8-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-8-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="../../df/d34/MetaManager_8java_source.html#l00295">295</a> of file <a class="el" href="../../df/d34/MetaManager_8java_source.html">MetaManager.java</a>.</p>
+<div id="dynsection-7" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-7-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-7-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-8-content" class="dyncontent" style="display:none;">
+<div id="dynsection-7-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_ac89cc69353fc7679b908ab4e5d2b738f_cgraph.png" border="0" usemap="#ad7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_ac89cc69353fc7679b908ab4e5d2b738f_cgraph" alt=""/></div>
 <map name="ad7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_ac89cc69353fc7679b908ab4e5d2b738f_cgraph" id="ad7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_ac89cc69353fc7679b908ab4e5d2b738f_cgraph">
 <area shape="rect" title="get all parts of one space" alt="" coords="5,5,120,32"/>
 <area shape="rect" href="../../d7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager.html#a3ee399a21679d629874d0453271a6e25" title="get all parts alloc of one space" alt="" coords="168,5,275,32"/>
 </map>
 </div>
-<div id="dynsection-9" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-9-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-9-summary" class="dynsummary" style="display:block;">
+<div id="dynsection-8" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-8-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-8-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-9-content" class="dyncontent" style="display:none;">
+<div id="dynsection-8-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_ac89cc69353fc7679b908ab4e5d2b738f_icgraph.png" border="0" usemap="#ad7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_ac89cc69353fc7679b908ab4e5d2b738f_icgraph" alt=""/></div>
 <map name="ad7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_ac89cc69353fc7679b908ab4e5d2b738f_icgraph" id="ad7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_ac89cc69353fc7679b908ab4e5d2b738f_icgraph">
 <area shape="rect" title="get all parts of one space" alt="" coords="292,46,407,73"/>
@@ -626,12 +541,12 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>getExecutionRetry</b> 
 
 <p>Implements <a class="el" href="../../d7/ddc/interfacecom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaCache.html">MetaCache</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="../../df/d34/MetaManager_8java_source.html#l00233">233</a> of file <a class="el" href="../../df/d34/MetaManager_8java_source.html">MetaManager.java</a>.</p>
-<div id="dynsection-10" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-10-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-10-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="../../df/d34/MetaManager_8java_source.html#l00201">201</a> of file <a class="el" href="../../df/d34/MetaManager_8java_source.html">MetaManager.java</a>.</p>
+<div id="dynsection-9" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-9-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-9-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-10-content" class="dyncontent" style="display:none;">
+<div id="dynsection-9-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_ab19047f56597058d66bc6c633ddc2c44_icgraph.png" border="0" usemap="#ad7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_ab19047f56597058d66bc6c633ddc2c44_icgraph" alt=""/></div>
 <map name="ad7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_ab19047f56597058d66bc6c633ddc2c44_icgraph" id="ad7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_ab19047f56597058d66bc6c633ddc2c44_icgraph">
 <area shape="rect" title="get tag" alt="" coords="131,5,196,32"/>
@@ -677,12 +592,12 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>getExecutionRetry</b> 
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>int </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../df/d34/MetaManager_8java_source.html#l00221">221</a> of file <a class="el" href="../../df/d34/MetaManager_8java_source.html">MetaManager.java</a>.</p>
-<div id="dynsection-11" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-11-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
-<div id="dynsection-11-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="../../df/d34/MetaManager_8java_source.html#l00189">189</a> of file <a class="el" href="../../df/d34/MetaManager_8java_source.html">MetaManager.java</a>.</p>
+<div id="dynsection-10" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-10-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
+<div id="dynsection-10-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-11-content" class="dyncontent" style="display:none;">
+<div id="dynsection-10-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_a83a89b21d032301dcceaa7edaec81586_cgraph.png" border="0" usemap="#ad7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_a83a89b21d032301dcceaa7edaec81586_cgraph" alt=""/></div>
 <map name="ad7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_a83a89b21d032301dcceaa7edaec81586_cgraph" id="ad7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_a83a89b21d032301dcceaa7edaec81586_cgraph">
 <area shape="rect" title="get tag id" alt="" coords="5,5,83,32"/>
@@ -734,12 +649,12 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>getExecutionRetry</b> 
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="../../df/d34/MetaManager_8java_source.html#l00372">372</a> of file <a class="el" href="../../df/d34/MetaManager_8java_source.html">MetaManager.java</a>.</p>
-<div id="dynsection-12" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
-  <img id="dynsection-12-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
-<div id="dynsection-12-summary" class="dynsummary" style="display:block;">
+<p class="definition">Definition at line <a class="el" href="../../df/d34/MetaManager_8java_source.html#l00329">329</a> of file <a class="el" href="../../df/d34/MetaManager_8java_source.html">MetaManager.java</a>.</p>
+<div id="dynsection-11" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-11-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
+<div id="dynsection-11-summary" class="dynsummary" style="display:block;">
 </div>
-<div id="dynsection-12-content" class="dyncontent" style="display:none;">
+<div id="dynsection-11-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="../../d7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_adc228d53a1ce0a70c4ba3f16a300b73f_icgraph.png" border="0" usemap="#ad7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_adc228d53a1ce0a70c4ba3f16a300b73f_icgraph" alt=""/></div>
 <map name="ad7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_adc228d53a1ce0a70c4ba3f16a300b73f_icgraph" id="ad7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager_adc228d53a1ce0a70c4ba3f16a300b73f_icgraph">
 <area shape="rect" title="cache new leader for part" alt="" coords="327,13,437,39"/>

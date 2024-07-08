@@ -2,8 +2,6 @@ var classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager =
 [
     [ "MetaManager", "d7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager.html#ad97fb586320d7db0211b2160063e79a3", null ],
     [ "MetaManager", "d7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager.html#a69e36d24ffc6e7f8c477f98055ffd0d6", null ],
-    [ "addStorageAddrMapping", "d7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager.html#ab61a0d02b449eb474e4e9181335a502b", null ],
-    [ "addStorageAddrMapping", "d7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager.html#ab25b4d597dba19fd6769b0c966bbc7c2", null ],
     [ "close", "d7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager.html#a5ae591df94fc66ccb85cbb6565368bca", null ],
     [ "getConnectionRetry", "d7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager.html#a853424b443f4eb46c80d491a7c728f67", null ],
     [ "getEdge", "d7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager.html#a4d5eba8eae54a31dde79a05c2eea5116", null ],

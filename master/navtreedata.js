@@ -45,8 +45,8 @@ var NAVTREEINDEX =
 [
 "annotated.html",
 "d6/d11/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1data_1_1BaseTableRow.html#aa5a8e89bc1723719d925f992af52c561",
-"dc/df0/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1data_1_1ResultSet.html#a7ed4c20f0c49c42599ba3cf8eaa829ac",
-"functions_f.html"
+"dc/df0/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1data_1_1ResultSet.html#a8e99ad2bde2e86263fa86d376204f291",
+"functions_func.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
