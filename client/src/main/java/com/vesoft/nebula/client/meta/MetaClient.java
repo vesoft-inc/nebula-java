@@ -10,6 +10,7 @@ import com.facebook.thrift.protocol.THeaderProtocol;
 import com.facebook.thrift.transport.THeaderTransport;
 import com.facebook.thrift.transport.TSocket;
 import com.facebook.thrift.transport.TTransportException;
+import com.google.common.base.Charsets;
 import com.vesoft.nebula.ErrorCode;
 import com.vesoft.nebula.HostAddr;
 import com.vesoft.nebula.client.graph.data.CASignedSSLParam;
