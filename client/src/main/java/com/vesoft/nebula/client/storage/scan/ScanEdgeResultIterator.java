@@ -108,8 +108,8 @@ public class ScanEdgeResultIterator extends ScanResultIterator {
                 try {
                     response = connection.scanEdge(partRequest);
                     if (!response.getResult().failed_parts.isEmpty()
-                            && response.getResult().failed_parts.get(0).code ==
-                            ErrorCode.E_LEADER_CHANGED) {
+                            && response.getResult().failed_parts.get(0).code
+                            == ErrorCode.E_LEADER_CHANGED) {
                         pool.release(leader, connection);
                         HostAddr newLeader = response.getResult().failed_parts.get(0).leader;
                         leader = new HostAddress(newLeader.host, newLeader.getPort());

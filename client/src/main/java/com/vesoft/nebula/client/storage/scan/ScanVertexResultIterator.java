@@ -110,7 +110,9 @@ public class ScanVertexResultIterator extends ScanResultIterator {
                 partRequest.setNeed_authenticate(true);
                 try {
                     response = connection.scanVertex(partRequest);
-                    if (!response.getResult().failed_parts.isEmpty() && response.getResult().failed_parts.get(0).code == ErrorCode.E_LEADER_CHANGED) {
+                    if (!response.getResult().failed_parts.isEmpty()
+                            && response.getResult().failed_parts.get(0).code
+                            == ErrorCode.E_LEADER_CHANGED) {
                         pool.release(leader, connection);
                         HostAddr newLeader = response.getResult().failed_parts.get(0).leader;
                         leader = new HostAddress(newLeader.host, newLeader.getPort());
