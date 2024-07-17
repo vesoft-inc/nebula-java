@@ -49,9 +49,10 @@ public class ScanVertexResultIterator extends ScanResultIterator {
                                      String labelName,
                                      boolean partSuccess,
                                      String user,
-                                     String password) {
+                                     String password,
+                                     Map<String, String> storageAddressMapping) {
         super(metaManager, pool, new PartScanQueue(partScanInfoList), addresses, spaceName,
-              labelName, partSuccess, user, password);
+              labelName, partSuccess, user, password, storageAddressMapping);
         this.request = request;
     }
 
@@ -115,7 +116,9 @@ public class ScanVertexResultIterator extends ScanResultIterator {
                             == ErrorCode.E_LEADER_CHANGED) {
                         pool.release(leader, connection);
                         HostAddr newLeader = response.getResult().failed_parts.get(0).leader;
-                        leader = new HostAddress(newLeader.host, newLeader.getPort());
+                        HostAddr availableLeader = storageAddressMapping
+                                .getOrDefault(newLeader, newLeader);
+                        leader = new HostAddress(availableLeader.host, availableLeader.getPort());
                         connection = pool.getStorageConnection(leader);
                         response = connection.scanVertex(partRequest);
                     }
@@ -197,6 +200,8 @@ public class ScanVertexResultIterator extends ScanResultIterator {
         String user     = null;
         String password = null;
 
+        Map<String, String> storageAddressMapping = null;
+
         public ScanVertexResultBuilder withMetaClient(MetaManager metaManager) {
             this.metaManager = metaManager;
             return this;
@@ -247,6 +252,12 @@ public class ScanVertexResultIterator extends ScanResultIterator {
             return this;
         }
 
+        public ScanVertexResultBuilder withStorageAddressMapping(
+                Map<String, String> storageAddressMapping) {
+            this.storageAddressMapping = storageAddressMapping;
+            return this;
+        }
+
         public ScanVertexResultIterator build() {
             return new ScanVertexResultIterator(
                     metaManager,
@@ -258,7 +269,8 @@ public class ScanVertexResultIterator extends ScanResultIterator {
                     tagName,
                     partSuccess,
                     user,
-                    password);
+                    password,
+                    storageAddressMapping);
         }
     }
 }

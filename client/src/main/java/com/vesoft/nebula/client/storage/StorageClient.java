@@ -656,6 +656,7 @@ public class StorageClient implements Serializable {
                 .withPartSuccess(allowPartSuccess)
                 .withUser(user)
                 .withPassword(password)
+                .withStorageAddressMapping(storageAddressMapping)
                 .build();
     }
 
