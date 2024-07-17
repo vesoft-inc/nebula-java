@@ -66,16 +66,16 @@ public class MetaClient extends AbstractMetaClient {
 
     public static final int LATEST_SCHEMA_VERSION = -1;
 
-    private static final int DEFAULT_TIMEOUT_MS = 1000;
+    private static final int DEFAULT_TIMEOUT_MS            = 1000;
     private static final int DEFAULT_CONNECTION_RETRY_SIZE = 3;
-    private static final int DEFAULT_EXECUTION_RETRY_SIZE = 3;
-    private static final int RETRY_TIMES = 1;
+    private static final int DEFAULT_EXECUTION_RETRY_SIZE  = 3;
+    private static final int RETRY_TIMES                   = 1;
 
-    private boolean enableSSL = false;
-    private SSLParam sslParam = null;
+    private boolean  enableSSL = false;
+    private SSLParam sslParam  = null;
 
-    private MetaService.Client client;
-    private final List<HostAddress> addresses;
+    private       MetaService.Client client;
+    private final List<HostAddress>  addresses;
 
     public MetaClient(String host, int port) throws UnknownHostException {
         this(new HostAddress(host, port));
@@ -122,9 +122,9 @@ public class MetaClient extends AbstractMetaClient {
      */
     private void doConnect()
             throws TTransportException, ClientServerIncompatibleException {
-        Random random = new Random(System.currentTimeMillis());
-        int position = random.nextInt(addresses.size());
-        HostAddress address = addresses.get(position);
+        Random      random   = new Random(System.currentTimeMillis());
+        int         position = random.nextInt(addresses.size());
+        HostAddress address  = addresses.get(position);
         getClient(address.getHost(), address.getPort());
     }
 
@@ -192,8 +192,8 @@ public class MetaClient extends AbstractMetaClient {
      * @return
      */
     public synchronized List<IdName> getSpaces() throws TException, ExecuteFailedException {
-        int retry = RETRY_TIMES;
-        ListSpacesReq request = new ListSpacesReq();
+        int            retry    = RETRY_TIMES;
+        ListSpacesReq  request  = new ListSpacesReq();
         ListSpacesResp response = null;
         try {
             while (retry-- >= 0) {
@@ -225,7 +225,7 @@ public class MetaClient extends AbstractMetaClient {
      */
     public synchronized SpaceItem getSpace(String spaceName) throws TException,
             ExecuteFailedException {
-        int retry = RETRY_TIMES;
+        int         retry   = RETRY_TIMES;
         GetSpaceReq request = new GetSpaceReq();
         request.setSpace_name(spaceName.getBytes());
         GetSpaceResp response = null;
@@ -261,8 +261,8 @@ public class MetaClient extends AbstractMetaClient {
             throws TException, ExecuteFailedException {
         int retry = RETRY_TIMES;
 
-        int spaceID = getSpace(spaceName).space_id;
-        ListTagsReq request = new ListTagsReq(spaceID);
+        int          spaceID  = getSpace(spaceName).space_id;
+        ListTagsReq  request  = new ListTagsReq(spaceID);
         ListTagsResp response = null;
         try {
             while (retry-- >= 0) {
@@ -296,9 +296,9 @@ public class MetaClient extends AbstractMetaClient {
      */
     public synchronized Schema getTag(String spaceName, String tagName)
             throws TException, ExecuteFailedException {
-        int retry = RETRY_TIMES;
+        int       retry   = RETRY_TIMES;
         GetTagReq request = new GetTagReq();
-        int spaceID = getSpace(spaceName).getSpace_id();
+        int       spaceID = getSpace(spaceName).getSpace_id();
         request.setSpace_id(spaceID);
         request.setTag_name(tagName.getBytes());
         request.setVersion(LATEST_SCHEMA_VERSION);
@@ -335,9 +335,9 @@ public class MetaClient extends AbstractMetaClient {
      */
     public synchronized List<EdgeItem> getEdges(String spaceName)
             throws TException, ExecuteFailedException {
-        int retry = RETRY_TIMES;
-        int spaceID = getSpace(spaceName).getSpace_id();
-        ListEdgesReq request = new ListEdgesReq(spaceID);
+        int           retry    = RETRY_TIMES;
+        int           spaceID  = getSpace(spaceName).getSpace_id();
+        ListEdgesReq  request  = new ListEdgesReq(spaceID);
         ListEdgesResp response = null;
         try {
             while (retry-- >= 0) {
@@ -370,9 +370,9 @@ public class MetaClient extends AbstractMetaClient {
      */
     public synchronized Schema getEdge(String spaceName, String edgeName)
             throws TException, ExecuteFailedException {
-        int retry = RETRY_TIMES;
+        int        retry   = RETRY_TIMES;
         GetEdgeReq request = new GetEdgeReq();
-        int spaceID = getSpace(spaceName).getSpace_id();
+        int        spaceID = getSpace(spaceName).getSpace_id();
         request.setSpace_id(spaceID);
         request.setEdge_name(edgeName.getBytes());
         request.setVersion(LATEST_SCHEMA_VERSION);
@@ -410,9 +410,9 @@ public class MetaClient extends AbstractMetaClient {
      */
     public synchronized Map<Integer, List<HostAddr>> getPartsAlloc(String spaceName)
             throws ExecuteFailedException, TException {
-        int retry = RETRY_TIMES;
+        int              retry   = RETRY_TIMES;
         GetPartsAllocReq request = new GetPartsAllocReq();
-        int spaceID = getSpace(spaceName).getSpace_id();
+        int              spaceID = getSpace(spaceName).getSpace_id();
         request.setSpace_id(spaceID);
 
         GetPartsAllocResp response = null;
@@ -442,7 +442,7 @@ public class MetaClient extends AbstractMetaClient {
      * get all Storaged servers
      */
     public synchronized Set<HostAddr> listHosts() {
-        int retry = RETRY_TIMES;
+        int          retry   = RETRY_TIMES;
         ListHostsReq request = new ListHostsReq();
         request.setType(ListHostType.STORAGE);
         ListHostsResp resp = null;
@@ -470,5 +470,39 @@ public class MetaClient extends AbstractMetaClient {
             }
         }
         return hostAddrs;
+    }
+
+    /**
+     * get the leader parts for all storaged address
+     */
+    public synchronized Set<HostItem> getHostItems() {
+        int          retry   = RETRY_TIMES;
+        ListHostsReq request = new ListHostsReq();
+        request.setType(ListHostType.ALLOC);
+        ListHostsResp resp = null;
+        try {
+            while (retry-- >= 0) {
+                resp = client.listHosts(request);
+                if (resp.getCode() == ErrorCode.E_LEADER_CHANGED) {
+                    freshClient(resp.getLeader());
+                } else {
+                    break;
+                }
+            }
+        } catch (TException e) {
+            LOGGER.error("listHosts error", e);
+            return null;
+        }
+        if (resp.getCode() != ErrorCode.SUCCEEDED) {
+            LOGGER.error("listHosts execute failed, errorCode: " + resp.getCode());
+            return null;
+        }
+        Set<HostItem> hostItems = new HashSet<>();
+        for (HostItem hostItem : resp.hosts) {
+            if (hostItem.getStatus().getValue() == HostStatus.ONLINE.getValue()) {
+                hostItems.add(hostItem);
+            }
+        }
+        return hostItems;
     }
 }
