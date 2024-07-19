@@ -1176,5 +1176,5 @@ public class StorageClient implements Serializable {
     private static final long DEFAULT_START_TIME = 0;
     private static final long DEFAULT_END_TIME = Long.MAX_VALUE;
     private static final boolean DEFAULT_ALLOW_PART_SUCCESS = false;
-    private static final boolean DEFAULT_ALLOW_READ_FOLLOWER = true;
+    private static final boolean DEFAULT_ALLOW_READ_FOLLOWER = false;
 }
