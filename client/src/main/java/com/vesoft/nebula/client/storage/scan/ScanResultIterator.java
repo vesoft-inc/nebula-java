@@ -13,12 +13,12 @@ import com.vesoft.nebula.client.meta.exception.ExecuteFailedException;
 import com.vesoft.nebula.client.storage.StorageConnPool;
 import com.vesoft.nebula.storage.PartitionResult;
 import com.vesoft.nebula.storage.ScanResponse;
+import com.vesoft.nebula.util.NetUtil;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,21 +30,29 @@ public class ScanResultIterator implements Serializable {
 
     protected final Map<Integer, byte[]> partCursor;
 
-    protected final MetaManager metaManager;
-    protected final StorageConnPool pool;
-    protected final PartScanQueue partScanQueue;
+    protected final MetaManager       metaManager;
+    protected final StorageConnPool   pool;
+    protected final PartScanQueue     partScanQueue;
     protected final List<HostAddress> addresses;
-    protected final String spaceName;
-    protected final String labelName;
-    protected final boolean partSuccess;
+    protected final String            spaceName;
+    protected final String            labelName;
+    protected final boolean           partSuccess;
 
     protected final String user;
     protected final String password;
 
-    protected ScanResultIterator(MetaManager metaManager, StorageConnPool pool,
-                                 PartScanQueue partScanQueue, List<HostAddress> addresses,
-                                 String spaceName, String labelName, boolean partSuccess,
-                                 String user, String password) {
+    protected final Map<HostAddr, HostAddr> storageAddressMapping = new ConcurrentHashMap<>();
+
+    protected ScanResultIterator(MetaManager metaManager,
+                                 StorageConnPool pool,
+                                 PartScanQueue partScanQueue,
+                                 List<HostAddress> addresses,
+                                 String spaceName,
+                                 String labelName,
+                                 boolean partSuccess,
+                                 String user,
+                                 String password,
+                                 Map<String, String> storageAddrMapping) {
         this.metaManager = metaManager;
         this.pool = pool;
         this.partScanQueue = partScanQueue;
@@ -55,6 +63,12 @@ public class ScanResultIterator implements Serializable {
         this.partCursor = new HashMap<>(partScanQueue.size());
         this.user = user;
         this.password = password;
+        if (storageAddrMapping != null && !storageAddrMapping.isEmpty()) {
+            for (Map.Entry<String, String> et : storageAddrMapping.entrySet()) {
+                storageAddressMapping.put(NetUtil.parseHostAddr(et.getKey()),
+                                          NetUtil.parseHostAddr(et.getValue()));
+            }
+        }
     }
 
 

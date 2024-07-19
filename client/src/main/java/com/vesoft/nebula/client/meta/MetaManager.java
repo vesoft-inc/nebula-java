@@ -13,6 +13,7 @@ import com.vesoft.nebula.client.graph.data.SSLParam;
 import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.meta.exception.ExecuteFailedException;
 import com.vesoft.nebula.meta.EdgeItem;
+import com.vesoft.nebula.meta.HostItem;
 import com.vesoft.nebula.meta.IdName;
 import com.vesoft.nebula.meta.SpaceItem;
 import com.vesoft.nebula.meta.TagItem;
@@ -28,6 +29,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
+import org.apache.commons.codec.Charsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -153,21 +155,16 @@ public class MetaManager implements MetaCache, Serializable {
                 if (partLeaders == null) {
                     partLeaders = new HashMap<>();
                 }
-                for (String spaceName : spacesInfo.keySet()) {
-                    if (!partLeaders.containsKey(spaceName)) {
-                        partLeaders.put(spaceName, Maps.newConcurrentMap());
-                        for (int partId : spacesInfo.get(spaceName).partsAlloc.keySet()) {
-                            if (spacesInfo.get(spaceName).partsAlloc.get(partId).size() < 1) {
-                                LOGGER.error("space {} part {} has not allocation host.",
-                                             spaceName, partId);
-                            } else {
-                                partLeaders.get(spaceName).put(partId,
-                                                               spacesInfo
-                                                                       .get(spaceName)
-                                                                       .partsAlloc
-                                                                       .get(partId).get(0));
-                            }
-
+                for (HostItem hostItem : metaClient.getHostItems()) {
+                    HostAddr leader = hostItem.getHostAddr();
+                    for (Map.Entry<byte[], List<Integer>> spaceParts
+                            : hostItem.getLeader_parts().entrySet()) {
+                        String space = new String(spaceParts.getKey(), Charsets.UTF_8);
+                        if (!partLeaders.containsKey(space)) {
+                            partLeaders.put(space, Maps.newConcurrentMap());
+                        }
+                        for (int part : spaceParts.getValue()) {
+                            partLeaders.get(space).put(part, leader);
                         }
                     }
                 }

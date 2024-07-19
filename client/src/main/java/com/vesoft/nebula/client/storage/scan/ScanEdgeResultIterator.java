@@ -5,9 +5,10 @@
 
 package com.vesoft.nebula.client.storage.scan;
 
-import com.facebook.thrift.TException;
 import com.google.common.base.Charsets;
 import com.vesoft.nebula.DataSet;
+import com.vesoft.nebula.ErrorCode;
+import com.vesoft.nebula.HostAddr;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.meta.MetaManager;
 import com.vesoft.nebula.client.storage.GraphStorageConnection;
@@ -33,7 +34,7 @@ public class ScanEdgeResultIterator extends ScanResultIterator {
     private static final Logger LOGGER = LoggerFactory.getLogger(ScanEdgeResultIterator.class);
 
     private final ScanEdgeRequest request;
-    private ExecutorService threadPool = null;
+    private       ExecutorService threadPool = null;
 
     private ScanEdgeResultIterator(MetaManager metaManager,
                                    StorageConnPool pool,
@@ -44,9 +45,10 @@ public class ScanEdgeResultIterator extends ScanResultIterator {
                                    String labelName,
                                    boolean partSuccess,
                                    String user,
-                                   String password) {
+                                   String password,
+                                   Map<String, String> storageAddressMapping) {
         super(metaManager, pool, new PartScanQueue(partScanInfoList), addresses, spaceName,
-                labelName, partSuccess, user, password);
+              labelName, partSuccess, user, password, storageAddressMapping);
         this.request = request;
     }
 
@@ -69,13 +71,14 @@ public class ScanEdgeResultIterator extends ScanResultIterator {
         List<Exception> exceptions =
                 Collections.synchronizedList(new ArrayList<>(addresses.size()));
         CountDownLatch countDownLatch = new CountDownLatch(addresses.size());
-        AtomicInteger existSuccess = new AtomicInteger(0);
+        AtomicInteger  existSuccess   = new AtomicInteger(0);
 
         threadPool = Executors.newFixedThreadPool(addresses.size());
         for (HostAddress addr : addresses) {
             threadPool.submit(() -> {
+                HostAddress  leader   = addr;
                 ScanResponse response;
-                PartScanInfo partInfo = partScanQueue.getPart(addr);
+                PartScanInfo partInfo = partScanQueue.getPart(leader);
                 // no part need to scan
                 if (partInfo == null) {
                     countDownLatch.countDown();
@@ -85,8 +88,7 @@ public class ScanEdgeResultIterator extends ScanResultIterator {
 
                 GraphStorageConnection connection;
                 try {
-                    connection = pool.getStorageConnection(new HostAddress(addr.getHost(),
-                            addr.getPort()));
+                    connection = pool.getStorageConnection(leader);
                 } catch (Exception e) {
                     LOGGER.error("get storage client error, ", e);
                     exceptions.add(e);
@@ -105,12 +107,25 @@ public class ScanEdgeResultIterator extends ScanResultIterator {
                 partRequest.setNeed_authenticate(true);
                 try {
                     response = connection.scanEdge(partRequest);
-                } catch (TException e) {
+                    if (!response.getResult().failed_parts.isEmpty()
+                            && response.getResult().failed_parts.get(0).code
+                            == ErrorCode.E_LEADER_CHANGED) {
+                        pool.release(leader, connection);
+                        HostAddr newLeader = response.getResult().failed_parts.get(0).leader;
+                        HostAddr availableLeader = storageAddressMapping
+                                .getOrDefault(newLeader, newLeader);
+                        leader = new HostAddress(availableLeader.host, availableLeader.getPort());
+                        connection = pool.getStorageConnection(leader);
+                        response = connection.scanEdge(partRequest);
+                    }
+                } catch (Exception e) {
                     LOGGER.error(String.format("Scan edgeRow failed for %s", e.getMessage()), e);
                     exceptions.add(e);
                     partScanQueue.dropPart(partInfo);
                     countDownLatch.countDown();
                     return;
+                } finally {
+                    pool.release(leader, connection);
                 }
 
                 if (response == null) {
@@ -158,7 +173,7 @@ public class ScanEdgeResultIterator extends ScanResultIterator {
             if (!exceptions.isEmpty()) {
                 throwExceptions(exceptions);
             }
-            boolean success = (existSuccess.get() == addresses.size());
+            boolean       success      = (existSuccess.get() == addresses.size());
             List<DataSet> finalResults = success ? results : null;
             return new ScanEdgeResult(finalResults, ScanStatus.ALL_SUCCESS);
         }
@@ -170,16 +185,17 @@ public class ScanEdgeResultIterator extends ScanResultIterator {
      */
     public static class ScanEdgeResultBuilder {
 
-        MetaManager metaManager;
-        StorageConnPool pool;
-        Set<PartScanInfo> partScanInfoList;
-        List<HostAddress> addresses;
-        ScanEdgeRequest request;
-        String spaceName;
-        String edgeName;
-        boolean partSuccess = false;
-        String user = null;
-        String password = null;
+        MetaManager         metaManager;
+        StorageConnPool     pool;
+        Set<PartScanInfo>   partScanInfoList;
+        List<HostAddress>   addresses;
+        ScanEdgeRequest     request;
+        String              spaceName;
+        String              edgeName;
+        boolean             partSuccess           = false;
+        String              user                  = null;
+        String              password              = null;
+        Map<String, String> storageAddressMapping = null;
 
         public ScanEdgeResultBuilder withMetaClient(MetaManager metaManager) {
             this.metaManager = metaManager;
@@ -231,6 +247,12 @@ public class ScanEdgeResultIterator extends ScanResultIterator {
             return this;
         }
 
+        public ScanEdgeResultBuilder withStorageAddressMapping(
+                Map<String, String> storageAddressMapping) {
+            this.storageAddressMapping = storageAddressMapping;
+            return this;
+        }
+
         public ScanEdgeResultIterator build() {
             return new ScanEdgeResultIterator(
                     metaManager,
@@ -242,7 +264,8 @@ public class ScanEdgeResultIterator extends ScanResultIterator {
                     edgeName,
                     partSuccess,
                     user,
-                    password);
+                    password,
+                    storageAddressMapping);
         }
     }
 }
