@@ -393,9 +393,6 @@ public class MetaManager implements MetaCache, Serializable {
      */
     public Set<HostAddr> listHosts() {
         Set<HostAddr> hosts = metaClient.listHosts();
-        if (hosts == null) {
-            return new HashSet<>();
-        }
         if (!storageAddressMapping.isEmpty()) {
             hosts = hosts
                     .stream()
