@@ -125,7 +125,7 @@ public class TestMetaClient extends TestCase {
             Process p = runtime.exec(cmd);
             p.waitFor(5, TimeUnit.SECONDS);
             ProcessUtil.printProcessStatus(cmd, p);
-            Thread.sleep(5000); // wait to update the storaged's status to OFFLINE
+            Thread.sleep(10000); // wait to update the storaged's status to OFFLINE
         } catch (Exception e) {
             LOGGER.error("stop docker service error, ", e);
             assert (false);
