@@ -30,7 +30,7 @@ public class TestMetaClient extends TestCase {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestMetaClient.class);
 
     private final String address = "127.0.0.1";
-    private final int port = 9559;
+    private final int    port    = 9559;
 
     private MetaClient metaClient;
 
@@ -119,7 +119,7 @@ public class TestMetaClient extends TestCase {
 
     public void testListOnlineHosts() {
         // stop one storage server
-        String cmd = "docker stop nebula-docker-compose_storaged0_1";
+        String  cmd     = "docker stop nebula-docker-compose_storaged0_1";
         Runtime runtime = Runtime.getRuntime();
         try {
             Process p = runtime.exec(cmd);
@@ -137,6 +137,7 @@ public class TestMetaClient extends TestCase {
                 assert (false);
             }
         }
+        System.out.println("listHosts size:" + metaClient.listHosts().size());
         assert (metaClient.listHosts().size() == 2);
 
         try {
@@ -162,7 +163,7 @@ public class TestMetaClient extends TestCase {
                     "src/test/resources/ssl/client.key");
 
             metaClient = new MetaClient(Arrays.asList(new HostAddress(address, 8559)),
-                    3000, 1, 1, true, sslParam);
+                                        3000, 1, 1, true, sslParam);
             metaClient.connect();
 
             List<TagItem> tags = metaClient.getTags("testMetaCA");
@@ -190,7 +191,7 @@ public class TestMetaClient extends TestCase {
                     "src/test/resources/ssl/client.key",
                     "");
             metaClient = new MetaClient(Arrays.asList(new HostAddress(address, 7559)),
-                    3000, 1, 1, true, sslParam);
+                                        3000, 1, 1, true, sslParam);
             metaClient.connect();
 
             List<TagItem> tags = metaClient.getTags("testMetaSelf");
