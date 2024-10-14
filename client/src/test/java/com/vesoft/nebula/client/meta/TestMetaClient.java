@@ -119,7 +119,7 @@ public class TestMetaClient extends TestCase {
 
     public void testListOnlineHosts() {
         // stop one storage server
-        String  cmd     = "docker stop nebula-docker-compose_storaged0_1";
+        String  cmd     = "docker stop nebula-docker-compose-storaged0-1";
         Runtime runtime = Runtime.getRuntime();
         try {
             Process p = runtime.exec(cmd);
@@ -141,7 +141,7 @@ public class TestMetaClient extends TestCase {
         assert (metaClient.listHosts().size() == 2);
 
         try {
-            runtime.exec("docker start nebula-docker-compose_storaged0_1")
+            runtime.exec("docker start nebula-docker-compose-storaged0-1")
                     .waitFor(5, TimeUnit.SECONDS);
             Thread.sleep(5000);
         } catch (Exception e) {
