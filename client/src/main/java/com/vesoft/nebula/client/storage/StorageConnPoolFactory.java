@@ -27,6 +27,11 @@ public class StorageConnPoolFactory
     @Override
     public PooledObject<GraphStorageConnection> makeObject(HostAddress address) throws Exception {
         GraphStorageConnection connection = new GraphStorageConnection();
+        connection.open(
+                address,
+                config.getTimeout(),
+                config.isEnableSSL(),
+                config.getSslParam());
         return new DefaultPooledObject<>(connection);
     }
 
@@ -47,7 +52,7 @@ public class StorageConnPoolFactory
             return connection.transport.isOpen();
         } catch (Exception e) {
             LOGGER.warn(String.format("storage connection with %s:%d is not open",
-                    hostAndPort.getHost(), hostAndPort.getPort()), e);
+                                      hostAndPort.getHost(), hostAndPort.getPort()), e);
             return false;
         }
     }
@@ -56,11 +61,12 @@ public class StorageConnPoolFactory
     public void activateObject(HostAddress address,
                                PooledObject<GraphStorageConnection> pooledObject)
             throws Exception {
-        pooledObject.getObject().open(
-                address,
-                config.getTimeout(),
-                config.isEnableSSL(),
-                config.getSslParam());
+        if (pooledObject.getObject() == null) {
+            throw new RuntimeException("The connection is null.");
+        }
+        if (!pooledObject.getObject().transport.isOpen()) {
+            throw new RuntimeException("The connection is broken.");
+        }
     }
 
     @Override
