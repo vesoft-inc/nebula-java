@@ -1,0 +1,16 @@
+<map id="updateServerStatus" name="updateServerStatus">
+<area shape="rect" id="Node000001" title="Update the services&#39; status when the connection is broken, it is called by Session and NebulaPool." alt="" coords="919,45,1069,70"/>
+<area shape="poly" id="edge7_Node000001_Node000001" title=" " alt="" coords="1038,35,1035,31,1028,27,994,23,967,25,953,30,950,36,958,43,954,46,945,36,950,26,966,20,994,18,1029,22,1039,27,1043,32"/>
+<area shape="rect" id="Node000002" href="$dd/d71/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1Session.html#a2ad028893d5d11a5d0a2b8a14e247e5b" title="Execute the nGql sentence." alt="" coords="619,5,871,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="905,49,870,44,871,39,906,43"/>
+<area shape="rect" id="Node000004" href="$dd/d71/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1Session.html#ad57784446a5f4b376a23fabaf76ba901" title="Execute the nGql sentence." alt="" coords="619,69,871,109"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="906,71,871,76,870,71,905,66"/>
+<area shape="rect" id="Node000003" href="$dd/d71/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1Session.html#a4c2a91d5187fa9783c7ea52f3e0077ae" title="Execute the nGql sentence." alt="" coords="319,5,571,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="605,28,571,28,571,23,605,23"/>
+<area shape="rect" id="Node000005" href="$dd/d71/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1Session.html#a6f6de27a854c1a50f362aafc5b02a47f" title="Execute the nGql sentence." alt="" coords="319,69,571,109"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="605,92,571,92,571,87,605,87"/>
+<area shape="rect" id="Node000006" href="$d0/df5/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1SessionWrapper.html#a6dc8e875f5884ef24ca3af88fc87207c" title="Execute the query sentence." alt="" coords="12,37,264,77"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="305,77,264,73,265,68,305,72"/>
+<area shape="rect" id="Node000007" href="$db/d14/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1SessionsManager.html#aac20ffe3d7a994c3054a6487a8a67345" title="getSessionWrapper: return a SessionWrapper from sessionManager, the SessionWrapper couldn&#39;t use by mu..." alt="" coords="5,101,271,141"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="305,107,271,110,270,105,305,101"/>
+</map>

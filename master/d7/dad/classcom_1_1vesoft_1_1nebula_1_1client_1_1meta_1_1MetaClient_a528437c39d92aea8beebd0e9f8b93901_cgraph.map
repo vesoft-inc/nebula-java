@@ -1,0 +1,5 @@
+<map id="getEdges" name="getEdges">
+<area shape="rect" id="Node000001" title="get all edges of specific space" alt="" coords="5,5,88,31"/>
+<area shape="rect" id="Node000002" href="$d7/dad/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaClient.html#a1a599b9f1383595cfb64e035d2016ed7" title="get one space" alt="" coords="136,5,219,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="88,15,122,15,122,21,88,21"/>
+</map>

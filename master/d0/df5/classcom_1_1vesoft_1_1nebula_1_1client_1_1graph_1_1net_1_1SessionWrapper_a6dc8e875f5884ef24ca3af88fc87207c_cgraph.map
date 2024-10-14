@@ -1,7 +1,12 @@
 <map id="execute" name="execute">
-<area shape="rect" id="node1" title="Execute the query sentence." alt="" coords="5,46,79,73"/>
-<area shape="rect" id="node2" href="$dd/d71/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1Session.html#a6f6de27a854c1a50f362aafc5b02a47f" title="Execute the nGql sentence." alt="" coords="127,39,379,80"/>
-<area shape="rect" id="node3" href="$dd/d71/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1Session.html#ad57784446a5f4b376a23fabaf76ba901" title="Execute the nGql sentence." alt="" coords="427,39,679,80"/>
-<area shape="rect" id="node4" href="$df/dbb/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1NebulaPool.html#a31a7ce3b234c17bd35441139ff7e0fcf" title="Update the services&#39; status when the connection is broken, it is called by Session and NebulaPool." alt="" coords="727,5,979,47"/>
-<area shape="rect" id="node5" href="$dd/d71/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1Session.html#acb6b236ec21cd76522050bad6efce128" title="convert java value type to nebula thrift value type" alt="" coords="727,71,979,112"/>
+<area shape="rect" id="Node000001" title="Execute the query sentence." alt="" coords="5,69,79,94"/>
+<area shape="rect" id="Node000002" href="$dd/d71/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1Session.html#a6f6de27a854c1a50f362aafc5b02a47f" title="Execute the nGql sentence." alt="" coords="127,61,379,101"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="79,79,113,79,113,84,79,84"/>
+<area shape="rect" id="Node000003" href="$dd/d71/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1Session.html#ad57784446a5f4b376a23fabaf76ba901" title="Execute the nGql sentence." alt="" coords="427,61,679,101"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="379,79,413,79,413,84,379,84"/>
+<area shape="rect" id="Node000004" href="$df/dbb/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1NebulaPool.html#a31a7ce3b234c17bd35441139ff7e0fcf" title="Update the services&#39; status when the connection is broken, it is called by Session and NebulaPool." alt="" coords="727,29,979,69"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="679,65,713,62,713,67,679,71"/>
+<area shape="rect" id="Node000005" href="$dd/d71/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1Session.html#acb6b236ec21cd76522050bad6efce128" title="convert java value type to nebula thrift value type" alt="" coords="727,93,979,133"/>
+<area shape="poly" id="edge5_Node000003_Node000005" title=" " alt="" coords="679,92,713,96,713,101,679,97"/>
+<area shape="poly" id="edge4_Node000004_Node000004" title=" " alt="" coords="798,30,794,20,803,10,823,5,853,3,887,5,906,13,904,18,886,11,853,8,824,10,806,15,799,21,803,28"/>
 </map>

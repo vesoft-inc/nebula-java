@@ -1,0 +1,5 @@
+<map id="close" name="close">
+<area shape="rect" id="Node000001" title="close the pool, all connections will be closed" alt="" coords="305,13,361,38"/>
+<area shape="rect" id="Node000002" href="$db/d14/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1SessionsManager.html#a106e308073bc398126183cf164305cf1" title="close: release all sessions and close the connection pool" alt="" coords="5,5,257,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="292,28,257,28,257,23,292,23"/>
+</map>

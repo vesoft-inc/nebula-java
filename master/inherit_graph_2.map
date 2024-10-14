@@ -1,6 +1,9 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,56,147,83"/>
-<area shape="rect" id="node2" href="$d5/d4a/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1exception_1_1InvalidConfigException.html" title=" " alt="" coords="199,5,370,32"/>
-<area shape="rect" id="node3" href="$de/dbb/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1exception_1_1InvalidSessionException.html" title=" " alt="" coords="195,56,375,83"/>
-<area shape="rect" id="node4" href="$d0/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1exception_1_1InvalidValueException.html" title=" " alt="" coords="201,107,368,133"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,55,92,80"/>
+<area shape="rect" id="Node000001" href="$d3/d29/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1exception_1_1AuthFailedException.html" title=" " alt="" coords="159,5,313,31"/>
+<area shape="poly" id="edge55_Node000000_Node000001" title=" " alt="" coords="105,49,139,39,183,28,184,33,141,45,106,54"/>
+<area shape="rect" id="Node000002" href="$dd/d59/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1exception_1_1BindSpaceFailedException.html" title=" " alt="" coords="140,55,332,80"/>
+<area shape="poly" id="edge56_Node000000_Node000002" title=" " alt="" coords="106,65,140,65,140,70,106,70"/>
+<area shape="rect" id="Node000003" href="$d6/d31/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1exception_1_1ClientServerIncompatibleException.html" title=" " alt="" coords="143,105,329,145"/>
+<area shape="poly" id="edge57_Node000000_Node000003" title=" " alt="" coords="105,82,171,102,169,107,103,87"/>
 </map>

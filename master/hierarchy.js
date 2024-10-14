@@ -3,16 +3,22 @@ var hierarchy =
     [ "AutoCloseable", null, [
       [ "Session", "dd/d71/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1Session.html", null ]
     ] ],
+    [ "BasePooledObjectFactory", null, [
+      [ "ConnObjectPool", "d0/d10/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1ConnObjectPool.html", null ]
+    ] ],
     [ "EdgeProcessor", "df/de3/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1processor_1_1EdgeProcessor.html", null ],
     [ "Exception", null, [
       [ "AuthFailedException", "d3/d29/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1exception_1_1AuthFailedException.html", null ],
       [ "BindSpaceFailedException", "dd/d59/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1exception_1_1BindSpaceFailedException.html", null ],
-      [ "ClientServerIncompatibleException", "d6/d31/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1exception_1_1ClientServerIncompatibleException.html", null ],
+      [ "ClientServerIncompatibleException", "d6/d31/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1exception_1_1ClientServerIncompatibleException.html", null ]
+    ] ],
+    [ "Exception", null, [
+      [ "IOErrorException", "d6/dd1/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1exception_1_1IOErrorException.html", null ],
       [ "NotValidConnectionException", "d6/d79/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1exception_1_1NotValidConnectionException.html", null ],
       [ "ExecuteFailedException", "da/de3/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1exception_1_1ExecuteFailedException.html", null ]
     ] ],
-    [ "Exception", null, [
-      [ "IOErrorException", "d6/dd1/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1exception_1_1IOErrorException.html", null ]
+    [ "KeyedPooledObjectFactory", null, [
+      [ "StorageConnPoolFactory", "d1/dbf/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1StorageConnPoolFactory.html", null ]
     ] ],
     [ "LoadBalancer", "db/d58/interfacecom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1LoadBalancer.html", [
       [ "RoundRobinLoadBalancer", "d1/d6f/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1RoundRobinLoadBalancer.html", null ]
@@ -27,17 +33,6 @@ var hierarchy =
       [ "InvalidValueException", "d0/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1exception_1_1InvalidValueException.html", null ]
     ] ],
     [ "ScanStatus", "db/de5/enumcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1data_1_1ScanStatus.html", null ],
-    [ "SessionState", "d0/df0/enumcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1SessionState.html", null ],
-    [ "SSLParam.SignMode", "db/d29/enumcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1data_1_1SSLParam_1_1SignMode.html", null ],
-    [ "TimeUtil", "d8/d6c/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1data_1_1TimeUtil.html", null ],
-    [ "ValueWrapper", "d4/d92/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1data_1_1ValueWrapper.html", null ],
-    [ "VertexProcessor", "d4/d2c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1processor_1_1VertexProcessor.html", null ],
-    [ "BasePooledObjectFactory", null, [
-      [ "ConnObjectPool", "d0/d10/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1ConnObjectPool.html", null ]
-    ] ],
-    [ "KeyedPooledObjectFactory", null, [
-      [ "StorageConnPoolFactory", "d1/dbf/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1StorageConnPoolFactory.html", null ]
-    ] ],
     [ "Serializable", null, [
       [ "NebulaPoolConfig", "dd/dd5/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1NebulaPoolConfig.html", null ],
       [ "NebulaSession", "d4/d33/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1NebulaSession.html", null ],
@@ -95,5 +90,10 @@ var hierarchy =
         [ "ScanVertexResultIterator", "d7/d42/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanVertexResultIterator.html", null ]
       ] ],
       [ "ScanVertexResult", "d5/d20/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanVertexResult.html", null ]
-    ] ]
+    ] ],
+    [ "SessionState", "d0/df0/enumcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1SessionState.html", null ],
+    [ "SSLParam.SignMode", "db/d29/enumcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1data_1_1SSLParam_1_1SignMode.html", null ],
+    [ "TimeUtil", "d8/d6c/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1data_1_1TimeUtil.html", null ],
+    [ "ValueWrapper", "d4/d92/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1data_1_1ValueWrapper.html", null ],
+    [ "VertexProcessor", "d4/d2c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1processor_1_1VertexProcessor.html", null ]
 ];
