@@ -137,6 +137,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad57784446a5f4b376a23fabaf76ba901"><td class="memItemLeft" align="right" valign="top">synchronized <a class="el" href="../../dc/df0/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1data_1_1ResultSet.html">ResultSet</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d71/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1Session.html#ad57784446a5f4b376a23fabaf76ba901">executeWithParameter</a> (String stmt, Map&lt; String, Object &gt; parameterMap)  throws IOErrorException </td></tr>
 <tr class="memdesc:ad57784446a5f4b376a23fabaf76ba901"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute the nGql sentence.  <a href="../../dd/d71/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1Session.html#ad57784446a5f4b376a23fabaf76ba901">More...</a><br /></td></tr>
 <tr class="separator:ad57784446a5f4b376a23fabaf76ba901"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25a82abe05ce91e37c22e5a4edc28c24"><td class="memItemLeft" align="right" valign="top"><a id="a25a82abe05ce91e37c22e5a4edc28c24"></a>
+<a class="el" href="../../dc/df0/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1data_1_1ResultSet.html">ResultSet</a>&#160;</td><td class="memItemRight" valign="bottom"><b>executeWithTimeout</b> (String stmt, long timeoutMs)  throws IOErrorException </td></tr>
+<tr class="separator:a25a82abe05ce91e37c22e5a4edc28c24"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2836e2414c45b34eb2a70052762edfc6"><td class="memItemLeft" align="right" valign="top"><a id="a2836e2414c45b34eb2a70052762edfc6"></a>
+<a class="el" href="../../dc/df0/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1data_1_1ResultSet.html">ResultSet</a>&#160;</td><td class="memItemRight" valign="bottom"><b>executeWithParameterTimeout</b> (String stmt, Map&lt; String, Object &gt; parameterMap, long timeoutMs)  throws IOErrorException </td></tr>
+<tr class="separator:a2836e2414c45b34eb2a70052762edfc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c2a91d5187fa9783c7ea52f3e0077ae"><td class="memItemLeft" align="right" valign="top">synchronized String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d71/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1Session.html#a4c2a91d5187fa9783c7ea52f3e0077ae">executeJson</a> (String stmt)  throws IOErrorException </td></tr>
 <tr class="memdesc:a4c2a91d5187fa9783c7ea52f3e0077ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute the nGql sentence.  <a href="../../dd/d71/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1Session.html#a4c2a91d5187fa9783c7ea52f3e0077ae">More...</a><br /></td></tr>
 <tr class="separator:a4c2a91d5187fa9783c7ea52f3e0077ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -319,7 +325,7 @@ static Map&lt; Class&lt;?&gt;, Setter &gt;&#160;</td><td class="memItemRight" va
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The JSON string </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../db/d7b/Session_8java_source.html#l00211">211</a> of file <a class="el" href="../../db/d7b/Session_8java_source.html">Session.java</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../db/d7b/Session_8java_source.html#l00273">273</a> of file <a class="el" href="../../db/d7b/Session_8java_source.html">Session.java</a>.</p>
 <div id="dynsection-4" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-4-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-4-summary" class="dynsummary" style="display:block;">
@@ -371,7 +377,7 @@ static Map&lt; Class&lt;?&gt;, Setter &gt;&#160;</td><td class="memItemRight" va
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The JSON string </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../db/d7b/Session_8java_source.html#l00276">276</a> of file <a class="el" href="../../db/d7b/Session_8java_source.html">Session.java</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../db/d7b/Session_8java_source.html#l00338">338</a> of file <a class="el" href="../../db/d7b/Session_8java_source.html">Session.java</a>.</p>
 <div id="dynsection-5" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-5-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-5-summary" class="dynsummary" style="display:block;">
@@ -481,7 +487,7 @@ static Map&lt; Class&lt;?&gt;, Setter &gt;&#160;</td><td class="memItemRight" va
 <p>Gets the service address of the current connection. </p>
 <dl class="section return"><dt>Returns</dt><dd>HostAddress the graph service address </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../db/d7b/Session_8java_source.html#l00364">364</a> of file <a class="el" href="../../db/d7b/Session_8java_source.html">Session.java</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../db/d7b/Session_8java_source.html#l00426">426</a> of file <a class="el" href="../../db/d7b/Session_8java_source.html">Session.java</a>.</p>
 
 </div>
 </div>
@@ -503,7 +509,7 @@ static Map&lt; Class&lt;?&gt;, Setter &gt;&#160;</td><td class="memItemRight" va
 <p>Check current connection is ok. </p>
 <dl class="section return"><dt>Returns</dt><dd>boolean </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../db/d7b/Session_8java_source.html#l00323">323</a> of file <a class="el" href="../../db/d7b/Session_8java_source.html">Session.java</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../db/d7b/Session_8java_source.html#l00385">385</a> of file <a class="el" href="../../db/d7b/Session_8java_source.html">Session.java</a>.</p>
 
 </div>
 </div>
@@ -525,7 +531,7 @@ static Map&lt; Class&lt;?&gt;, Setter &gt;&#160;</td><td class="memItemRight" va
 <p>Notifies the server that the session is no longer needed and returns the connection to the pool, and the connection will be reuse. </p>
 <p>This function is called if the user is no longer using the session. </p>
 
-<p class="definition">Definition at line <a class="el" href="../../db/d7b/Session_8java_source.html#l00346">346</a> of file <a class="el" href="../../db/d7b/Session_8java_source.html">Session.java</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../db/d7b/Session_8java_source.html#l00408">408</a> of file <a class="el" href="../../db/d7b/Session_8java_source.html">Session.java</a>.</p>
 <div id="dynsection-9" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-9-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-9-summary" class="dynsummary" style="display:block;">
@@ -573,7 +579,7 @@ static Map&lt; Class&lt;?&gt;, Setter &gt;&#160;</td><td class="memItemRight" va
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>nebula value </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../db/d7b/Session_8java_source.html#l00434">434</a> of file <a class="el" href="../../db/d7b/Session_8java_source.html">Session.java</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../db/d7b/Session_8java_source.html#l00496">496</a> of file <a class="el" href="../../db/d7b/Session_8java_source.html">Session.java</a>.</p>
 <div id="dynsection-10" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-10-trigger" src="../../closed.png" alt="+"/> Here is the caller graph for this function:</div>
 <div id="dynsection-10-summary" class="dynsummary" style="display:block;">
@@ -613,7 +619,7 @@ static Map&lt; Class&lt;?&gt;, Setter &gt;&#160;</td><td class="memItemRight" va
   </tr>
 </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= </div>
+<b>Initial value:</b><div class="fragment"><div class="line">=</div>
 <div class="line">        <span class="keyword">new</span> HashMap&lt;Class&lt;?&gt;, Setter&gt;() {{</div>
 <div class="line">            put(Value.class, (Setter&lt;Value&gt;) (param) -&gt; param);</div>
 <div class="line">            put(Boolean.class, (Setter&lt;Boolean&gt;) Value::bVal);</div>
@@ -642,7 +648,7 @@ static Map&lt; Class&lt;?&gt;, Setter &gt;&#160;</td><td class="memItemRight" va
 </div><!-- fragment -->
 <p>some value setter for java type (basic or nebula special type) that need convert to NValue </p>
 
-<p class="definition">Definition at line <a class="el" href="../../db/d7b/Session_8java_source.html#l00467">467</a> of file <a class="el" href="../../db/d7b/Session_8java_source.html">Session.java</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../db/d7b/Session_8java_source.html#l00529">529</a> of file <a class="el" href="../../db/d7b/Session_8java_source.html">Session.java</a>.</p>
 
 </div>
 </div>

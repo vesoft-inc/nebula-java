@@ -131,6 +131,12 @@ boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href=".
 <tr class="memitem:a5e8da2459524f27b584cb0ca781af713"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../dc/df0/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1data_1_1ResultSet.html">ResultSet</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/dbf/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1SessionPool.html#a5e8da2459524f27b584cb0ca781af713">execute</a> (String stmt, Map&lt; String, Object &gt; parameterMap)  throws ClientServerIncompatibleException, AuthFailedException,             IOErrorException, BindSpaceFailedException </td></tr>
 <tr class="memdesc:a5e8da2459524f27b584cb0ca781af713"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute the nGql sentence with parameter.  <a href="../../df/dbf/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1SessionPool.html#a5e8da2459524f27b584cb0ca781af713">More...</a><br /></td></tr>
 <tr class="separator:a5e8da2459524f27b584cb0ca781af713"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25a82abe05ce91e37c22e5a4edc28c24"><td class="memItemLeft" align="right" valign="top"><a id="a25a82abe05ce91e37c22e5a4edc28c24"></a>
+<a class="el" href="../../dc/df0/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1data_1_1ResultSet.html">ResultSet</a>&#160;</td><td class="memItemRight" valign="bottom"><b>executeWithTimeout</b> (String stmt, long timeoutMs)  throws IOErrorException, AuthFailedException, BindSpaceFailedException </td></tr>
+<tr class="separator:a25a82abe05ce91e37c22e5a4edc28c24"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2836e2414c45b34eb2a70052762edfc6"><td class="memItemLeft" align="right" valign="top"><a id="a2836e2414c45b34eb2a70052762edfc6"></a>
+<a class="el" href="../../dc/df0/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1data_1_1ResultSet.html">ResultSet</a>&#160;</td><td class="memItemRight" valign="bottom"><b>executeWithParameterTimeout</b> (String stmt, Map&lt; String, Object &gt; parameterMap, long timeoutMs)  throws IOErrorException, AuthFailedException, BindSpaceFailedException </td></tr>
+<tr class="separator:a2836e2414c45b34eb2a70052762edfc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a66f364da38d4aa1bd7e7bad83bf1057a"><td class="memItemLeft" align="right" valign="top"><a id="a66f364da38d4aa1bd7e7bad83bf1057a"></a>
 String&#160;</td><td class="memItemRight" valign="bottom"><b>executeJson</b> (String stmt)  throws ClientServerIncompatibleException, AuthFailedException,             IOErrorException, BindSpaceFailedException </td></tr>
 <tr class="separator:a66f364da38d4aa1bd7e7bad83bf1057a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -178,7 +184,7 @@ AtomicBoolean&#160;</td><td class="memItemRight" valign="bottom"><b>isClosed</b>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="../../d2/dc5/SessionPool_8java_source.html#l00032">32</a> of file <a class="el" href="../../d2/dc5/SessionPool_8java_source.html">SessionPool.java</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d2/dc5/SessionPool_8java_source.html#l00035">35</a> of file <a class="el" href="../../d2/dc5/SessionPool_8java_source.html">SessionPool.java</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a6dc8e875f5884ef24ca3af88fc87207c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6dc8e875f5884ef24ca3af88fc87207c">&#9670;&nbsp;</a></span>execute() <span class="overload">[1/2]</span></h2>
@@ -205,7 +211,7 @@ AtomicBoolean&#160;</td><td class="memItemRight" valign="bottom"><b>isClosed</b>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The ResultSet </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d2/dc5/SessionPool_8java_source.html#l00146">146</a> of file <a class="el" href="../../d2/dc5/SessionPool_8java_source.html">SessionPool.java</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d2/dc5/SessionPool_8java_source.html#l00149">149</a> of file <a class="el" href="../../d2/dc5/SessionPool_8java_source.html">SessionPool.java</a>.</p>
 <div id="dynsection-2" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
   <img id="dynsection-2-trigger" src="../../closed.png" alt="+"/> Here is the call graph for this function:</div>
 <div id="dynsection-2-summary" class="dynsummary" style="display:block;">
@@ -258,7 +264,7 @@ AtomicBoolean&#160;</td><td class="memItemRight" valign="bottom"><b>isClosed</b>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The ResultSet </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="../../d2/dc5/SessionPool_8java_source.html#l00210">210</a> of file <a class="el" href="../../d2/dc5/SessionPool_8java_source.html">SessionPool.java</a>.</p>
+<p class="definition">Definition at line <a class="el" href="../../d2/dc5/SessionPool_8java_source.html#l00212">212</a> of file <a class="el" href="../../d2/dc5/SessionPool_8java_source.html">SessionPool.java</a>.</p>
 
 </div>
 </div>

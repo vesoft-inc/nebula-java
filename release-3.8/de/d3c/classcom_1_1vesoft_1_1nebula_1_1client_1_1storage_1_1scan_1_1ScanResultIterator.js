@@ -1,6 +1,6 @@
 var classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator =
 [
-    [ "ScanResultIterator", "de/d3c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator.html#a9a882f5ca8c0ec4fa4939bb9f516f468", null ],
+    [ "ScanResultIterator", "de/d3c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator.html#a59ca489bbf2ad14636f6584737fb0592", null ],
     [ "freshLeader", "de/d3c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator.html#af8faa2a2302aef45e6053ae4237242f8", null ],
     [ "getLeader", "de/d3c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator.html#aac55d5a2cbddd97f6c7b57c47d8e7555", null ],
     [ "handleFailedResult", "de/d3c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator.html#a081a52bce9d70090e6123f965990046f", null ],
@@ -20,5 +20,6 @@ var classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultItera
     [ "password", "de/d3c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator.html#aeaa551b82acfe8e65bf52dc571d3c1ac", null ],
     [ "pool", "de/d3c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator.html#a591f444b954928d726995788af22864a", null ],
     [ "spaceName", "de/d3c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator.html#a1efe6525e19500ec0745422f00bce129", null ],
+    [ "storageAddressMapping", "de/d3c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator.html#aa2a7c997140bd9bae170663be888e11e", null ],
     [ "user", "de/d3c/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanResultIterator.html#aa6fb16700d8bd09a0cc890638796776b", null ]
 ];

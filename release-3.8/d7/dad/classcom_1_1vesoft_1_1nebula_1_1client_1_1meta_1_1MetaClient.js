@@ -10,6 +10,7 @@ var classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaClient =
     [ "connect", "d7/dad/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaClient.html#a1396bf9b5defe9fa844a63b5cd40ac0e", null ],
     [ "getEdge", "d7/dad/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaClient.html#a833b5c9d69b6735e44b799e382afddf9", null ],
     [ "getEdges", "d7/dad/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaClient.html#abc4f2ba6a0242e71d21b02d2bdc7610b", null ],
+    [ "getHostItems", "d7/dad/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaClient.html#a14d681545a63311857f542e8d3a18bc8", null ],
     [ "getPartsAlloc", "d7/dad/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaClient.html#abc3ae88c82298a9d9098f093f8aa1681", null ],
     [ "getSpace", "d7/dad/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaClient.html#a1a599b9f1383595cfb64e035d2016ed7", null ],
     [ "getSpaces", "d7/dad/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaClient.html#a3f8bc9859158b22b4c4b052f349a48fb", null ],

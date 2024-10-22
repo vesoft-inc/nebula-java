@@ -4,6 +4,8 @@ var classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1NebulaSession =
     [ "execute", "d4/d33/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1NebulaSession.html#a6dc8e875f5884ef24ca3af88fc87207c", null ],
     [ "executeJsonWithParameter", "d4/d33/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1NebulaSession.html#ae1e681abb272cae9aa3c52e81a3f101a", null ],
     [ "executeWithParameter", "d4/d33/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1NebulaSession.html#ab3176ff22ed959657abb9efd836b383d", null ],
+    [ "executeWithParameterTimeout", "d4/d33/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1NebulaSession.html#a2836e2414c45b34eb2a70052762edfc6", null ],
+    [ "executeWithTimeout", "d4/d33/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1NebulaSession.html#a25a82abe05ce91e37c22e5a4edc28c24", null ],
     [ "getSessionID", "d4/d33/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1NebulaSession.html#ab6a84aefde2fd33d233945d3e1d50056", null ],
     [ "isIdle", "d4/d33/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1NebulaSession.html#a4fd3ecda9f42ddcd6338a91fc819153a", null ],
     [ "isIdleAndSetUsed", "d4/d33/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1NebulaSession.html#abde8cbd30de4139ba87e6963823e0032", null ],
