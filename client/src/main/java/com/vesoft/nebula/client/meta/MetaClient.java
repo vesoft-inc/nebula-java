@@ -457,11 +457,11 @@ public class MetaClient extends AbstractMetaClient {
             }
         } catch (TException e) {
             LOGGER.error("listHosts error", e);
-            return null;
+            throw new RuntimeException("listHosts error", e);
         }
         if (resp.getCode() != ErrorCode.SUCCEEDED) {
             LOGGER.error("listHosts execute failed, errorCode: " + resp.getCode());
-            return null;
+            throw new RuntimeException("listHosts execute failed, errorCode:" + resp.getCode());
         }
         Set<HostAddr> hostAddrs = new HashSet<>();
         for (HostItem hostItem : resp.hosts) {
