@@ -26,9 +26,9 @@ jobs:
           git clone https://github.com/vesoft-inc/nebula-docker-compose.git
           pushd nebula-docker-compose/
           cp ../../client/src/test/resources/docker-compose.yaml .
-          docker-compose up -d
+          docker compose up -d
           sleep 30
-          docker-compose ps
+          docker compose ps
           popd
           popd
 
@@ -39,9 +39,9 @@ jobs:
           pushd ca
           cp -r ../../client/src/test/resources/ssl .
           cp ../../client/src/test/resources/docker-compose-casigned.yaml .
-          docker-compose -f docker-compose-casigned.yaml up -d
+          docker compose -f docker-compose-casigned.yaml up -d
           sleep 30
-          docker-compose -f docker-compose-casigned.yaml ps
+          docker compose -f docker-compose-casigned.yaml ps
           popd
           popd
 
@@ -52,9 +52,9 @@ jobs:
           pushd self
           cp -r ../../client/src/test/resources/ssl .
           cp ../../client/src/test/resources/docker-compose-selfsigned.yaml .
-          docker-compose -f docker-compose-selfsigned.yaml up -d
+          docker compose -f docker-compose-selfsigned.yaml up -d
           sleep 30
-          docker-compose -f docker-compose-selfsigned.yaml ps
+          docker compose -f docker-compose-selfsigned.yaml ps
           popd
           popd
 
