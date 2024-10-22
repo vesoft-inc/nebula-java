@@ -12,6 +12,7 @@ import com.vesoft.nebula.client.graph.net.Session;
 import com.vesoft.nebula.client.graph.net.SessionState;
 import com.vesoft.nebula.client.graph.net.SyncConnection;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -25,9 +26,9 @@ public class NebulaSession implements Serializable {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    private final long sessionID;
-    private final int timezoneOffset;
-    private SyncConnection connection;
+    private final long                          sessionID;
+    private final int                           timezoneOffset;
+    private       SyncConnection                connection;
     private final AtomicReference<SessionState> state = new AtomicReference<>();
 
     private final AtomicBoolean isReleased = new AtomicBoolean(false);
@@ -69,6 +70,25 @@ public class NebulaSession implements Serializable {
         Map<byte[], Value> map = new HashMap<>();
         parameterMap.forEach((key, value) -> map.put(key.getBytes(), Session.value2Nvalue(value)));
         return new ResultSet(connection.executeWithParameter(sessionID, stmt, map), timezoneOffset);
+    }
+
+    public ResultSet executeWithTimeout(String stmt, long timeoutMs) throws IOErrorException {
+        return executeWithParameterTimeout(stmt,
+                                           (Map<String, Object>) Collections.EMPTY_MAP,
+                                           timeoutMs);
+    }
+
+    public ResultSet executeWithParameterTimeout(String stmt,
+                                                 Map<String, Object> parameterMap,
+                                                 long timeoutMs) throws IOErrorException {
+        Map<byte[], Value> map = new HashMap<>();
+        parameterMap.forEach((key, value) -> map.put(key.getBytes(), Session.value2Nvalue(value)));
+        return new ResultSet(connection.executeWithParameterTimeout(sessionID,
+                                                                    stmt,
+                                                                    map,
+                                                                    timeoutMs),
+                             timezoneOffset);
+
     }
 
     public String executeJsonWithParameter(String stmt, Map<String, Object> parameterMap)

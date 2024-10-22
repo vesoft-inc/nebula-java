@@ -5,6 +5,7 @@
 
 package com.vesoft.nebula.client.graph.net;
 
+import com.vesoft.nebula.ErrorCode;
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
 import com.vesoft.nebula.client.graph.SessionPool;
 import com.vesoft.nebula.client.graph.SessionPoolConfig;
@@ -534,5 +535,27 @@ public class TestSessionPool {
             Assert.assertFalse(e.getMessage(), true);
         }
 
+    }
+
+    // test for NebulaGraph Enterprise
+    public void testExecuteWithTimeout() {
+        System.out.println("<==== testExecuteWithTimeout ====>");
+
+        try {
+            List<HostAddress> addresses = Arrays.asList(
+                    new HostAddress("127.0.0.1", 3669));
+            SessionPoolConfig config = new SessionPoolConfig(addresses,
+                                                             "test",
+                                                             "root",
+                                                             "nebula");
+            SessionPool pool = new SessionPool(config);
+            ResultSet resultSet = pool.executeWithTimeout(
+                    "use test;match (v) return v limit 1000",
+                    1);
+            assert (resultSet.getErrorCode() == ErrorCode.E_QUERY_TIMEDOUT.getValue());
+        } catch (Exception e) {
+            e.printStackTrace();
+            assert false;
+        }
     }
 }
