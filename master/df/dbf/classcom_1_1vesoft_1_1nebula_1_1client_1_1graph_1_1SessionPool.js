@@ -6,6 +6,8 @@ var classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1SessionPool =
     [ "execute", "df/dbf/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1SessionPool.html#a5e8da2459524f27b584cb0ca781af713", null ],
     [ "executeJson", "df/dbf/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1SessionPool.html#a66f364da38d4aa1bd7e7bad83bf1057a", null ],
     [ "executeJsonWithParameter", "df/dbf/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1SessionPool.html#ae1e681abb272cae9aa3c52e81a3f101a", null ],
+    [ "executeWithParameterTimeout", "df/dbf/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1SessionPool.html#a2836e2414c45b34eb2a70052762edfc6", null ],
+    [ "executeWithTimeout", "df/dbf/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1SessionPool.html#a25a82abe05ce91e37c22e5a4edc28c24", null ],
     [ "getAddress", "df/dbf/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1SessionPool.html#af3846d054f220ccb627fa1d38f382a9e", null ],
     [ "getIdleSessionNums", "df/dbf/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1SessionPool.html#a80d1b77dae32d05a204877939db5f980", null ],
     [ "getSessionNums", "df/dbf/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1SessionPool.html#ab7701e22e8148df7e6fd6eed0c36d752", null ],
