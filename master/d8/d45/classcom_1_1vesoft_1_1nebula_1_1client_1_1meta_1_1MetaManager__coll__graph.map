@@ -1,7 +1,5 @@
 <map id="MetaManager" name="MetaManager">
-<area shape="rect" id="Node000001" title="MetaManager is a manager for meta info, such as spaces,tags and edges." alt="" coords="57,79,169,104"/>
-<area shape="rect" id="Node000002" href="$d7/ddc/interfacecom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaCache.html" title=" " alt="" coords="5,5,100,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,40,105,77,101,80,69,43"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="125,5,223,31"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="157,43,125,80,121,77,153,40"/>
+<area shape="rect" id="node1" title="MetaManager is a manager for meta info, such as spaces,tags and edges." alt="" coords="57,80,169,107"/>
+<area shape="rect" id="node2" href="$d7/ddc/interfacecom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaCache.html" title=" " alt="" coords="5,5,100,32"/>
+<area shape="rect" id="node3" title=" " alt="" coords="125,5,223,32"/>
 </map>

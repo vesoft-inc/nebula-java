@@ -1,6 +1,7 @@
 var classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1Session =
 [
     [ "Session", "dd/d71/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1Session.html#ac9ff32445b93f287b358265624f3c1b1", null ],
+    [ "close", "dd/d71/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1Session.html#a106e308073bc398126183cf164305cf1", null ],
     [ "execute", "dd/d71/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1Session.html#a6f6de27a854c1a50f362aafc5b02a47f", null ],
     [ "executeJson", "dd/d71/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1Session.html#a4c2a91d5187fa9783c7ea52f3e0077ae", null ],
     [ "executeJsonWithParameter", "dd/d71/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1Session.html#a2ad028893d5d11a5d0a2b8a14e247e5b", null ],

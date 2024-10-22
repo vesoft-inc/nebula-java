@@ -1,9 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" title=" " alt="" coords="5,55,92,80"/>
-<area shape="rect" id="Node000001" href="$d6/dd1/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1exception_1_1IOErrorException.html" title=" " alt="" coords="182,5,313,31"/>
-<area shape="poly" id="edge58_Node000000_Node000001" title=" " alt="" coords="104,49,139,39,186,28,188,33,141,45,106,54"/>
-<area shape="rect" id="Node000002" href="$d6/d79/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1exception_1_1NotValidConnectionException.html" title=" " alt="" coords="140,55,355,80"/>
-<area shape="poly" id="edge59_Node000000_Node000002" title=" " alt="" coords="106,65,140,65,140,70,106,70"/>
-<area shape="rect" id="Node000003" href="$da/de3/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1exception_1_1ExecuteFailedException.html" title=" " alt="" coords="160,104,335,129"/>
-<area shape="poly" id="edge60_Node000000_Node000003" title=" " alt="" coords="106,80,141,89,192,101,191,107,139,94,105,85"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,5,92,32"/>
+<area shape="rect" id="node2" href="$d6/dd1/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1exception_1_1IOErrorException.html" title=" " alt="" coords="140,5,271,32"/>
 </map>

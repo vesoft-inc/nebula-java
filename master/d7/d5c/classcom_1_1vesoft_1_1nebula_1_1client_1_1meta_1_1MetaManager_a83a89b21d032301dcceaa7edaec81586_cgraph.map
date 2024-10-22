@@ -1,5 +1,4 @@
 <map id="getTagId" name="getTagId">
-<area shape="rect" id="Node000001" title="get tag id" alt="" coords="5,5,83,31"/>
-<area shape="rect" id="Node000002" href="$d7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager.html#ab19047f56597058d66bc6c633ddc2c44" title="get tag" alt="" coords="131,5,196,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="83,15,117,15,117,21,83,21"/>
+<area shape="rect" id="node1" title="get tag id" alt="" coords="5,5,83,32"/>
+<area shape="rect" id="node2" href="$d7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager.html#ab19047f56597058d66bc6c633ddc2c44" title="get tag" alt="" coords="131,5,196,32"/>
 </map>

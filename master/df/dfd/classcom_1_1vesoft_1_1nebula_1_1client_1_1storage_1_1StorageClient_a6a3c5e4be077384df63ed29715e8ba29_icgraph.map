@@ -1,34 +1,4 @@
 <map id="scanEdge" name="scanEdge">
-<area shape="rect" id="Node000001" title="scan edge of all parts with return cols." alt="" coords="137,351,221,376"/>
-<area shape="poly" id="edge13_Node000001_Node000001" title=" " alt="" coords="201,339,195,332,179,329,166,331,159,336,158,342,162,349,157,352,152,342,155,333,164,326,179,324,197,327,205,336"/>
-<area shape="rect" id="Node000002" href="$df/dfd/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1StorageClient.html#a7ef27fc44bb5a0e72c7328609f79ed5e" title="scan edge of specific part with no return cols." alt="" coords="5,5,89,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="175,337,169,279,156,202,130,119,111,80,87,44,75,33,79,29,91,40,115,77,135,117,161,201,175,278,180,337"/>
-<area shape="rect" id="Node000003" href="$df/dfd/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1StorageClient.html#a86c214d5f8ec7e81ed4fe29223d82695" title="scan edge of specific part with no return cols and limit config." alt="" coords="5,55,89,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="173,337,165,288,150,224,125,155,108,123,87,93,75,82,78,78,91,90,112,120,130,153,155,222,171,287,178,337"/>
-<area shape="rect" id="Node000004" href="$df/dfd/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1StorageClient.html#a36769a57b2a9e1a30c8e81a2dcd29877" title="scan edge of specific part with no return cols and limit, start time, end time config." alt="" coords="5,104,89,129"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="171,338,161,296,144,245,120,191,87,142,74,131,78,127,91,139,125,189,149,243,166,295,176,336"/>
-<area shape="rect" id="Node000005" href="$df/dfd/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1StorageClient.html#aeb3db437f24de37cfcdbe2df1388bd6a" title="scan edge of specific part with no return cols and limit, start time, end time, if allow partial succ..." alt="" coords="5,153,89,179"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="168,339,138,268,116,228,87,192,74,181,77,177,91,188,120,225,143,266,173,337"/>
-<area shape="rect" id="Node000006" href="$df/dfd/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1StorageClient.html#a2631f39424f908eee0e53a6f26796b6b" title="scan edge of specific part with return cols." alt="" coords="5,203,89,228"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="162,340,131,292,88,241,72,230,75,226,91,237,135,288,167,337"/>
-<area shape="rect" id="Node000007" href="$df/dfd/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1StorageClient.html#a3bae575878038cf2654374ee98071339" title="scan edge of specific part with return cols." alt="" coords="5,252,89,277"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="152,343,88,291,70,280,73,275,91,287,156,339"/>
-<area shape="rect" id="Node000008" href="$df/dfd/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1StorageClient.html#ac69e9f588750ef8afda56705a35ea753" title="scan edge of specific part with return cols and limit, start time, end time config." alt="" coords="5,301,89,327"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="131,348,81,329,83,324,133,343"/>
-<area shape="rect" id="Node000009" href="$df/dfd/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1StorageClient.html#acb4665e9fb0ab4fbc28dd0e31acead69" title="scan edge of specific part with return cols and limit, start time, end time, if allow partial success..." alt="" coords="5,351,89,376"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="124,366,90,366,90,361,124,361"/>
-<area shape="rect" id="Node000010" href="$df/dfd/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1StorageClient.html#a5f67c36ee6bf111c399eb12a04f95f96" title="scan edge of all parts with no return cols." alt="" coords="5,400,89,425"/>
-<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="133,383,83,402,81,397,131,378"/>
-<area shape="rect" id="Node000011" href="$df/dfd/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1StorageClient.html#aff5abe35e0c01011d716d7acc242faf1" title="scan edge of all parts with no return cols and limit config." alt="" coords="5,449,89,475"/>
-<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="155,388,91,439,72,451,69,447,88,435,151,383"/>
-<area shape="rect" id="Node000012" href="$df/dfd/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1StorageClient.html#aa12863c4d15cf257b4ba0c4b06558619" title="scan edge of all parts with no return cols and limit, start time, end time config." alt="" coords="5,499,89,524"/>
-<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="167,389,135,437,91,488,74,501,71,496,88,484,131,434,162,386"/>
-<area shape="rect" id="Node000013" href="$df/dfd/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1StorageClient.html#aebd491f8a7057162ff23129c86530490" title="scan edge of all parts with no return cols and limit, start time, end time, if allow partial success,..." alt="" coords="5,548,89,573"/>
-<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="172,390,142,460,119,500,91,537,76,550,72,546,87,533,115,497,138,458,167,388"/>
-<area shape="rect" id="Node000014" href="$df/dfd/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1StorageClient.html#ace1b69e2eff3f6c33e9e1f2e3fca938c" title="scan edge of all parts with return cols and limit config." alt="" coords="5,597,89,623"/>
-<area shape="poly" id="edge14_Node000001_Node000014" title=" " alt="" coords="176,390,166,431,149,482,124,537,91,586,76,599,73,595,87,583,120,534,144,480,160,430,171,389"/>
-<area shape="rect" id="Node000015" href="$df/dfd/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1StorageClient.html#aad5ed36be14da195fc449baf51a9f614" title="scan edge of all parts with return cols and limit, start time, end time config." alt="" coords="5,647,89,672"/>
-<area shape="poly" id="edge15_Node000001_Node000015" title=" " alt="" coords="178,390,170,439,155,503,129,572,112,605,91,636,77,648,74,644,87,632,108,602,125,570,150,502,165,438,173,389"/>
-<area shape="rect" id="Node000016" href="$df/dfd/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1StorageClient.html#a46f070fdc4b9fb7032c7ac61894190e6" title="scan edge of all parts with return cols and limit, start time, end time, if allow partial success,..." alt="" coords="5,696,89,721"/>
-<area shape="poly" id="edge16_Node000001_Node000016" title=" " alt="" coords="180,390,174,448,160,525,134,608,115,648,91,685,77,698,74,694,87,682,110,645,129,606,155,524,169,447,174,390"/>
+<area shape="rect" id="node1" title="scan edge of all parts with return cols." alt="" coords="137,5,221,32"/>
+<area shape="rect" id="node2" href="$df/dfd/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1StorageClient.html#a2631f39424f908eee0e53a6f26796b6b" title="scan edge of specific part with return cols." alt="" coords="5,5,89,32"/>
 </map>

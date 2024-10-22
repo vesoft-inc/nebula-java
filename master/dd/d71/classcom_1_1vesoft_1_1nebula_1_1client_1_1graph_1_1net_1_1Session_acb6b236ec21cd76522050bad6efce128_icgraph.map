@@ -1,15 +1,9 @@
 <map id="value2Nvalue" name="value2Nvalue">
-<area shape="rect" id="Node000001" title="convert java value type to nebula thrift value type" alt="" coords="712,31,824,56"/>
-<area shape="rect" id="Node000002" href="$dd/d71/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1Session.html#a2ad028893d5d11a5d0a2b8a14e247e5b" title="Execute the nGql sentence." alt="" coords="467,5,664,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="698,37,664,33,665,28,698,32"/>
-<area shape="rect" id="Node000004" href="$dd/d71/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1Session.html#ad57784446a5f4b376a23fabaf76ba901" title="Execute the nGql sentence." alt="" coords="480,55,651,80"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="698,54,651,60,651,55,698,49"/>
-<area shape="rect" id="Node000003" href="$dd/d71/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1Session.html#a4c2a91d5187fa9783c7ea52f3e0077ae" title="Execute the nGql sentence." alt="" coords="319,5,419,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="453,21,419,21,419,15,453,15"/>
-<area shape="rect" id="Node000005" href="$dd/d71/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1Session.html#a6f6de27a854c1a50f362aafc5b02a47f" title="Execute the nGql sentence." alt="" coords="332,55,405,80"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="466,70,406,70,406,65,466,65"/>
-<area shape="rect" id="Node000006" href="$d0/df5/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1SessionWrapper.html#a6dc8e875f5884ef24ca3af88fc87207c" title="Execute the query sentence." alt="" coords="12,15,264,55"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="318,63,264,55,265,50,319,58"/>
-<area shape="rect" id="Node000007" href="$db/d14/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1SessionsManager.html#aac20ffe3d7a994c3054a6487a8a67345" title="getSessionWrapper: return a SessionWrapper from sessionManager, the SessionWrapper couldn&#39;t use by mu..." alt="" coords="5,79,271,119"/>
-<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="319,77,272,83,271,78,318,72"/>
+<area shape="rect" id="node1" title="convert java value type to nebula thrift value type" alt="" coords="712,31,824,57"/>
+<area shape="rect" id="node2" href="$dd/d71/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1Session.html#a2ad028893d5d11a5d0a2b8a14e247e5b" title="Execute the nGql sentence." alt="" coords="467,5,664,32"/>
+<area shape="rect" id="node4" href="$dd/d71/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1Session.html#ad57784446a5f4b376a23fabaf76ba901" title="Execute the nGql sentence." alt="" coords="480,56,651,83"/>
+<area shape="rect" id="node3" href="$dd/d71/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1Session.html#a4c2a91d5187fa9783c7ea52f3e0077ae" title="Execute the nGql sentence." alt="" coords="319,5,419,32"/>
+<area shape="rect" id="node5" href="$dd/d71/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1Session.html#a6f6de27a854c1a50f362aafc5b02a47f" title="Execute the nGql sentence." alt="" coords="332,56,405,83"/>
+<area shape="rect" id="node6" href="$d0/df5/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1SessionWrapper.html#a6dc8e875f5884ef24ca3af88fc87207c" title="Execute the query sentence." alt="" coords="12,15,264,57"/>
+<area shape="rect" id="node7" href="$db/d14/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1net_1_1SessionsManager.html#aac20ffe3d7a994c3054a6487a8a67345" title="getSessionWrapper: return a SessionWrapper from sessionManager, the SessionWrapper couldn&#39;t use by mu..." alt="" coords="5,81,271,122"/>
 </map>

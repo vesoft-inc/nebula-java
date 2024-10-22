@@ -1,7 +1,5 @@
 <map id="next" name="next">
-<area shape="rect" id="Node000001" title="get the next vertex set" alt="" coords="5,45,56,70"/>
-<area shape="rect" id="Node000002" href="$d1/d06/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1PartScanQueue.html#ac3f7325ca38faa13c1c4b2e9c914388b" title="delete part from set" alt="" coords="104,5,377,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="56,51,96,45,97,50,57,56"/>
-<area shape="rect" id="Node000003" href="$d1/d06/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1PartScanQueue.html#a913b721e422822b8446fcef948bd4c75" title="get part according to leader" alt="" coords="104,69,377,109"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="57,58,97,65,96,70,56,64"/>
+<area shape="rect" id="node1" title="get the next vertex set" alt="" coords="5,46,56,73"/>
+<area shape="rect" id="node2" href="$d1/d06/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1PartScanQueue.html#ac3f7325ca38faa13c1c4b2e9c914388b" title="delete part from set" alt="" coords="104,5,377,47"/>
+<area shape="rect" id="node3" href="$d1/d06/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1PartScanQueue.html#a913b721e422822b8446fcef948bd4c75" title="get part according to leader" alt="" coords="104,71,377,112"/>
 </map>

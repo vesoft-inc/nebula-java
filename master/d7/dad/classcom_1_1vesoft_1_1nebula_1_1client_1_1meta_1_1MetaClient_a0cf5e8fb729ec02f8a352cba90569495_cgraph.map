@@ -1,5 +1,0 @@
-<map id="getPartsAlloc" name="getPartsAlloc">
-<area shape="rect" id="Node000001" title="Get all parts and the address in a space Store in this.parts." alt="" coords="5,5,112,31"/>
-<area shape="rect" id="Node000002" href="$d7/dad/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaClient.html#a1a599b9f1383595cfb64e035d2016ed7" title="get one space" alt="" coords="160,5,243,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,15,146,15,146,21,112,21"/>
-</map>

@@ -1,0 +1,6 @@
+<map id="execute" name="execute">
+<area shape="rect" id="node1" title="Execute the nGql sentence." alt="" coords="5,78,79,105"/>
+<area shape="rect" id="node2" href="$dc/df0/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1data_1_1ResultSet.html#a81996e8ca7b3e049c077c447b8830434" title="get errorCode of execute result" alt="" coords="127,5,387,47"/>
+<area shape="rect" id="node3" href="$dc/df0/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1data_1_1ResultSet.html#a8f518227eb38895cf5f2c5ece567d7cb" title="get the error message of the execute result" alt="" coords="127,71,387,112"/>
+<area shape="rect" id="node4" href="$dc/df0/classcom_1_1vesoft_1_1nebula_1_1client_1_1graph_1_1data_1_1ResultSet.html#a9338f18ff3f9cc869f6a2f3fffce4fcd" title="the execute result is succeeded" alt="" coords="127,136,387,177"/>
+</map>
