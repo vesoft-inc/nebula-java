@@ -7,6 +7,7 @@ package com.vesoft.nebula.client.graph;
 
 import com.alibaba.fastjson.JSON;
 import com.vesoft.nebula.ErrorCode;
+import com.vesoft.nebula.Value;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.ResultSet;
 import com.vesoft.nebula.client.graph.exception.AuthFailedException;
@@ -14,10 +15,12 @@ import com.vesoft.nebula.client.graph.exception.BindSpaceFailedException;
 import com.vesoft.nebula.client.graph.exception.ClientServerIncompatibleException;
 import com.vesoft.nebula.client.graph.exception.IOErrorException;
 import com.vesoft.nebula.client.graph.net.AuthResult;
+import com.vesoft.nebula.client.graph.net.Session;
 import com.vesoft.nebula.client.graph.net.SessionState;
 import com.vesoft.nebula.client.graph.net.SyncConnection;
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -206,7 +209,6 @@ public class SessionPool implements Serializable {
      * @param parameterMap The nGql parameter map
      * @return The ResultSet
      */
-    @Deprecated
     public ResultSet execute(String stmt, Map<String, Object> parameterMap)
             throws ClientServerIncompatibleException, AuthFailedException,
             IOErrorException, BindSpaceFailedException {
@@ -229,6 +231,78 @@ public class SessionPool implements Serializable {
         }
 
         useSpace(nebulaSession, resultSet);
+        return resultSet;
+    }
+
+    public ResultSet executeWithTimeout(String stmt,
+                                        long timeoutMs)
+            throws IOErrorException, AuthFailedException, BindSpaceFailedException {
+        return executeWithParameterTimeout(stmt,
+                                           (Map<String, Object>) Collections.EMPTY_MAP,
+                                           timeoutMs);
+    }
+
+    public ResultSet executeWithParameterTimeout(String stmt,
+                                                 Map<String, Object> parameterMap,
+                                                 long timeoutMs)
+            throws IOErrorException, AuthFailedException, BindSpaceFailedException {
+        if (timeoutMs <= 0) {
+            throw new IllegalArgumentException("timeout should be a positive number");
+        }
+        stmtCheck(stmt);
+        checkSessionPool();
+        NebulaSession nebulaSession = null;
+        ResultSet resultSet = null;
+        int tryTimes = 0;
+        while (tryTimes++ <= retryTimes) {
+            try {
+                nebulaSession = getSession();
+                resultSet = nebulaSession.executeWithParameterTimeout(stmt,
+                                                                      parameterMap,
+                                                                      timeoutMs);
+                if (resultSet.isSucceeded()
+                        || resultSet.getErrorCode() == ErrorCode.E_SEMANTIC_ERROR.getValue()
+                        || resultSet.getErrorCode() == ErrorCode.E_SYNTAX_ERROR.getValue()) {
+                    releaseSession(nebulaSession);
+                    return resultSet;
+                }
+                log.warn(String.format("execute error, code: %d, message: %s, retry: %d",
+                                       resultSet.getErrorCode(),
+                                       resultSet.getErrorMessage(),
+                                       tryTimes));
+                nebulaSession.release();
+                sessionList.remove(nebulaSession);
+                try {
+                    Thread.sleep(intervalTime);
+                } catch (InterruptedException interruptedException) {
+                    // ignore
+                }
+            } catch (ClientServerIncompatibleException e) {
+                // will never get here.
+            } catch (AuthFailedException | BindSpaceFailedException e) {
+                throw e;
+            } catch (IOErrorException e) {
+                if (nebulaSession != null) {
+                    nebulaSession.release();
+                    sessionList.remove(nebulaSession);
+                }
+                if (tryTimes < retryTimes) {
+                    log.warn(String.format("execute failed for IOErrorException, message: %s, "
+                                                   + "retry: %d", e.getMessage(), tryTimes));
+                    try {
+                        Thread.sleep(intervalTime);
+                    } catch (InterruptedException interruptedException) {
+                        // ignore
+                    }
+                } else {
+                    throw e;
+                }
+            }
+        }
+        if (nebulaSession != null) {
+            nebulaSession.release();
+            sessionList.remove(nebulaSession);
+        }
         return resultSet;
     }
 

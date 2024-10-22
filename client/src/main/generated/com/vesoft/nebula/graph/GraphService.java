@@ -39,6 +39,8 @@ public class GraphService {
 
     public ExecutionResponse executeWithParameter(long sessionId, byte[] stmt, Map<byte[],com.vesoft.nebula.Value> parameterMap) throws TException;
 
+    public ExecutionResponse executeWithTimeout(long sessionId, byte[] stmt, Map<byte[],com.vesoft.nebula.Value> parameterMap, long timeout) throws TException;
+
     public byte[] executeJson(long sessionId, byte[] stmt) throws TException;
 
     public byte[] executeJsonWithParameter(long sessionId, byte[] stmt, Map<byte[],com.vesoft.nebula.Value> parameterMap) throws TException;
@@ -58,6 +60,8 @@ public class GraphService {
     public void execute(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler) throws TException;
 
     public void executeWithParameter(long sessionId, byte[] stmt, Map<byte[],com.vesoft.nebula.Value> parameterMap, AsyncMethodCallback resultHandler) throws TException;
+
+    public void executeWithTimeout(long sessionId, byte[] stmt, Map<byte[],com.vesoft.nebula.Value> parameterMap, long timeout, AsyncMethodCallback resultHandler) throws TException;
 
     public void executeJson(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler) throws TException;
 
@@ -256,6 +260,54 @@ public class GraphService {
         return result.success;
       }
       throw new TApplicationException(TApplicationException.MISSING_RESULT, "executeWithParameter failed: unknown result");
+    }
+
+    public ExecutionResponse executeWithTimeout(long sessionId, byte[] stmt, Map<byte[],com.vesoft.nebula.Value> parameterMap, long timeout) throws TException
+    {
+      ContextStack ctx = getContextStack("GraphService.executeWithTimeout", null);
+      this.setContextStack(ctx);
+      send_executeWithTimeout(sessionId, stmt, parameterMap, timeout);
+      return recv_executeWithTimeout();
+    }
+
+    public void send_executeWithTimeout(long sessionId, byte[] stmt, Map<byte[],com.vesoft.nebula.Value> parameterMap, long timeout) throws TException
+    {
+      ContextStack ctx = this.getContextStack();
+      super.preWrite(ctx, "GraphService.executeWithTimeout", null);
+      oprot_.writeMessageBegin(new TMessage("executeWithTimeout", TMessageType.CALL, seqid_));
+      executeWithTimeout_args args = new executeWithTimeout_args();
+      args.sessionId = sessionId;
+      args.stmt = stmt;
+      args.parameterMap = parameterMap;
+      args.timeout = timeout;
+      args.write(oprot_);
+      oprot_.writeMessageEnd();
+      oprot_.getTransport().flush();
+      super.postWrite(ctx, "GraphService.executeWithTimeout", args);
+      return;
+    }
+
+    public ExecutionResponse recv_executeWithTimeout() throws TException
+    {
+      ContextStack ctx = super.getContextStack();
+      long bytes;
+      TMessageType mtype;
+      super.preRead(ctx, "GraphService.executeWithTimeout");
+      TMessage msg = iprot_.readMessageBegin();
+      if (msg.type == TMessageType.EXCEPTION) {
+        TApplicationException x = TApplicationException.read(iprot_);
+        iprot_.readMessageEnd();
+        throw x;
+      }
+      executeWithTimeout_result result = new executeWithTimeout_result();
+      result.read(iprot_);
+      iprot_.readMessageEnd();
+      super.postRead(ctx, "GraphService.executeWithTimeout", result);
+
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      throw new TApplicationException(TApplicationException.MISSING_RESULT, "executeWithTimeout failed: unknown result");
     }
 
     public byte[] executeJson(long sessionId, byte[] stmt) throws TException
@@ -458,9 +510,9 @@ public class GraphService {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void authenticate(byte[] username, byte[] password, AsyncMethodCallback resultHandler37) throws TException {
+    public void authenticate(byte[] username, byte[] password, AsyncMethodCallback resultHandler38) throws TException {
       checkReady();
-      authenticate_call method_call = new authenticate_call(username, password, resultHandler37, this, ___protocolFactory, ___transport);
+      authenticate_call method_call = new authenticate_call(username, password, resultHandler38, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
@@ -468,8 +520,8 @@ public class GraphService {
     public static class authenticate_call extends TAsyncMethodCall {
       private byte[] username;
       private byte[] password;
-      public authenticate_call(byte[] username, byte[] password, AsyncMethodCallback resultHandler38, TAsyncClient client34, TProtocolFactory protocolFactory35, TNonblockingTransport transport36) throws TException {
-        super(client34, protocolFactory35, transport36, resultHandler38, false);
+      public authenticate_call(byte[] username, byte[] password, AsyncMethodCallback resultHandler39, TAsyncClient client35, TProtocolFactory protocolFactory36, TNonblockingTransport transport37) throws TException {
+        super(client35, protocolFactory36, transport37, resultHandler39, false);
         this.username = username;
         this.password = password;
       }
@@ -493,17 +545,17 @@ public class GraphService {
       }
     }
 
-    public void signout(long sessionId, AsyncMethodCallback resultHandler42) throws TException {
+    public void signout(long sessionId, AsyncMethodCallback resultHandler43) throws TException {
       checkReady();
-      signout_call method_call = new signout_call(sessionId, resultHandler42, this, ___protocolFactory, ___transport);
+      signout_call method_call = new signout_call(sessionId, resultHandler43, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class signout_call extends TAsyncMethodCall {
       private long sessionId;
-      public signout_call(long sessionId, AsyncMethodCallback resultHandler43, TAsyncClient client39, TProtocolFactory protocolFactory40, TNonblockingTransport transport41) throws TException {
-        super(client39, protocolFactory40, transport41, resultHandler43, true);
+      public signout_call(long sessionId, AsyncMethodCallback resultHandler44, TAsyncClient client40, TProtocolFactory protocolFactory41, TNonblockingTransport transport42) throws TException {
+        super(client40, protocolFactory41, transport42, resultHandler44, true);
         this.sessionId = sessionId;
       }
 
@@ -524,9 +576,9 @@ public class GraphService {
       }
     }
 
-    public void execute(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler47) throws TException {
+    public void execute(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler48) throws TException {
       checkReady();
-      execute_call method_call = new execute_call(sessionId, stmt, resultHandler47, this, ___protocolFactory, ___transport);
+      execute_call method_call = new execute_call(sessionId, stmt, resultHandler48, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
@@ -534,8 +586,8 @@ public class GraphService {
     public static class execute_call extends TAsyncMethodCall {
       private long sessionId;
       private byte[] stmt;
-      public execute_call(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler48, TAsyncClient client44, TProtocolFactory protocolFactory45, TNonblockingTransport transport46) throws TException {
-        super(client44, protocolFactory45, transport46, resultHandler48, false);
+      public execute_call(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler49, TAsyncClient client45, TProtocolFactory protocolFactory46, TNonblockingTransport transport47) throws TException {
+        super(client45, protocolFactory46, transport47, resultHandler49, false);
         this.sessionId = sessionId;
         this.stmt = stmt;
       }
@@ -559,9 +611,9 @@ public class GraphService {
       }
     }
 
-    public void executeWithParameter(long sessionId, byte[] stmt, Map<byte[],com.vesoft.nebula.Value> parameterMap, AsyncMethodCallback resultHandler52) throws TException {
+    public void executeWithParameter(long sessionId, byte[] stmt, Map<byte[],com.vesoft.nebula.Value> parameterMap, AsyncMethodCallback resultHandler53) throws TException {
       checkReady();
-      executeWithParameter_call method_call = new executeWithParameter_call(sessionId, stmt, parameterMap, resultHandler52, this, ___protocolFactory, ___transport);
+      executeWithParameter_call method_call = new executeWithParameter_call(sessionId, stmt, parameterMap, resultHandler53, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
@@ -570,8 +622,8 @@ public class GraphService {
       private long sessionId;
       private byte[] stmt;
       private Map<byte[],com.vesoft.nebula.Value> parameterMap;
-      public executeWithParameter_call(long sessionId, byte[] stmt, Map<byte[],com.vesoft.nebula.Value> parameterMap, AsyncMethodCallback resultHandler53, TAsyncClient client49, TProtocolFactory protocolFactory50, TNonblockingTransport transport51) throws TException {
-        super(client49, protocolFactory50, transport51, resultHandler53, false);
+      public executeWithParameter_call(long sessionId, byte[] stmt, Map<byte[],com.vesoft.nebula.Value> parameterMap, AsyncMethodCallback resultHandler54, TAsyncClient client50, TProtocolFactory protocolFactory51, TNonblockingTransport transport52) throws TException {
+        super(client50, protocolFactory51, transport52, resultHandler54, false);
         this.sessionId = sessionId;
         this.stmt = stmt;
         this.parameterMap = parameterMap;
@@ -597,9 +649,50 @@ public class GraphService {
       }
     }
 
-    public void executeJson(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler57) throws TException {
+    public void executeWithTimeout(long sessionId, byte[] stmt, Map<byte[],com.vesoft.nebula.Value> parameterMap, long timeout, AsyncMethodCallback resultHandler58) throws TException {
       checkReady();
-      executeJson_call method_call = new executeJson_call(sessionId, stmt, resultHandler57, this, ___protocolFactory, ___transport);
+      executeWithTimeout_call method_call = new executeWithTimeout_call(sessionId, stmt, parameterMap, timeout, resultHandler58, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    public static class executeWithTimeout_call extends TAsyncMethodCall {
+      private long sessionId;
+      private byte[] stmt;
+      private Map<byte[],com.vesoft.nebula.Value> parameterMap;
+      private long timeout;
+      public executeWithTimeout_call(long sessionId, byte[] stmt, Map<byte[],com.vesoft.nebula.Value> parameterMap, long timeout, AsyncMethodCallback resultHandler59, TAsyncClient client55, TProtocolFactory protocolFactory56, TNonblockingTransport transport57) throws TException {
+        super(client55, protocolFactory56, transport57, resultHandler59, false);
+        this.sessionId = sessionId;
+        this.stmt = stmt;
+        this.parameterMap = parameterMap;
+        this.timeout = timeout;
+      }
+
+      public void write_args(TProtocol prot) throws TException {
+        prot.writeMessageBegin(new TMessage("executeWithTimeout", TMessageType.CALL, 0));
+        executeWithTimeout_args args = new executeWithTimeout_args();
+        args.setSessionId(sessionId);
+        args.setStmt(stmt);
+        args.setParameterMap(parameterMap);
+        args.setTimeout(timeout);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public ExecutionResponse getResult() throws TException {
+        if (getState() != State.RESPONSE_READ) {
+          throw new IllegalStateException("Method call not finished!");
+        }
+        TMemoryInputTransport memoryTransport = new TMemoryInputTransport(getFrameBuffer().array());
+        TProtocol prot = super.client.getProtocolFactory().getProtocol(memoryTransport);
+        return (new Client(prot)).recv_executeWithTimeout();
+      }
+    }
+
+    public void executeJson(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler63) throws TException {
+      checkReady();
+      executeJson_call method_call = new executeJson_call(sessionId, stmt, resultHandler63, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
@@ -607,8 +700,8 @@ public class GraphService {
     public static class executeJson_call extends TAsyncMethodCall {
       private long sessionId;
       private byte[] stmt;
-      public executeJson_call(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler58, TAsyncClient client54, TProtocolFactory protocolFactory55, TNonblockingTransport transport56) throws TException {
-        super(client54, protocolFactory55, transport56, resultHandler58, false);
+      public executeJson_call(long sessionId, byte[] stmt, AsyncMethodCallback resultHandler64, TAsyncClient client60, TProtocolFactory protocolFactory61, TNonblockingTransport transport62) throws TException {
+        super(client60, protocolFactory61, transport62, resultHandler64, false);
         this.sessionId = sessionId;
         this.stmt = stmt;
       }
@@ -632,9 +725,9 @@ public class GraphService {
       }
     }
 
-    public void executeJsonWithParameter(long sessionId, byte[] stmt, Map<byte[],com.vesoft.nebula.Value> parameterMap, AsyncMethodCallback resultHandler62) throws TException {
+    public void executeJsonWithParameter(long sessionId, byte[] stmt, Map<byte[],com.vesoft.nebula.Value> parameterMap, AsyncMethodCallback resultHandler68) throws TException {
       checkReady();
-      executeJsonWithParameter_call method_call = new executeJsonWithParameter_call(sessionId, stmt, parameterMap, resultHandler62, this, ___protocolFactory, ___transport);
+      executeJsonWithParameter_call method_call = new executeJsonWithParameter_call(sessionId, stmt, parameterMap, resultHandler68, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
@@ -643,8 +736,8 @@ public class GraphService {
       private long sessionId;
       private byte[] stmt;
       private Map<byte[],com.vesoft.nebula.Value> parameterMap;
-      public executeJsonWithParameter_call(long sessionId, byte[] stmt, Map<byte[],com.vesoft.nebula.Value> parameterMap, AsyncMethodCallback resultHandler63, TAsyncClient client59, TProtocolFactory protocolFactory60, TNonblockingTransport transport61) throws TException {
-        super(client59, protocolFactory60, transport61, resultHandler63, false);
+      public executeJsonWithParameter_call(long sessionId, byte[] stmt, Map<byte[],com.vesoft.nebula.Value> parameterMap, AsyncMethodCallback resultHandler69, TAsyncClient client65, TProtocolFactory protocolFactory66, TNonblockingTransport transport67) throws TException {
+        super(client65, protocolFactory66, transport67, resultHandler69, false);
         this.sessionId = sessionId;
         this.stmt = stmt;
         this.parameterMap = parameterMap;
@@ -670,17 +763,17 @@ public class GraphService {
       }
     }
 
-    public void verifyClientVersion(VerifyClientVersionReq req, AsyncMethodCallback resultHandler67) throws TException {
+    public void verifyClientVersion(VerifyClientVersionReq req, AsyncMethodCallback resultHandler73) throws TException {
       checkReady();
-      verifyClientVersion_call method_call = new verifyClientVersion_call(req, resultHandler67, this, ___protocolFactory, ___transport);
+      verifyClientVersion_call method_call = new verifyClientVersion_call(req, resultHandler73, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class verifyClientVersion_call extends TAsyncMethodCall {
       private VerifyClientVersionReq req;
-      public verifyClientVersion_call(VerifyClientVersionReq req, AsyncMethodCallback resultHandler68, TAsyncClient client64, TProtocolFactory protocolFactory65, TNonblockingTransport transport66) throws TException {
-        super(client64, protocolFactory65, transport66, resultHandler68, false);
+      public verifyClientVersion_call(VerifyClientVersionReq req, AsyncMethodCallback resultHandler74, TAsyncClient client70, TProtocolFactory protocolFactory71, TNonblockingTransport transport72) throws TException {
+        super(client70, protocolFactory71, transport72, resultHandler74, false);
         this.req = req;
       }
 
@@ -702,16 +795,16 @@ public class GraphService {
       }
     }
 
-    public void health(AsyncMethodCallback resultHandler72) throws TException {
+    public void health(AsyncMethodCallback resultHandler78) throws TException {
       checkReady();
-      health_call method_call = new health_call(resultHandler72, this, ___protocolFactory, ___transport);
+      health_call method_call = new health_call(resultHandler78, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class health_call extends TAsyncMethodCall {
-      public health_call(AsyncMethodCallback resultHandler73, TAsyncClient client69, TProtocolFactory protocolFactory70, TNonblockingTransport transport71) throws TException {
-        super(client69, protocolFactory70, transport71, resultHandler73, false);
+      public health_call(AsyncMethodCallback resultHandler79, TAsyncClient client75, TProtocolFactory protocolFactory76, TNonblockingTransport transport77) throws TException {
+        super(client75, protocolFactory76, transport77, resultHandler79, false);
       }
 
       public void write_args(TProtocol prot) throws TException {
@@ -743,6 +836,7 @@ public class GraphService {
       processMap_.put("signout", new signout());
       processMap_.put("execute", new execute());
       processMap_.put("executeWithParameter", new executeWithParameter());
+      processMap_.put("executeWithTimeout", new executeWithTimeout());
       processMap_.put("executeJson", new executeJson());
       processMap_.put("executeJsonWithParameter", new executeJsonWithParameter());
       processMap_.put("verifyClientVersion", new verifyClientVersion());
@@ -852,6 +946,27 @@ public class GraphService {
         oprot.writeMessageEnd();
         oprot.getTransport().flush();
         event_handler_.postWrite(handler_ctx, "GraphService.executeWithParameter", result);
+      }
+
+    }
+
+    private class executeWithTimeout implements ProcessFunction {
+      public void process(int seqid, TProtocol iprot, TProtocol oprot, TConnectionContext server_ctx) throws TException
+      {
+        Object handler_ctx = event_handler_.getContext("GraphService.executeWithTimeout", server_ctx);
+        executeWithTimeout_args args = new executeWithTimeout_args();
+        event_handler_.preRead(handler_ctx, "GraphService.executeWithTimeout");
+        args.read(iprot);
+        iprot.readMessageEnd();
+        event_handler_.postRead(handler_ctx, "GraphService.executeWithTimeout", args);
+        executeWithTimeout_result result = new executeWithTimeout_result();
+        result.success = iface_.executeWithTimeout(args.sessionId, args.stmt, args.parameterMap, args.timeout);
+        event_handler_.preWrite(handler_ctx, "GraphService.executeWithTimeout", result);
+        oprot.writeMessageBegin(new TMessage("executeWithTimeout", TMessageType.REPLY, seqid));
+        result.write(oprot);
+        oprot.writeMessageEnd();
+        oprot.getTransport().flush();
+        event_handler_.postWrite(handler_ctx, "GraphService.executeWithTimeout", result);
       }
 
     }
@@ -2410,18 +2525,18 @@ public class GraphService {
           case PARAMETERMAP:
             if (__field.type == TType.MAP) {
               {
-                TMap _map74 = iprot.readMapBegin();
-                this.parameterMap = new HashMap<byte[],com.vesoft.nebula.Value>(Math.max(0, 2*_map74.size));
-                for (int _i75 = 0; 
-                     (_map74.size < 0) ? iprot.peekMap() : (_i75 < _map74.size); 
-                     ++_i75)
+                TMap _map80 = iprot.readMapBegin();
+                this.parameterMap = new HashMap<byte[],com.vesoft.nebula.Value>(Math.max(0, 2*_map80.size));
+                for (int _i81 = 0; 
+                     (_map80.size < 0) ? iprot.peekMap() : (_i81 < _map80.size); 
+                     ++_i81)
                 {
-                  byte[] _key76;
-                  com.vesoft.nebula.Value _val77;
-                  _key76 = iprot.readBinary();
-                  _val77 = new com.vesoft.nebula.Value();
-                  _val77.read(iprot);
-                  this.parameterMap.put(_key76, _val77);
+                  byte[] _key82;
+                  com.vesoft.nebula.Value _val83;
+                  _key82 = iprot.readBinary();
+                  _val83 = new com.vesoft.nebula.Value();
+                  _val83.read(iprot);
+                  this.parameterMap.put(_key82, _val83);
                 }
                 iprot.readMapEnd();
               }
@@ -2458,9 +2573,9 @@ public class GraphService {
         oprot.writeFieldBegin(PARAMETER_MAP_FIELD_DESC);
         {
           oprot.writeMapBegin(new TMap(TType.STRING, TType.STRUCT, this.parameterMap.size()));
-          for (Map.Entry<byte[], com.vesoft.nebula.Value> _iter78 : this.parameterMap.entrySet())          {
-            oprot.writeBinary(_iter78.getKey());
-            _iter78.getValue().write(oprot);
+          for (Map.Entry<byte[], com.vesoft.nebula.Value> _iter84 : this.parameterMap.entrySet())          {
+            oprot.writeBinary(_iter84.getKey());
+            _iter84.getValue().write(oprot);
           }
           oprot.writeMapEnd();
         }
@@ -2698,6 +2813,625 @@ public class GraphService {
       String newLine = prettyPrint ? "\n" : "";
       String space = prettyPrint ? " " : "";
       StringBuilder sb = new StringBuilder("executeWithParameter_result");
+      sb.append(space);
+      sb.append("(");
+      sb.append(newLine);
+      boolean first = true;
+
+      sb.append(indentStr);
+      sb.append("success");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getSuccess() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getSuccess(), indent + 1, prettyPrint));
+      }
+      first = false;
+      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+    }
+
+  }
+
+  public static class executeWithTimeout_args implements TBase, java.io.Serializable, Cloneable   {
+    private static final TStruct STRUCT_DESC = new TStruct("executeWithTimeout_args");
+    private static final TField SESSION_ID_FIELD_DESC = new TField("sessionId", TType.I64, (short)1);
+    private static final TField STMT_FIELD_DESC = new TField("stmt", TType.STRING, (short)2);
+    private static final TField PARAMETER_MAP_FIELD_DESC = new TField("parameterMap", TType.MAP, (short)3);
+    private static final TField TIMEOUT_FIELD_DESC = new TField("timeout", TType.I64, (short)4);
+
+    public long sessionId;
+    public byte[] stmt;
+    public Map<byte[],com.vesoft.nebula.Value> parameterMap;
+    public long timeout;
+    public static final int SESSIONID = 1;
+    public static final int STMT = 2;
+    public static final int PARAMETERMAP = 3;
+    public static final int TIMEOUT = 4;
+
+    // isset id assignments
+    private static final int __SESSIONID_ISSET_ID = 0;
+    private static final int __TIMEOUT_ISSET_ID = 1;
+    private BitSet __isset_bit_vector = new BitSet(2);
+
+    public static final Map<Integer, FieldMetaData> metaDataMap;
+
+    static {
+      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+      tmpMetaDataMap.put(SESSIONID, new FieldMetaData("sessionId", TFieldRequirementType.DEFAULT, 
+          new FieldValueMetaData(TType.I64)));
+      tmpMetaDataMap.put(STMT, new FieldMetaData("stmt", TFieldRequirementType.DEFAULT, 
+          new FieldValueMetaData(TType.STRING)));
+      tmpMetaDataMap.put(PARAMETERMAP, new FieldMetaData("parameterMap", TFieldRequirementType.DEFAULT, 
+          new MapMetaData(TType.MAP, 
+              new FieldValueMetaData(TType.STRING), 
+              new StructMetaData(TType.STRUCT, com.vesoft.nebula.Value.class))));
+      tmpMetaDataMap.put(TIMEOUT, new FieldMetaData("timeout", TFieldRequirementType.DEFAULT, 
+          new FieldValueMetaData(TType.I64)));
+      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
+    }
+
+    static {
+      FieldMetaData.addStructMetaDataMap(executeWithTimeout_args.class, metaDataMap);
+    }
+
+    public executeWithTimeout_args() {
+    }
+
+    public executeWithTimeout_args(
+        long sessionId,
+        byte[] stmt,
+        Map<byte[],com.vesoft.nebula.Value> parameterMap,
+        long timeout) {
+      this();
+      this.sessionId = sessionId;
+      setSessionIdIsSet(true);
+      this.stmt = stmt;
+      this.parameterMap = parameterMap;
+      this.timeout = timeout;
+      setTimeoutIsSet(true);
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public executeWithTimeout_args(executeWithTimeout_args other) {
+      __isset_bit_vector.clear();
+      __isset_bit_vector.or(other.__isset_bit_vector);
+      this.sessionId = TBaseHelper.deepCopy(other.sessionId);
+      if (other.isSetStmt()) {
+        this.stmt = TBaseHelper.deepCopy(other.stmt);
+      }
+      if (other.isSetParameterMap()) {
+        this.parameterMap = TBaseHelper.deepCopy(other.parameterMap);
+      }
+      this.timeout = TBaseHelper.deepCopy(other.timeout);
+    }
+
+    public executeWithTimeout_args deepCopy() {
+      return new executeWithTimeout_args(this);
+    }
+
+    public long getSessionId() {
+      return this.sessionId;
+    }
+
+    public executeWithTimeout_args setSessionId(long sessionId) {
+      this.sessionId = sessionId;
+      setSessionIdIsSet(true);
+      return this;
+    }
+
+    public void unsetSessionId() {
+      __isset_bit_vector.clear(__SESSIONID_ISSET_ID);
+    }
+
+    // Returns true if field sessionId is set (has been assigned a value) and false otherwise
+    public boolean isSetSessionId() {
+      return __isset_bit_vector.get(__SESSIONID_ISSET_ID);
+    }
+
+    public void setSessionIdIsSet(boolean __value) {
+      __isset_bit_vector.set(__SESSIONID_ISSET_ID, __value);
+    }
+
+    public byte[] getStmt() {
+      return this.stmt;
+    }
+
+    public executeWithTimeout_args setStmt(byte[] stmt) {
+      this.stmt = stmt;
+      return this;
+    }
+
+    public void unsetStmt() {
+      this.stmt = null;
+    }
+
+    // Returns true if field stmt is set (has been assigned a value) and false otherwise
+    public boolean isSetStmt() {
+      return this.stmt != null;
+    }
+
+    public void setStmtIsSet(boolean __value) {
+      if (!__value) {
+        this.stmt = null;
+      }
+    }
+
+    public Map<byte[],com.vesoft.nebula.Value> getParameterMap() {
+      return this.parameterMap;
+    }
+
+    public executeWithTimeout_args setParameterMap(Map<byte[],com.vesoft.nebula.Value> parameterMap) {
+      this.parameterMap = parameterMap;
+      return this;
+    }
+
+    public void unsetParameterMap() {
+      this.parameterMap = null;
+    }
+
+    // Returns true if field parameterMap is set (has been assigned a value) and false otherwise
+    public boolean isSetParameterMap() {
+      return this.parameterMap != null;
+    }
+
+    public void setParameterMapIsSet(boolean __value) {
+      if (!__value) {
+        this.parameterMap = null;
+      }
+    }
+
+    public long getTimeout() {
+      return this.timeout;
+    }
+
+    public executeWithTimeout_args setTimeout(long timeout) {
+      this.timeout = timeout;
+      setTimeoutIsSet(true);
+      return this;
+    }
+
+    public void unsetTimeout() {
+      __isset_bit_vector.clear(__TIMEOUT_ISSET_ID);
+    }
+
+    // Returns true if field timeout is set (has been assigned a value) and false otherwise
+    public boolean isSetTimeout() {
+      return __isset_bit_vector.get(__TIMEOUT_ISSET_ID);
+    }
+
+    public void setTimeoutIsSet(boolean __value) {
+      __isset_bit_vector.set(__TIMEOUT_ISSET_ID, __value);
+    }
+
+    @SuppressWarnings("unchecked")
+    public void setFieldValue(int fieldID, Object __value) {
+      switch (fieldID) {
+      case SESSIONID:
+        if (__value == null) {
+          unsetSessionId();
+        } else {
+          setSessionId((Long)__value);
+        }
+        break;
+
+      case STMT:
+        if (__value == null) {
+          unsetStmt();
+        } else {
+          setStmt((byte[])__value);
+        }
+        break;
+
+      case PARAMETERMAP:
+        if (__value == null) {
+          unsetParameterMap();
+        } else {
+          setParameterMap((Map<byte[],com.vesoft.nebula.Value>)__value);
+        }
+        break;
+
+      case TIMEOUT:
+        if (__value == null) {
+          unsetTimeout();
+        } else {
+          setTimeout((Long)__value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case SESSIONID:
+        return new Long(getSessionId());
+
+      case STMT:
+        return getStmt();
+
+      case PARAMETERMAP:
+        return getParameterMap();
+
+      case TIMEOUT:
+        return new Long(getTimeout());
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object _that) {
+      if (_that == null)
+        return false;
+      if (this == _that)
+        return true;
+      if (!(_that instanceof executeWithTimeout_args))
+        return false;
+      executeWithTimeout_args that = (executeWithTimeout_args)_that;
+
+      if (!TBaseHelper.equalsNobinary(this.sessionId, that.sessionId)) { return false; }
+
+      if (!TBaseHelper.equalsSlow(this.isSetStmt(), that.isSetStmt(), this.stmt, that.stmt)) { return false; }
+
+      if (!TBaseHelper.equalsSlow(this.isSetParameterMap(), that.isSetParameterMap(), this.parameterMap, that.parameterMap)) { return false; }
+
+      if (!TBaseHelper.equalsNobinary(this.timeout, that.timeout)) { return false; }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return Arrays.deepHashCode(new Object[] {sessionId, stmt, parameterMap, timeout});
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField __field;
+      iprot.readStructBegin(metaDataMap);
+      while (true)
+      {
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
+          break;
+        }
+        switch (__field.id)
+        {
+          case SESSIONID:
+            if (__field.type == TType.I64) {
+              this.sessionId = iprot.readI64();
+              setSessionIdIsSet(true);
+            } else { 
+              TProtocolUtil.skip(iprot, __field.type);
+            }
+            break;
+          case STMT:
+            if (__field.type == TType.STRING) {
+              this.stmt = iprot.readBinary();
+            } else { 
+              TProtocolUtil.skip(iprot, __field.type);
+            }
+            break;
+          case PARAMETERMAP:
+            if (__field.type == TType.MAP) {
+              {
+                TMap _map85 = iprot.readMapBegin();
+                this.parameterMap = new HashMap<byte[],com.vesoft.nebula.Value>(Math.max(0, 2*_map85.size));
+                for (int _i86 = 0; 
+                     (_map85.size < 0) ? iprot.peekMap() : (_i86 < _map85.size); 
+                     ++_i86)
+                {
+                  byte[] _key87;
+                  com.vesoft.nebula.Value _val88;
+                  _key87 = iprot.readBinary();
+                  _val88 = new com.vesoft.nebula.Value();
+                  _val88.read(iprot);
+                  this.parameterMap.put(_key87, _val88);
+                }
+                iprot.readMapEnd();
+              }
+            } else { 
+              TProtocolUtil.skip(iprot, __field.type);
+            }
+            break;
+          case TIMEOUT:
+            if (__field.type == TType.I64) {
+              this.timeout = iprot.readI64();
+              setTimeoutIsSet(true);
+            } else { 
+              TProtocolUtil.skip(iprot, __field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, __field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      validate();
+
+      oprot.writeStructBegin(STRUCT_DESC);
+      oprot.writeFieldBegin(SESSION_ID_FIELD_DESC);
+      oprot.writeI64(this.sessionId);
+      oprot.writeFieldEnd();
+      if (this.stmt != null) {
+        oprot.writeFieldBegin(STMT_FIELD_DESC);
+        oprot.writeBinary(this.stmt);
+        oprot.writeFieldEnd();
+      }
+      if (this.parameterMap != null) {
+        oprot.writeFieldBegin(PARAMETER_MAP_FIELD_DESC);
+        {
+          oprot.writeMapBegin(new TMap(TType.STRING, TType.STRUCT, this.parameterMap.size()));
+          for (Map.Entry<byte[], com.vesoft.nebula.Value> _iter89 : this.parameterMap.entrySet())          {
+            oprot.writeBinary(_iter89.getKey());
+            _iter89.getValue().write(oprot);
+          }
+          oprot.writeMapEnd();
+        }
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldBegin(TIMEOUT_FIELD_DESC);
+      oprot.writeI64(this.timeout);
+      oprot.writeFieldEnd();
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      return toString(1, true);
+    }
+
+    @Override
+    public String toString(int indent, boolean prettyPrint) {
+      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
+      String newLine = prettyPrint ? "\n" : "";
+      String space = prettyPrint ? " " : "";
+      StringBuilder sb = new StringBuilder("executeWithTimeout_args");
+      sb.append(space);
+      sb.append("(");
+      sb.append(newLine);
+      boolean first = true;
+
+      sb.append(indentStr);
+      sb.append("sessionId");
+      sb.append(space);
+      sb.append(":").append(space);
+      sb.append(TBaseHelper.toString(this.getSessionId(), indent + 1, prettyPrint));
+      first = false;
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("stmt");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getStmt() == null) {
+        sb.append("null");
+      } else {
+          int __stmt_size = Math.min(this.getStmt().length, 128);
+          for (int i = 0; i < __stmt_size; i++) {
+            if (i != 0) sb.append(" ");
+            sb.append(Integer.toHexString(this.getStmt()[i]).length() > 1 ? Integer.toHexString(this.getStmt()[i]).substring(Integer.toHexString(this.getStmt()[i]).length() - 2).toUpperCase() : "0" + Integer.toHexString(this.getStmt()[i]).toUpperCase());
+          }
+          if (this.getStmt().length > 128) sb.append(" ...");
+      }
+      first = false;
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("parameterMap");
+      sb.append(space);
+      sb.append(":").append(space);
+      if (this.getParameterMap() == null) {
+        sb.append("null");
+      } else {
+        sb.append(TBaseHelper.toString(this.getParameterMap(), indent + 1, prettyPrint));
+      }
+      first = false;
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("timeout");
+      sb.append(space);
+      sb.append(":").append(space);
+      sb.append(TBaseHelper.toString(this.getTimeout(), indent + 1, prettyPrint));
+      first = false;
+      sb.append(newLine + TBaseHelper.reduceIndent(indentStr));
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws TException {
+      // check for required fields
+    }
+
+  }
+
+  public static class executeWithTimeout_result implements TBase, java.io.Serializable, Cloneable   {
+    private static final TStruct STRUCT_DESC = new TStruct("executeWithTimeout_result");
+    private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.STRUCT, (short)0);
+
+    public ExecutionResponse success;
+    public static final int SUCCESS = 0;
+
+    // isset id assignments
+
+    public static final Map<Integer, FieldMetaData> metaDataMap;
+
+    static {
+      Map<Integer, FieldMetaData> tmpMetaDataMap = new HashMap<Integer, FieldMetaData>();
+      tmpMetaDataMap.put(SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
+          new StructMetaData(TType.STRUCT, ExecutionResponse.class)));
+      metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
+    }
+
+    static {
+      FieldMetaData.addStructMetaDataMap(executeWithTimeout_result.class, metaDataMap);
+    }
+
+    public executeWithTimeout_result() {
+    }
+
+    public executeWithTimeout_result(
+        ExecutionResponse success) {
+      this();
+      this.success = success;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public executeWithTimeout_result(executeWithTimeout_result other) {
+      if (other.isSetSuccess()) {
+        this.success = TBaseHelper.deepCopy(other.success);
+      }
+    }
+
+    public executeWithTimeout_result deepCopy() {
+      return new executeWithTimeout_result(this);
+    }
+
+    public ExecutionResponse getSuccess() {
+      return this.success;
+    }
+
+    public executeWithTimeout_result setSuccess(ExecutionResponse success) {
+      this.success = success;
+      return this;
+    }
+
+    public void unsetSuccess() {
+      this.success = null;
+    }
+
+    // Returns true if field success is set (has been assigned a value) and false otherwise
+    public boolean isSetSuccess() {
+      return this.success != null;
+    }
+
+    public void setSuccessIsSet(boolean __value) {
+      if (!__value) {
+        this.success = null;
+      }
+    }
+
+    public void setFieldValue(int fieldID, Object __value) {
+      switch (fieldID) {
+      case SUCCESS:
+        if (__value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((ExecutionResponse)__value);
+        }
+        break;
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    public Object getFieldValue(int fieldID) {
+      switch (fieldID) {
+      case SUCCESS:
+        return getSuccess();
+
+      default:
+        throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
+      }
+    }
+
+    @Override
+    public boolean equals(Object _that) {
+      if (_that == null)
+        return false;
+      if (this == _that)
+        return true;
+      if (!(_that instanceof executeWithTimeout_result))
+        return false;
+      executeWithTimeout_result that = (executeWithTimeout_result)_that;
+
+      if (!TBaseHelper.equalsNobinary(this.isSetSuccess(), that.isSetSuccess(), this.success, that.success)) { return false; }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      return Arrays.deepHashCode(new Object[] {success});
+    }
+
+    public void read(TProtocol iprot) throws TException {
+      TField __field;
+      iprot.readStructBegin(metaDataMap);
+      while (true)
+      {
+        __field = iprot.readFieldBegin();
+        if (__field.type == TType.STOP) { 
+          break;
+        }
+        switch (__field.id)
+        {
+          case SUCCESS:
+            if (__field.type == TType.STRUCT) {
+              this.success = new ExecutionResponse();
+              this.success.read(iprot);
+            } else { 
+              TProtocolUtil.skip(iprot, __field.type);
+            }
+            break;
+          default:
+            TProtocolUtil.skip(iprot, __field.type);
+            break;
+        }
+        iprot.readFieldEnd();
+      }
+      iprot.readStructEnd();
+
+
+      // check for required fields of primitive type, which can't be checked in the validate method
+      validate();
+    }
+
+    public void write(TProtocol oprot) throws TException {
+      oprot.writeStructBegin(STRUCT_DESC);
+
+      if (this.isSetSuccess()) {
+        oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+        this.success.write(oprot);
+        oprot.writeFieldEnd();
+      }
+      oprot.writeFieldStop();
+      oprot.writeStructEnd();
+    }
+
+    @Override
+    public String toString() {
+      return toString(1, true);
+    }
+
+    @Override
+    public String toString(int indent, boolean prettyPrint) {
+      String indentStr = prettyPrint ? TBaseHelper.getIndentedString(indent) : "";
+      String newLine = prettyPrint ? "\n" : "";
+      String space = prettyPrint ? " " : "";
+      StringBuilder sb = new StringBuilder("executeWithTimeout_result");
       sb.append(space);
       sb.append("(");
       sb.append(newLine);
@@ -3483,18 +4217,18 @@ public class GraphService {
           case PARAMETERMAP:
             if (__field.type == TType.MAP) {
               {
-                TMap _map79 = iprot.readMapBegin();
-                this.parameterMap = new HashMap<byte[],com.vesoft.nebula.Value>(Math.max(0, 2*_map79.size));
-                for (int _i80 = 0; 
-                     (_map79.size < 0) ? iprot.peekMap() : (_i80 < _map79.size); 
-                     ++_i80)
+                TMap _map90 = iprot.readMapBegin();
+                this.parameterMap = new HashMap<byte[],com.vesoft.nebula.Value>(Math.max(0, 2*_map90.size));
+                for (int _i91 = 0; 
+                     (_map90.size < 0) ? iprot.peekMap() : (_i91 < _map90.size); 
+                     ++_i91)
                 {
-                  byte[] _key81;
-                  com.vesoft.nebula.Value _val82;
-                  _key81 = iprot.readBinary();
-                  _val82 = new com.vesoft.nebula.Value();
-                  _val82.read(iprot);
-                  this.parameterMap.put(_key81, _val82);
+                  byte[] _key92;
+                  com.vesoft.nebula.Value _val93;
+                  _key92 = iprot.readBinary();
+                  _val93 = new com.vesoft.nebula.Value();
+                  _val93.read(iprot);
+                  this.parameterMap.put(_key92, _val93);
                 }
                 iprot.readMapEnd();
               }
@@ -3531,9 +4265,9 @@ public class GraphService {
         oprot.writeFieldBegin(PARAMETER_MAP_FIELD_DESC);
         {
           oprot.writeMapBegin(new TMap(TType.STRING, TType.STRUCT, this.parameterMap.size()));
-          for (Map.Entry<byte[], com.vesoft.nebula.Value> _iter83 : this.parameterMap.entrySet())          {
-            oprot.writeBinary(_iter83.getKey());
-            _iter83.getValue().write(oprot);
+          for (Map.Entry<byte[], com.vesoft.nebula.Value> _iter94 : this.parameterMap.entrySet())          {
+            oprot.writeBinary(_iter94.getKey());
+            _iter94.getValue().write(oprot);
           }
           oprot.writeMapEnd();
         }

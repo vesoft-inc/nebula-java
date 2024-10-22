@@ -149,6 +149,68 @@ public class Session implements Serializable, AutoCloseable {
         }
     }
 
+
+    public ResultSet executeWithTimeout(String stmt, long timeoutMs) throws IOErrorException {
+        return executeWithParameterTimeout(stmt,
+                                           (Map<String, Object>) Collections.EMPTY_MAP,
+                                           timeoutMs);
+    }
+
+    public ResultSet executeWithParameterTimeout(String stmt,
+                                                 Map<String, Object> parameterMap,
+                                                 long timeoutMs) throws IOErrorException {
+        if (connection == null) {
+            throw new IOErrorException(IOErrorException.E_CONNECT_BROKEN,
+                                       "The session was released, couldn't use again.");
+        }
+        if (timeoutMs <= 0) {
+            throw new IllegalArgumentException("timeout should be a positive number");
+        }
+        Map<byte[], Value> map = new HashMap<>();
+        parameterMap.forEach((key, value) -> map.put(key.getBytes(), value2Nvalue(value)));
+
+        if (connectionIsBroken.get() && retryConnect) {
+            if (retryConnect()) {
+                ExecutionResponse resp =
+                        connection.executeWithParameterTimeout(sessionID, stmt, map, timeoutMs);
+                return new ResultSet(resp, timezoneOffset);
+            } else {
+                throw new IOErrorException(IOErrorException.E_ALL_BROKEN,
+                                           "All servers are broken.");
+            }
+        }
+
+        try {
+            ExecutionResponse resp = connection.executeWithParameterTimeout(sessionID,
+                                                                            stmt,
+                                                                            map,
+                                                                            timeoutMs);
+            return new ResultSet(resp, timezoneOffset);
+        } catch (IOErrorException ie) {
+            if (ie.getType() == IOErrorException.E_CONNECT_BROKEN) {
+                connectionIsBroken.set(true);
+                pool.updateServerStatus();
+
+                if (retryConnect) {
+                    if (retryConnect()) {
+                        connectionIsBroken.set(false);
+                        ExecutionResponse resp =
+                                connection.executeWithParameterTimeout(sessionID,
+                                                                       stmt,
+                                                                       map,
+                                                                       timeoutMs);
+                        return new ResultSet(resp, timezoneOffset);
+                    } else {
+                        connectionIsBroken.set(true);
+                        throw new IOErrorException(IOErrorException.E_ALL_BROKEN,
+                                                   "All servers are broken.");
+                    }
+                }
+            }
+            throw ie;
+        }
+    }
+
     /**
      * Execute the nGql sentence.
      * Date and Datetime will be returned in UTC
@@ -464,7 +526,7 @@ public class Session implements Serializable, AutoCloseable {
     /**
      * some value setter for java type (basic or nebula special type) that need convert to NValue
      */
-    public static Map<Class<?>, Setter> LEAF_TYPE_AND_SETTER = 
+    public static Map<Class<?>, Setter> LEAF_TYPE_AND_SETTER =
         new HashMap<Class<?>, Setter>() {{
             put(Value.class, (Setter<Value>) (param) -> param);
             put(Boolean.class, (Setter<Boolean>) Value::bVal);
@@ -495,7 +557,7 @@ public class Session implements Serializable, AutoCloseable {
      * some value setter for java type (complex java type include collections or date) that need
      * convert to NValue
      */
-    public static Map<Class<?>, Setter> COMPLEX_TYPE_AND_SETTER = 
+    public static Map<Class<?>, Setter> COMPLEX_TYPE_AND_SETTER =
         new LinkedHashMap<Class<?>, Setter>() {{
             put(Collection.class, (Setter<Collection>) (collection) -> {
                 Value value = new Value();
