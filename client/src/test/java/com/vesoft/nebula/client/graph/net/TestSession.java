@@ -6,6 +6,7 @@
 package com.vesoft.nebula.client.graph.net;
 
 import com.vesoft.nebula.Date;
+import com.vesoft.nebula.ErrorCode;
 import com.vesoft.nebula.Row;
 import com.vesoft.nebula.Value;
 import com.vesoft.nebula.client.graph.NebulaPoolConfig;
@@ -36,9 +37,9 @@ public class TestSession {
             nebulaPoolConfig.setMaxConnSize(1);
             List<HostAddress> addresses = Arrays.asList(new HostAddress("127.0.0.1", 9670));
             Assert.assertTrue(pool.init(addresses, nebulaPoolConfig));
-            Session session = pool.getSession("root", "nebula", true);
+            Session         session         = pool.getSession("root", "nebula", true);
             ExecutorService executorService = Executors.newFixedThreadPool(10);
-            AtomicInteger failedCount = new AtomicInteger(0);
+            AtomicInteger   failedCount     = new AtomicInteger(0);
             for (int i = 0; i < 10; i++) {
                 executorService.submit(() -> {
                     try {
@@ -96,12 +97,12 @@ public class TestSession {
     @Test
     public void testReconnectWithMultiServices() {
         System.out.println("<==== testReconnectWithMultiServices ====>");
-        Runtime runtime = Runtime.getRuntime();
-        NebulaPool pool = new NebulaPool();
+        Runtime    runtime = Runtime.getRuntime();
+        NebulaPool pool    = new NebulaPool();
         try {
             // make sure the graphd2_1 without any sessions
-            String cmd = "docker restart nebula-docker-compose_graphd2_1";
-            Process p = runtime.exec(cmd);
+            String  cmd = "docker restart nebula-docker-compose_graphd2_1";
+            Process p   = runtime.exec(cmd);
             p.waitFor(10, TimeUnit.SECONDS);
             ProcessUtil.printProcessStatus(cmd, p);
 
@@ -183,12 +184,12 @@ public class TestSession {
     @Test
     public void testExecuteWithParameter() {
         System.out.println("<==== testExecuteWithParameter ====>");
-        Runtime runtime = Runtime.getRuntime();
-        NebulaPool pool = new NebulaPool();
+        Runtime    runtime = Runtime.getRuntime();
+        NebulaPool pool    = new NebulaPool();
         try {
             // make sure the graphd2_1 without any sessions
-            String cmd = "docker restart nebula-docker-compose_graphd2_1";
-            Process p = runtime.exec(cmd);
+            String  cmd = "docker restart nebula-docker-compose_graphd2_1";
+            Process p   = runtime.exec(cmd);
             p.waitFor(10, TimeUnit.SECONDS);
             ProcessUtil.printProcessStatus(cmd, p);
 
@@ -212,7 +213,7 @@ public class TestSession {
             paramMap.put("p2", true);
             paramMap.put("p3", 3.3);
             Value nvalue = new Value();
-            Date date = new Date();
+            Date  date   = new Date();
             date.setYear((short) 2021);
             nvalue.setDVal(date);
             List<Object> list = new ArrayList<>();
@@ -253,6 +254,27 @@ public class TestSession {
                 e.printStackTrace();
             }
             pool.close();
+        }
+    }
+
+    // test for NebulaGraph Enterprise
+    public void testExecuteWithTimeout() {
+        System.out.println("<==== testExecuteWithTimeout ====>");
+        NebulaPool pool = new NebulaPool();
+        try {
+            NebulaPoolConfig nebulaPoolConfig = new NebulaPoolConfig();
+            nebulaPoolConfig.setMaxConnSize(6);
+            List<HostAddress> addresses = Arrays.asList(
+                    new HostAddress("127.0.0.1", 3669));
+            Assert.assertTrue(pool.init(addresses, nebulaPoolConfig));
+            Session   session   = pool.getSession("root", "nebula", true);
+            ResultSet resultSet = session.executeWithTimeout(
+                    "use test;match (v) return v limit 1000",
+                    1);
+            assert (resultSet.getErrorCode() == ErrorCode.E_QUERY_TIMEDOUT.getValue());
+        } catch (Exception e) {
+            e.printStackTrace();
+            assert false;
         }
     }
 }

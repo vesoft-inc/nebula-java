@@ -29,19 +29,23 @@ public class RequestCommon implements TBase, java.io.Serializable, Cloneable, Co
   private static final TField SESSION_ID_FIELD_DESC = new TField("session_id", TType.I64, (short)1);
   private static final TField PLAN_ID_FIELD_DESC = new TField("plan_id", TType.I64, (short)2);
   private static final TField PROFILE_DETAIL_FIELD_DESC = new TField("profile_detail", TType.BOOL, (short)3);
+  private static final TField TIMEOUT_FIELD_DESC = new TField("timeout", TType.I64, (short)4);
 
   public long session_id;
   public long plan_id;
   public boolean profile_detail;
+  public long timeout;
   public static final int SESSION_ID = 1;
   public static final int PLAN_ID = 2;
   public static final int PROFILE_DETAIL = 3;
+  public static final int TIMEOUT = 4;
 
   // isset id assignments
   private static final int __SESSION_ID_ISSET_ID = 0;
   private static final int __PLAN_ID_ISSET_ID = 1;
   private static final int __PROFILE_DETAIL_ISSET_ID = 2;
-  private BitSet __isset_bit_vector = new BitSet(3);
+  private static final int __TIMEOUT_ISSET_ID = 3;
+  private BitSet __isset_bit_vector = new BitSet(4);
 
   public static final Map<Integer, FieldMetaData> metaDataMap;
 
@@ -53,6 +57,8 @@ public class RequestCommon implements TBase, java.io.Serializable, Cloneable, Co
         new FieldValueMetaData(TType.I64)));
     tmpMetaDataMap.put(PROFILE_DETAIL, new FieldMetaData("profile_detail", TFieldRequirementType.OPTIONAL, 
         new FieldValueMetaData(TType.BOOL)));
+    tmpMetaDataMap.put(TIMEOUT, new FieldMetaData("timeout", TFieldRequirementType.OPTIONAL, 
+        new FieldValueMetaData(TType.I64)));
     metaDataMap = Collections.unmodifiableMap(tmpMetaDataMap);
   }
 
@@ -66,7 +72,8 @@ public class RequestCommon implements TBase, java.io.Serializable, Cloneable, Co
   public RequestCommon(
       long session_id,
       long plan_id,
-      boolean profile_detail) {
+      boolean profile_detail,
+      long timeout) {
     this();
     this.session_id = session_id;
     setSession_idIsSet(true);
@@ -74,14 +81,17 @@ public class RequestCommon implements TBase, java.io.Serializable, Cloneable, Co
     setPlan_idIsSet(true);
     this.profile_detail = profile_detail;
     setProfile_detailIsSet(true);
+    this.timeout = timeout;
+    setTimeoutIsSet(true);
   }
 
   public static class Builder {
     private long session_id;
     private long plan_id;
     private boolean profile_detail;
+    private long timeout;
 
-    BitSet __optional_isset = new BitSet(3);
+    BitSet __optional_isset = new BitSet(4);
 
     public Builder() {
     }
@@ -104,6 +114,12 @@ public class RequestCommon implements TBase, java.io.Serializable, Cloneable, Co
       return this;
     }
 
+    public Builder setTimeout(final long timeout) {
+      this.timeout = timeout;
+      __optional_isset.set(__TIMEOUT_ISSET_ID, true);
+      return this;
+    }
+
     public RequestCommon build() {
       RequestCommon result = new RequestCommon();
       if (__optional_isset.get(__SESSION_ID_ISSET_ID)) {
@@ -114,6 +130,9 @@ public class RequestCommon implements TBase, java.io.Serializable, Cloneable, Co
       }
       if (__optional_isset.get(__PROFILE_DETAIL_ISSET_ID)) {
         result.setProfile_detail(this.profile_detail);
+      }
+      if (__optional_isset.get(__TIMEOUT_ISSET_ID)) {
+        result.setTimeout(this.timeout);
       }
       return result;
     }
@@ -132,6 +151,7 @@ public class RequestCommon implements TBase, java.io.Serializable, Cloneable, Co
     this.session_id = TBaseHelper.deepCopy(other.session_id);
     this.plan_id = TBaseHelper.deepCopy(other.plan_id);
     this.profile_detail = TBaseHelper.deepCopy(other.profile_detail);
+    this.timeout = TBaseHelper.deepCopy(other.timeout);
   }
 
   public RequestCommon deepCopy() {
@@ -207,6 +227,29 @@ public class RequestCommon implements TBase, java.io.Serializable, Cloneable, Co
     __isset_bit_vector.set(__PROFILE_DETAIL_ISSET_ID, __value);
   }
 
+  public long getTimeout() {
+    return this.timeout;
+  }
+
+  public RequestCommon setTimeout(long timeout) {
+    this.timeout = timeout;
+    setTimeoutIsSet(true);
+    return this;
+  }
+
+  public void unsetTimeout() {
+    __isset_bit_vector.clear(__TIMEOUT_ISSET_ID);
+  }
+
+  // Returns true if field timeout is set (has been assigned a value) and false otherwise
+  public boolean isSetTimeout() {
+    return __isset_bit_vector.get(__TIMEOUT_ISSET_ID);
+  }
+
+  public void setTimeoutIsSet(boolean __value) {
+    __isset_bit_vector.set(__TIMEOUT_ISSET_ID, __value);
+  }
+
   public void setFieldValue(int fieldID, Object __value) {
     switch (fieldID) {
     case SESSION_ID:
@@ -233,6 +276,14 @@ public class RequestCommon implements TBase, java.io.Serializable, Cloneable, Co
       }
       break;
 
+    case TIMEOUT:
+      if (__value == null) {
+        unsetTimeout();
+      } else {
+        setTimeout((Long)__value);
+      }
+      break;
+
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
     }
@@ -248,6 +299,9 @@ public class RequestCommon implements TBase, java.io.Serializable, Cloneable, Co
 
     case PROFILE_DETAIL:
       return new Boolean(isProfile_detail());
+
+    case TIMEOUT:
+      return new Long(getTimeout());
 
     default:
       throw new IllegalArgumentException("Field " + fieldID + " doesn't exist!");
@@ -270,12 +324,14 @@ public class RequestCommon implements TBase, java.io.Serializable, Cloneable, Co
 
     if (!TBaseHelper.equalsNobinary(this.isSetProfile_detail(), that.isSetProfile_detail(), this.profile_detail, that.profile_detail)) { return false; }
 
+    if (!TBaseHelper.equalsNobinary(this.isSetTimeout(), that.isSetTimeout(), this.timeout, that.timeout)) { return false; }
+
     return true;
   }
 
   @Override
   public int hashCode() {
-    return Arrays.deepHashCode(new Object[] {session_id, plan_id, profile_detail});
+    return Arrays.deepHashCode(new Object[] {session_id, plan_id, profile_detail, timeout});
   }
 
   @Override
@@ -311,6 +367,14 @@ public class RequestCommon implements TBase, java.io.Serializable, Cloneable, Co
       return lastComparison;
     }
     lastComparison = TBaseHelper.compareTo(profile_detail, other.profile_detail);
+    if (lastComparison != 0) { 
+      return lastComparison;
+    }
+    lastComparison = Boolean.valueOf(isSetTimeout()).compareTo(other.isSetTimeout());
+    if (lastComparison != 0) {
+      return lastComparison;
+    }
+    lastComparison = TBaseHelper.compareTo(timeout, other.timeout);
     if (lastComparison != 0) { 
       return lastComparison;
     }
@@ -352,6 +416,14 @@ public class RequestCommon implements TBase, java.io.Serializable, Cloneable, Co
             TProtocolUtil.skip(iprot, __field.type);
           }
           break;
+        case TIMEOUT:
+          if (__field.type == TType.I64) {
+            this.timeout = iprot.readI64();
+            setTimeoutIsSet(true);
+          } else { 
+            TProtocolUtil.skip(iprot, __field.type);
+          }
+          break;
         default:
           TProtocolUtil.skip(iprot, __field.type);
           break;
@@ -382,6 +454,11 @@ public class RequestCommon implements TBase, java.io.Serializable, Cloneable, Co
     if (isSetProfile_detail()) {
       oprot.writeFieldBegin(PROFILE_DETAIL_FIELD_DESC);
       oprot.writeBool(this.profile_detail);
+      oprot.writeFieldEnd();
+    }
+    if (isSetTimeout()) {
+      oprot.writeFieldBegin(TIMEOUT_FIELD_DESC);
+      oprot.writeI64(this.timeout);
       oprot.writeFieldEnd();
     }
     oprot.writeFieldStop();
@@ -431,6 +508,16 @@ public class RequestCommon implements TBase, java.io.Serializable, Cloneable, Co
       sb.append(space);
       sb.append(":").append(space);
       sb.append(TBaseHelper.toString(this.isProfile_detail(), indent + 1, prettyPrint));
+      first = false;
+    }
+    if (isSetTimeout())
+    {
+      if (!first) sb.append("," + newLine);
+      sb.append(indentStr);
+      sb.append("timeout");
+      sb.append(space);
+      sb.append(":").append(space);
+      sb.append(TBaseHelper.toString(this.getTimeout(), indent + 1, prettyPrint));
       first = false;
     }
     sb.append(newLine + TBaseHelper.reduceIndent(indentStr));

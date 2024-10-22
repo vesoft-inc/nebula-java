@@ -17,6 +17,7 @@ import com.facebook.thrift.transport.TTransportException;
 import com.facebook.thrift.utils.StandardCharsets;
 import com.google.common.base.Charsets;
 import com.vesoft.nebula.ErrorCode;
+import com.vesoft.nebula.Value;
 import com.vesoft.nebula.client.graph.data.CASignedSSLParam;
 import com.vesoft.nebula.client.graph.data.HostAddress;
 import com.vesoft.nebula.client.graph.data.SSLParam;
@@ -44,14 +45,14 @@ public class SyncConnection extends Connection {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SyncConnection.class);
 
-    protected TTransport transport = null;
-    protected TProtocol protocol = null;
-    private GraphService.Client client = null;
-    private int timeout = 0;
-    private SSLParam sslParam = null;
-    private boolean enabledSsl = false;
-    private SSLSocketFactory sslSocketFactory = null;
-    private boolean useHttp2 = false;
+    protected TTransport          transport        = null;
+    protected TProtocol           protocol         = null;
+    private   GraphService.Client client           = null;
+    private   int                 timeout          = 0;
+    private   SSLParam            sslParam         = null;
+    private   boolean             enabledSsl       = false;
+    private   SSLSocketFactory    sslSocketFactory = null;
+    private   boolean             useHttp2         = false;
 
     private Map<String, String> headers = new HashMap<>();
 
@@ -96,7 +97,7 @@ public class SyncConnection extends Connection {
             if (resp.error_code != ErrorCode.SUCCEEDED) {
                 client.getInputProtocol().getTransport().close();
                 throw new ClientServerIncompatibleException(new String(resp.getError_msg(),
-                        Charsets.UTF_8));
+                                                                       Charsets.UTF_8));
             }
         } catch (TException | IOException e) {
             close();
@@ -131,7 +132,7 @@ public class SyncConnection extends Connection {
             if (resp.error_code != ErrorCode.SUCCEEDED) {
                 client.getInputProtocol().getTransport().close();
                 throw new ClientServerIncompatibleException(new String(resp.getError_msg(),
-                        Charsets.UTF_8));
+                                                                       Charsets.UTF_8));
             }
         } catch (TException e) {
             close();
@@ -143,7 +144,7 @@ public class SyncConnection extends Connection {
      * create protocol for http2 with tls
      */
     private void getProtocolWithTlsHttp2() {
-        String url = "https://" + serverAddr.getHost() + ":" + serverAddr.getPort();
+        String       url = "https://" + serverAddr.getHost() + ":" + serverAddr.getPort();
         TrustManager trustManager;
         if (SslUtil.getTrustManagers() == null || SslUtil.getTrustManagers().length == 0) {
             trustManager = null;
@@ -165,7 +166,7 @@ public class SyncConnection extends Connection {
     private void getProtocolForTls() throws IOException {
         this.transport = new THeaderTransport(new TSocket(
                 sslSocketFactory.createSocket(serverAddr.getHost(),
-                        serverAddr.getPort()), this.timeout, this.timeout));
+                                              serverAddr.getPort()), this.timeout, this.timeout));
         this.protocol = new THeaderProtocol((THeaderTransport) transport);
     }
 
@@ -217,7 +218,7 @@ public class SyncConnection extends Connection {
             throws AuthFailedException, IOErrorException, ClientServerIncompatibleException {
         try {
             AuthResponse resp = client.authenticate(user.getBytes(Charsets.UTF_8),
-                    password.getBytes(Charsets.UTF_8));
+                                                    password.getBytes(Charsets.UTF_8));
             if (resp.error_code != ErrorCode.SUCCEEDED) {
                 if (resp.error_msg != null) {
                     throw new AuthFailedException(new String(resp.error_msg));
@@ -248,7 +249,8 @@ public class SyncConnection extends Connection {
     public ExecutionResponse execute(long sessionID, String stmt)
             throws IOErrorException {
         return executeWithParameter(sessionID,
-                stmt, (Map<byte[], com.vesoft.nebula.Value>) Collections.EMPTY_MAP);
+                                    stmt,
+                                    (Map<byte[], com.vesoft.nebula.Value>) Collections.EMPTY_MAP);
     }
 
     public ExecutionResponse executeWithParameter(long sessionID, String stmt,
@@ -280,14 +282,44 @@ public class SyncConnection extends Connection {
         }
     }
 
+    public ExecutionResponse executeWithParameterTimeout(long sessionID,
+                                                         String stmt,
+                                                         Map<byte[], Value> parameterMap,
+                                                         long timeoutMs) throws IOErrorException {
+        try {
+            return client.executeWithTimeout(sessionID,
+                                             stmt.getBytes(Charsets.UTF_8),
+                                             parameterMap,
+                                             timeoutMs);
+        } catch (TException e) {
+            if (e instanceof TTransportException) {
+                TTransportException te = (TTransportException) e;
+                if (te.getType() == TTransportException.END_OF_FILE) {
+                    throw new IOErrorException(IOErrorException.E_CONNECT_BROKEN, te.getMessage());
+                } else if (te.getType() == TTransportException.NOT_OPEN) {
+                    throw new IOErrorException(IOErrorException.E_NO_OPEN, te.getMessage());
+                } else if (te.getType() == TTransportException.TIMED_OUT
+                        || te.getMessage().contains("Read timed out")) {
+                    try {
+                        reopen();
+                    } catch (ClientServerIncompatibleException ex) {
+                        LOGGER.error(ex.getMessage());
+                    }
+                    throw new IOErrorException(IOErrorException.E_TIME_OUT, te.getMessage());
+                }
+            }
+            throw new IOErrorException(IOErrorException.E_UNKNOWN, e.getMessage());
+        }
+    }
+
     public String executeJson(long sessionID, String stmt)
             throws IOErrorException {
         return executeJsonWithParameter(sessionID, stmt,
-                (Map<byte[], com.vesoft.nebula.Value>) Collections.EMPTY_MAP);
+                                        (Map<byte[], Value>) Collections.EMPTY_MAP);
     }
 
     public String executeJsonWithParameter(long sessionID, String stmt,
-                                           Map<byte[], com.vesoft.nebula.Value> parameterMap)
+                                           Map<byte[], Value> parameterMap)
             throws IOErrorException {
         try {
             byte[] result =
