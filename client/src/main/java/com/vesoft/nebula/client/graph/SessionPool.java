@@ -159,7 +159,8 @@ public class SessionPool implements Serializable {
                 resultSet = nebulaSession.execute(stmt);
                 if (resultSet.isSucceeded()
                         || resultSet.getErrorCode() == ErrorCode.E_SEMANTIC_ERROR.getValue()
-                        || resultSet.getErrorCode() == ErrorCode.E_SYNTAX_ERROR.getValue()) {
+                        || resultSet.getErrorCode() == ErrorCode.E_SYNTAX_ERROR.getValue()
+                        || resultSet.getErrorCode() == ErrorCode.E_QUERY_TIMEDOUT.getValue()) {
                     releaseSession(nebulaSession);
                     return resultSet;
                 }
