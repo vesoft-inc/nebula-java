@@ -1,0 +1,5 @@
+<map id="listHosts" name="listHosts">
+<area shape="rect" id="Node000001" title="get all storage addresses" alt="" coords="5,13,84,38"/>
+<area shape="rect" id="Node000002" href="$d7/dad/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaClient.html#a28ba91d1e4fb3159abadc018fbac3d92" title="get all Storaged servers" alt="" coords="132,5,356,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="84,23,118,23,118,28,84,28"/>
+</map>

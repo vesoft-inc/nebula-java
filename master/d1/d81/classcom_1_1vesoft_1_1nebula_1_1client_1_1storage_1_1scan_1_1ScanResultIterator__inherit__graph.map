@@ -1,6 +1,9 @@
 <map id="ScanResultIterator" name="ScanResultIterator">
-<area shape="rect" id="node1" title=" " alt="" coords="123,80,265,107"/>
-<area shape="rect" id="node3" href="$d4/de7/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanEdgeResultIterator.html" title=" " alt="" coords="5,155,180,181"/>
-<area shape="rect" id="node4" href="$d7/d42/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanVertexResultIterator.html" title="ScanVertexResult&#39;s iterator." alt="" coords="205,155,389,181"/>
-<area shape="rect" id="node2" title=" " alt="" coords="145,5,243,32"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="123,79,265,104"/>
+<area shape="rect" id="Node000003" href="$d4/de7/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanEdgeResultIterator.html" title=" " alt="" coords="5,152,180,177"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="168,114,111,154,108,150,165,110"/>
+<area shape="rect" id="Node000004" href="$d7/d42/classcom_1_1vesoft_1_1nebula_1_1client_1_1storage_1_1scan_1_1ScanVertexResultIterator.html" title="ScanVertexResult&#39;s iterator." alt="" coords="205,152,389,177"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="223,110,281,150,278,154,220,114"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="145,5,243,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="197,44,197,79,191,79,191,44"/>
 </map>

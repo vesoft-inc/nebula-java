@@ -1,4 +1,0 @@
-<map id="connect" name="connect">
-<area shape="rect" id="node1" title="Connect to Nebula Storage server." alt="" coords="5,13,79,39"/>
-<area shape="rect" id="node2" href="$d7/d5c/classcom_1_1vesoft_1_1nebula_1_1client_1_1meta_1_1MetaManager.html#ab25b4d597dba19fd6769b0c966bbc7c2" title="Add address mapping for storage.Used for change address of storage read from meta server." alt="" coords="127,5,401,47"/>
-</map>
