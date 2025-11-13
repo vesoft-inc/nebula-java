@@ -266,7 +266,7 @@
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
-            <version>3.14.0</version>
+            <version>4.9.2</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.mortbay.jetty.alpn/alpn-boot -->
