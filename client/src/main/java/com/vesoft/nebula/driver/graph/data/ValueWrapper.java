@@ -21,11 +21,9 @@ import static com.vesoft.nebula.driver.graph.decode.ColumnType.COLUMN_TYPE_INT8;
 import static com.vesoft.nebula.driver.graph.decode.ColumnType.COLUMN_TYPE_LIST;
 import static com.vesoft.nebula.driver.graph.decode.ColumnType.COLUMN_TYPE_LOCALDATETIME;
 import static com.vesoft.nebula.driver.graph.decode.ColumnType.COLUMN_TYPE_LOCALTIME;
-import static com.vesoft.nebula.driver.graph.decode.ColumnType.COLUMN_TYPE_MAP;
 import static com.vesoft.nebula.driver.graph.decode.ColumnType.COLUMN_TYPE_NODE;
 import static com.vesoft.nebula.driver.graph.decode.ColumnType.COLUMN_TYPE_PATH;
 import static com.vesoft.nebula.driver.graph.decode.ColumnType.COLUMN_TYPE_RECORD;
-import static com.vesoft.nebula.driver.graph.decode.ColumnType.COLUMN_TYPE_SET;
 import static com.vesoft.nebula.driver.graph.decode.ColumnType.COLUMN_TYPE_STRING;
 import static com.vesoft.nebula.driver.graph.decode.ColumnType.COLUMN_TYPE_UINT16;
 import static com.vesoft.nebula.driver.graph.decode.ColumnType.COLUMN_TYPE_UINT32;
@@ -44,9 +42,7 @@ import java.time.OffsetTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.Vector;
 
 public class ValueWrapper {
@@ -126,10 +122,6 @@ public class ValueWrapper {
                 return "ANY";
             case COLUMN_TYPE_GEOGRAPHY:
                 return "GEOGRAPHY";
-            case COLUMN_TYPE_SET:
-                return "SET";
-            case COLUMN_TYPE_MAP:
-                return "MAP";
             default:
                 throw new IllegalArgumentException("Unknown data type: " + type);
         }
@@ -336,24 +328,6 @@ public class ValueWrapper {
      */
     public boolean isGeography() {
         return type == COLUMN_TYPE_GEOGRAPHY;
-    }
-
-    /**
-     * check if the Value is Set type
-     *
-     * @return true if Value's type is COLUMN_TYPE_SET
-     */
-    public boolean isSet() {
-        return type == COLUMN_TYPE_SET;
-    }
-
-    /**
-     * check if the Value is Map type
-     *
-     * @return true if Value's type is COLUMN_TYPE_MAP
-     */
-    public boolean isMap() {
-        return type == COLUMN_TYPE_MAP;
     }
 
     /**
@@ -652,34 +626,6 @@ public class ValueWrapper {
             "cannot get field `geography` because value's type is " + getDataType());
     }
 
-    /**
-     * Convert the original data type Value to Set
-     *
-     * @return {@link java.util.Set}
-     * @throws InvalidValueException if the value type is not set
-     */
-    public Set asSet() throws InvalidValueException {
-        if (type == COLUMN_TYPE_SET) {
-            return (Set) value;
-        }
-        throw new InvalidValueException(
-            "cannot get field `set` because value's type is " + getDataType());
-    }
-
-    /**
-     * Convert the original data type Value to Map
-     *
-     * @return {@link java.util.Map}
-     * @throws InvalidValueException if the value type is not map
-     */
-    public Map asMap() throws InvalidValueException {
-        if (type == COLUMN_TYPE_MAP) {
-            return (Map) value;
-        }
-        throw new InvalidValueException(
-            "cannot get field `map` because value's type is " + getDataType());
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -746,10 +692,6 @@ public class ValueWrapper {
             return asVector().toString();
         } else if (isGeography()) {
             return asGeography().toString();
-        } else if (isSet()) {
-            return asSet().toString();
-        } else if (isMap()) {
-            return asMap().toString();
         }
         return "Unknown type: " + getDataType();
     }

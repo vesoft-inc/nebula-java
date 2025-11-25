@@ -28,8 +28,6 @@ import static com.vesoft.nebula.driver.graph.decode.struct.SizeConstant.DOUBLE_S
 import static com.vesoft.nebula.driver.graph.decode.struct.SizeConstant.DURATION_SIZE;
 import static com.vesoft.nebula.driver.graph.decode.struct.SizeConstant.EDGE_TYPE_ID_SIZE;
 import static com.vesoft.nebula.driver.graph.decode.struct.SizeConstant.ELEMENT_NUMBER_SIZE_FOR_ANY_VALUE;
-import static com.vesoft.nebula.driver.graph.decode.struct.SizeConstant.ELEMENT_NUMBER_SIZE_FOR_MAP;
-import static com.vesoft.nebula.driver.graph.decode.struct.SizeConstant.ELEMENT_NUMBER_SIZE_FOR_SET;
 import static com.vesoft.nebula.driver.graph.decode.struct.SizeConstant.ELEMENT_NUMBER_SIZE_FOR_VECTOR_VALUE;
 import static com.vesoft.nebula.driver.graph.decode.struct.SizeConstant.EMBEDDING_VECTOR_FLOAT_VALUE_SIZE;
 import static com.vesoft.nebula.driver.graph.decode.struct.SizeConstant.FLOAT_SIZE;
@@ -47,7 +45,6 @@ import static com.vesoft.nebula.driver.graph.decode.struct.SizeConstant.INT64_SI
 import static com.vesoft.nebula.driver.graph.decode.struct.SizeConstant.INT8_SIZE;
 import static com.vesoft.nebula.driver.graph.decode.struct.SizeConstant.LIST_HEADER_SIZE;
 import static com.vesoft.nebula.driver.graph.decode.struct.SizeConstant.LOCAL_TIME_SIZE;
-import static com.vesoft.nebula.driver.graph.decode.struct.SizeConstant.MAP_HEADER_SIZE;
 import static com.vesoft.nebula.driver.graph.decode.struct.SizeConstant.MICRO_SECONDS_OF_DAY;
 import static com.vesoft.nebula.driver.graph.decode.struct.SizeConstant.MICRO_SECONDS_OF_HOUR;
 import static com.vesoft.nebula.driver.graph.decode.struct.SizeConstant.MICRO_SECONDS_OF_MINUTE;
@@ -56,7 +53,6 @@ import static com.vesoft.nebula.driver.graph.decode.struct.SizeConstant.MONTH_SI
 import static com.vesoft.nebula.driver.graph.decode.struct.SizeConstant.NODE_ID_SIZE;
 import static com.vesoft.nebula.driver.graph.decode.struct.SizeConstant.NODE_TYPE_ID_SIZE;
 import static com.vesoft.nebula.driver.graph.decode.struct.SizeConstant.RANK_SIZE;
-import static com.vesoft.nebula.driver.graph.decode.struct.SizeConstant.SET_HEADER_SIZE;
 import static com.vesoft.nebula.driver.graph.decode.struct.SizeConstant.STRING_MAX_VALUE_LENGTH_IN_HEADER;
 import static com.vesoft.nebula.driver.graph.decode.struct.SizeConstant.STRING_SIZE;
 import static com.vesoft.nebula.driver.graph.decode.struct.SizeConstant.STRING_VALUE_LENGTH_SIZE;
@@ -86,23 +82,19 @@ import com.vesoft.nebula.driver.graph.decode.datatype.DataType;
 import com.vesoft.nebula.driver.graph.decode.datatype.EdgeType;
 import com.vesoft.nebula.driver.graph.decode.datatype.EmbeddingVectorType;
 import com.vesoft.nebula.driver.graph.decode.datatype.ListType;
-import com.vesoft.nebula.driver.graph.decode.datatype.MapType;
 import com.vesoft.nebula.driver.graph.decode.datatype.NodeType;
 import com.vesoft.nebula.driver.graph.decode.datatype.PathType;
 import com.vesoft.nebula.driver.graph.decode.datatype.RecordType;
-import com.vesoft.nebula.driver.graph.decode.datatype.SetType;
 import com.vesoft.nebula.driver.graph.decode.struct.AnyHeader;
 import com.vesoft.nebula.driver.graph.decode.struct.AnyValue;
 import com.vesoft.nebula.driver.graph.decode.struct.EdgeHeader;
 import com.vesoft.nebula.driver.graph.decode.struct.ListHeader;
-import com.vesoft.nebula.driver.graph.decode.struct.MapHeader;
 import com.vesoft.nebula.driver.graph.decode.struct.NodeHeader;
 import com.vesoft.nebula.driver.graph.decode.struct.PathAdjHeader;
 import com.vesoft.nebula.driver.graph.decode.struct.PathHeader;
 import com.vesoft.nebula.driver.graph.decode.struct.PathSpecialMetaData;
 import com.vesoft.nebula.driver.graph.decode.struct.PathVectorPair;
 import com.vesoft.nebula.driver.graph.decode.struct.ResultGraphSchemas;
-import com.vesoft.nebula.driver.graph.decode.struct.SetHeader;
 import com.vesoft.nebula.proto.graph.NestedVector;
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
@@ -116,10 +108,8 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class ValueParser {
 
@@ -499,40 +489,6 @@ public class ValueParser {
                     .getVectorData()
                     .substring(chunkOffset);
                 return bytesToGeography(new BytesReader(data));
-            case COLUMN_TYPE_SET:
-                // get the type for set element
-                SetType setType = (SetType) type;
-                Set<ValueWrapper> set = new HashSet<>();
-                // parse set header：offset + set size
-                valueData = getSubBytes(vectorData, SET_HEADER_SIZE, rowIndex);
-                SetHeader setHeader = new SetHeader(valueData, byteOrder);
-
-                for (int i = 0; i < setHeader.getSize(); i++) {
-                    set.add(new ValueWrapper(decodeValue(vector.getVectorWrapper(0),
-                                                         setType.getValueType(),
-                                                         setHeader.getOffset() + i),
-                                             setType.getValueType().getType()));
-                }
-                return set;
-            case COLUMN_TYPE_MAP:
-                MapType mapType = (MapType) type;
-                Map<ValueWrapper, ValueWrapper> mapValue = new HashMap<>();
-                // parse map header: offset + map size
-                valueData = getSubBytes(vectorData, MAP_HEADER_SIZE, rowIndex);
-                MapHeader mapHeader = new MapHeader(valueData, byteOrder);
-
-                for (int i = 0; i < mapHeader.getSize(); i++) {
-                    ValueWrapper key = new ValueWrapper(decodeValue(vector.getVectorWrapper(0),
-                                                                    mapType.getKeyType(),
-                                                                    mapHeader.getOffset() + i),
-                                                        mapType.getKeyType().getType());
-                    ValueWrapper value = new ValueWrapper(decodeValue(vector.getVectorWrapper(1),
-                                                                      mapType.getKeyType(),
-                                                                      mapHeader.getOffset() + i),
-                                                          mapType.getKeyType().getType());
-                    mapValue.put(key, value);
-                }
-                return mapValue;
             default:
                 throw new RuntimeException("do not support type: " + type);
         }
@@ -1015,7 +971,7 @@ public class ValueParser {
             case COLUMN_TYPE_LIST:
                 ColumnType eleType = ColumnType.getColumnType(
                     bytesToInt8(reader.read(VALUE_TYPE_SIZE)));
-                int listSize = bytesToUInt16(
+                int listSize = bytesToInt16(
                     reader.read(ELEMENT_NUMBER_SIZE_FOR_ANY_VALUE), byteOrder);
                 int nullBitSize = (listSize % 8 == 0) ? (listSize / 8) : (listSize / 8 + 1);
                 ByteString nullBitBytes = reader.read(nullBitSize);
@@ -1030,7 +986,7 @@ public class ValueParser {
                 }
                 return values;
             case COLUMN_TYPE_RECORD:
-                int recordSize = bytesToUInt16(
+                int recordSize = bytesToInt16(
                     reader.read(ELEMENT_NUMBER_SIZE_FOR_ANY_VALUE), byteOrder);
                 Map<String, ValueWrapper> map = new HashMap<>();
                 for (int i = 0; i < recordSize; i++) {
@@ -1046,7 +1002,7 @@ public class ValueParser {
                 long nodeId = bytesToInt64(reader.read(NODE_ID_SIZE), byteOrder);
                 int nodeTypeId = getNodeTypeIdFromNodeId(nodeId);
                 int nodeGraphId = bytesToInt32(reader.read(GRAPH_ID_SIZE), byteOrder);
-                int nodePropNum = bytesToUInt16(
+                int nodePropNum = bytesToInt16(
                     reader.read(ELEMENT_NUMBER_SIZE_FOR_ANY_VALUE), byteOrder);
                 Map<String, ValueWrapper> nodeProperties = new HashMap<>();
                 for (int i = 0; i < nodePropNum; i++) {
@@ -1064,7 +1020,7 @@ public class ValueParser {
                 long rank = bytesToInt64(reader.read(RANK_SIZE), byteOrder);
                 int edgeGraphId = bytesToInt32(reader.read(GRAPH_ID_SIZE), byteOrder);
                 int edgeTypeId = bytesToInt32(reader.read(EDGE_TYPE_ID_SIZE), byteOrder);
-                int edgePropNum = bytesToUInt16(
+                int edgePropNum = bytesToInt16(
                     reader.read(ELEMENT_NUMBER_SIZE_FOR_ANY_VALUE), byteOrder);
                 Map<String, ValueWrapper> edgeProperties = new HashMap<>();
                 for (int i = 0; i < edgePropNum; i++) {
@@ -1082,7 +1038,7 @@ public class ValueParser {
                                 edgeProperties,
                                 graphSchemas);
             case COLUMN_TYPE_PATH:
-                int elementNum = bytesToUInt16(
+                int elementNum = bytesToInt16(
                     reader.read(ELEMENT_NUMBER_SIZE_FOR_ANY_VALUE), byteOrder);
                 List<ValueWrapper> eleValues = new ArrayList<>();
                 for (int i = 0; i < elementNum; i++) {
@@ -1096,62 +1052,6 @@ public class ValueParser {
                 int vectorEleNum = bytesToInt16(reader.read(ELEMENT_NUMBER_SIZE_FOR_VECTOR_VALUE),
                                                 byteOrder);
                 return bytesToEmbeddingVector(reader, vectorEleNum);
-            case COLUMN_TYPE_SET:
-                ColumnType setEleType = ColumnType.getColumnType(
-                    bytesToInt8(reader.read(VALUE_TYPE_SIZE)));
-                int setSize = bytesToInt32(reader.read(ELEMENT_NUMBER_SIZE_FOR_SET), byteOrder);
-                int setNullBitSize = (setSize % 8 == 0) ? (setSize / 8) : (setSize / 8 + 1);
-                ByteString setNullBitBytes = reader.read(setNullBitSize);
-                Set<ValueWrapper> setValues = new HashSet<>();
-                for (int i = 0; i < setSize; i++) {
-                    if ((setNullBitBytes.byteAt(i / 8) & (1 << (i % 8))) == 0) {
-                        setValues.add(new ValueWrapper(null, ColumnType.COLUMN_TYPE_NULL));
-                    } else {
-                        setValues.add(new ValueWrapper(decodeCompositeValue(reader, setEleType),
-                                                       setEleType));
-                    }
-                }
-                return setValues;
-            case COLUMN_TYPE_MAP:
-                ColumnType mapKeyType = ColumnType.getColumnType(
-                    bytesToInt8(reader.read(VALUE_TYPE_SIZE)));
-                int mapKeySize = bytesToInt32(reader.read(ELEMENT_NUMBER_SIZE_FOR_MAP), byteOrder);
-                int mapKeyNullBitSize =
-                    (mapKeySize % 8 == 0) ? (mapKeySize / 8) : (mapKeySize / 8 + 1);
-                ByteString mapKeyNullBitBytes = reader.read(mapKeyNullBitSize);
-
-                List<ValueWrapper> keys = new ArrayList<>();
-                for (int i = 0; i < mapKeySize; i++) {
-                    if ((mapKeyNullBitBytes.byteAt(i / 8) & (1 << (i % 8))) == 0) {
-                        keys.add(new ValueWrapper(null, ColumnType.COLUMN_TYPE_NULL));
-                    } else {
-                        keys.add(new ValueWrapper(decodeCompositeValue(reader, mapKeyType),
-                                                  mapKeyType));
-                    }
-                }
-                ColumnType mapValueType = ColumnType.getColumnType(
-                    bytesToInt8(reader.read(VALUE_TYPE_SIZE)));
-                int mapValueSize = bytesToInt32(reader.read(ELEMENT_NUMBER_SIZE_FOR_MAP),
-                                                byteOrder);
-                int mapValueNullBitSize =
-                    (mapValueSize % 8 == 0) ? (mapValueSize / 8) : (mapValueSize / 8 + 1);
-                ByteString mapValueNullBitBytes = reader.read(mapValueNullBitSize);
-
-                List<ValueWrapper> mapValues = new ArrayList<>();
-                for (int i = 0; i < mapKeySize; i++) {
-                    if ((mapValueNullBitBytes.byteAt(i / 8) & (1 << (i % 8))) == 0) {
-                        mapValues.add(new ValueWrapper(null, ColumnType.COLUMN_TYPE_NULL));
-                    } else {
-                        mapValues.add(new ValueWrapper(decodeCompositeValue(reader, mapValueType),
-                                                       mapValueType));
-                    }
-                }
-
-                Map<ValueWrapper, ValueWrapper> mapInfo = new HashMap<>();
-                for (int i = 0; i < mapKeySize; i++) {
-                    mapInfo.put(keys.get(i), mapValues.get(i));
-                }
-                return mapInfo;
             default:
                 throw new RuntimeException("do not support type:" + type);
         }

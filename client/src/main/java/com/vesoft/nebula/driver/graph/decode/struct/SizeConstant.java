@@ -50,19 +50,6 @@ public class SizeConstant {
     // list size size
     public static final int LIST_SIZE_SIZE   = 4;
 
-    // set
-    // set header size
-    public static final int SET_HEADER_SIZE = 8;
-    public static final int SET_SIZE_SIZE   = 4;
-    public static final int ELEMENT_NUMBER_SIZE_FOR_SET = 4;
-
-    // map
-    // set header size
-    public static final int MAP_HEADER_SIZE = 8;
-    public static final int MAP_SIZE_SIZE   = 4;
-
-    public static final int ELEMENT_NUMBER_SIZE_FOR_MAP = 4;
-
     public static final int RECORD_HEADER_SIZE = 8;
     public static final int ANY_HEADER_SIZE    = 8;
 
@@ -115,10 +102,10 @@ public class SizeConstant {
     public static final int EMBEDDING_VECTOR_FLOAT_VALUE_SIZE    = 4;
 
     // size for geo
-    public static final int GEO_HEADER_SIZE             = 8;
-    public static final int GEO_SHAPE_SIZE              = 1;
-    public static final int GEO_SRID_SIZE               = 4;
-    public static final int GEO_POINT_COORDINATE_SIZE   = 8;
+    public static final int GEO_HEADER_SIZE = 8;
+    public static final int GEO_SHAPE_SIZE = 1;
+    public static final int GEO_SRID_SIZE  = 4;
+    public static final int GEO_POINT_COORDINATE_SIZE = 8;
     public static final int GEO_COORDINATE_NUMBER_SIZE  = 4;
     public static final int GEO_LINEAR_RING_NUMBER_SIZE = 4;
     public static final int GEO_LINAER_RING_INDEX_SIZE  = 4;

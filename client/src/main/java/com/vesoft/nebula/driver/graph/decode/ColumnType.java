@@ -39,8 +39,6 @@ public enum ColumnType {
     // while Geometry is reserved for abstract spatial data not tied to Earth.
     // Geometry may be added in the future.
     COLUMN_TYPE_GEOGRAPHY(0x24),
-    COLUMN_TYPE_SET(0x25),
-    COLUMN_TYPE_MAP(0x26),
     COLUMN_TYPE_ANY(0xFE),
     COLUMN_TYPE_INVALID(0xFF),
     ;
@@ -93,8 +91,6 @@ public enum ColumnType {
         switch (type) {
             case COLUMN_TYPE_LIST:
             case COLUMN_TYPE_RECORD:
-            case COLUMN_TYPE_SET:
-            case COLUMN_TYPE_MAP:
             case COLUMN_TYPE_EMBEDDINGVECTOR:
             case COLUMN_TYPE_NODE:
             case COLUMN_TYPE_EDGE:

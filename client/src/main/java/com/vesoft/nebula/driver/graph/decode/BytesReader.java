@@ -5,7 +5,7 @@
 
 package com.vesoft.nebula.driver.graph.decode;
 
-import static com.vesoft.nebula.driver.graph.decode.DecodeUtils.bytesToUInt16;
+import static com.vesoft.nebula.driver.graph.decode.DecodeUtils.bytesToInt16;
 import static com.vesoft.nebula.driver.graph.decode.DecodeUtils.charset;
 import static com.vesoft.nebula.driver.graph.decode.struct.SizeConstant.ELEMENT_NUMBER_SIZE_FOR_ANY_VALUE;
 
@@ -31,7 +31,7 @@ public class BytesReader {
     }
 
     public String readSizedString(ByteOrder byteOrder) {
-        int length     = bytesToUInt16(read(ELEMENT_NUMBER_SIZE_FOR_ANY_VALUE), byteOrder);
+        int length     = bytesToInt16(read(ELEMENT_NUMBER_SIZE_FOR_ANY_VALUE), byteOrder);
         int startIndex = index;
         index += length;
         ByteString strBytes = data.substring(startIndex, startIndex + length);

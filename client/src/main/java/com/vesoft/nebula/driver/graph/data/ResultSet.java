@@ -176,7 +176,7 @@ public class ResultSet {
 
     /**
      * get error code of execute result
-     * return {@link ErrorCode}
+     * TODO return {@link ErrorCode}
      *
      * @return String
      */

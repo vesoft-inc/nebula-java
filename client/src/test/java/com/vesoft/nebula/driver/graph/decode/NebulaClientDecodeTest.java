@@ -28,8 +28,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.Vector;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -565,69 +564,6 @@ public class NebulaClientDecodeTest {
             Assert.assertEquals("POLYGON((0.0 0.0,0.0 10.0,10.0 10.0,10.0 0.0,0.0 0.0),"
                                     + "(2.0 2.0,2.0 4.0,4.0 4.0,4.0 2.0,2.0 2.0))",
                                 values.get(0).asGeography().toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail(e.getMessage());
-        }
-    }
-
-    @Test
-    public void testConstVectorSetResult() {
-        try {
-            // test list<Integer>
-            String                  gql    = "for i in range (1,100) return SET{0,1,2,3,4}";
-            ResultSet               res    = client.execute(gql);
-            List<Set<ValueWrapper>> values = new ArrayList<>();
-            while (res.hasNext()) {
-                ValueWrapper value = res.next().get(0);
-                if (value.isNull()) {
-                    Assert.fail();
-                } else {
-                    values.add(value.asSet());
-                }
-            }
-            Assert.assertEquals(100, values.size());
-            Set<ValueWrapper> setValues = values.get(0);
-            Assert.assertEquals(5, setValues.size());
-            Assert.assertTrue(
-                setValues.contains(new ValueWrapper(0, ColumnType.COLUMN_TYPE_INT32)));
-            Assert.assertTrue(
-                setValues.contains(new ValueWrapper(1, ColumnType.COLUMN_TYPE_INT32)));
-            Assert.assertTrue(
-                setValues.contains(new ValueWrapper(2, ColumnType.COLUMN_TYPE_INT32)));
-            Assert.assertTrue(
-                setValues.contains(new ValueWrapper(3, ColumnType.COLUMN_TYPE_INT32)));
-            Assert.assertTrue(
-                setValues.contains(new ValueWrapper(4, ColumnType.COLUMN_TYPE_INT32)));
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail(e.getMessage());
-        }
-    }
-
-    @Test
-    public void testConstVectorMapResult() {
-        try {
-            // test Map<String,true>
-            String gql = "for i in range (1,100) return Map{\"a\":true,\"b\":false}";
-
-            ResultSet                             res    = client.execute(gql);
-            List<Map<ValueWrapper, ValueWrapper>> values = new ArrayList<>();
-            while (res.hasNext()) {
-                ValueWrapper value = res.next().get(0);
-                if (value.isNull()) {
-                    Assert.fail();
-                } else {
-                    values.add(value.asMap());
-                }
-            }
-            Assert.assertEquals(100, values.size());
-            Map<ValueWrapper, ValueWrapper> map = values.get(0);
-            Assert.assertEquals(2, map.size());
-            Assert.assertTrue(
-                map.containsKey(new ValueWrapper("a", ColumnType.COLUMN_TYPE_STRING)));
-            Assert.assertTrue(
-                map.containsKey(new ValueWrapper("b", ColumnType.COLUMN_TYPE_STRING)));
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail(e.getMessage());
@@ -1443,51 +1379,5 @@ public class NebulaClientDecodeTest {
         }
     }
 
-    @Test
-    public void testDecodeSetResult() {
-        System.out.println("<==== testDecodeSetResult ====>");
-        try {
-            String             gql    = "LET a=0,b=1,c=2 RETURN SET{a,b,c}";
-            ResultSet          res    = client.execute(gql);
-            List<ValueWrapper> values = res.next().values();
-            Assert.assertEquals(1, values.size());
-            ValueWrapper value = values.get(0);
-            Assert.assertEquals(3, value.asSet().size());
-            Assert.assertTrue(value.asSet().contains(
-                new ValueWrapper(0, ColumnType.COLUMN_TYPE_INT32)));
-            Assert.assertTrue(value.asSet().contains(
-                new ValueWrapper(1, ColumnType.COLUMN_TYPE_INT32)));
-            Assert.assertTrue(value.asSet().contains(
-                new ValueWrapper(2, ColumnType.COLUMN_TYPE_INT32)));
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail(e.getMessage());
-        }
-    }
 
-    @Test
-    public void testDecodeMapResult() {
-        System.out.println("<==== testDecodeMapResult ====>");
-        try {
-            String gql = "LET a1=1,b1=2,c1=3 return Map{'a':a1, 'b':b1, 'c':c1} as r";
-
-            ResultSet          res    = client.execute(gql);
-            List<ValueWrapper> values = res.next().values();
-            Assert.assertEquals(1, values.size());
-            Assert.assertEquals(3, values.get(0).asMap().size());
-            Map<ValueWrapper, ValueWrapper> value = values.get(0).asMap();
-            Assert.assertEquals(1, value
-                .get(new ValueWrapper("a", ColumnType.COLUMN_TYPE_STRING))
-                .asInt());
-            Assert.assertEquals(2, value
-                .get(new ValueWrapper("b", ColumnType.COLUMN_TYPE_STRING))
-                .asInt());
-            Assert.assertEquals(3, value
-                .get(new ValueWrapper("c", ColumnType.COLUMN_TYPE_STRING))
-                .asInt());
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail(e.getMessage());
-        }
-    }
 }

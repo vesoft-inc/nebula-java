@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 
 public class ValueTypeParser {
-
     private final ByteOrder byteOrder;
 
     public ValueTypeParser(ByteOrder byteOrder) {
@@ -39,7 +38,7 @@ public class ValueTypeParser {
 
     public DataType decodeValueType(BytesReader reader) {
         ColumnType type = ColumnType.getColumnType(
-            DecodeUtils.bytesToUInt8(reader.read(VALUE_TYPE_SIZE)));
+                DecodeUtils.bytesToUInt8(reader.read(VALUE_TYPE_SIZE)));
         switch (type) {
             case COLUMN_TYPE_NULL:
             case COLUMN_TYPE_BOOL:
@@ -74,15 +73,15 @@ public class ValueTypeParser {
                 return new BasicType(type);
             case COLUMN_TYPE_NODE:
                 Map<Integer, Map<Integer, Map<String, DataType>>> nodeTypes =
-                    getPropertyNameAndTypeFromValueType(reader, NODE_TYPE_ID_SIZE, byteOrder);
+                        getPropertyNameAndTypeFromValueType(reader, NODE_TYPE_ID_SIZE, byteOrder);
                 return new NodeType(nodeTypes);
             case COLUMN_TYPE_EDGE:
                 Map<Integer, Map<Integer, Map<String, DataType>>> edgeTypes =
-                    getPropertyNameAndTypeFromValueType(reader, EDGE_TYPE_ID_SIZE, byteOrder);
+                        getPropertyNameAndTypeFromValueType(reader, EDGE_TYPE_ID_SIZE, byteOrder);
                 return new EdgeType(edgeTypes);
             case COLUMN_TYPE_PATH:
                 int elementNum = DecodeUtils.bytesToInt32(
-                    reader.read(PATH_ELEMENT_NUM_SIZE), byteOrder);
+                        reader.read(PATH_ELEMENT_NUM_SIZE), byteOrder);
                 List<DataType> dataTypes = new ArrayList<>();
                 for (int i = 0; i < elementNum; i++) {
                     dataTypes.add(decodeValueType(reader));
@@ -93,7 +92,7 @@ public class ValueTypeParser {
                 return new ListType(dataType);
             case COLUMN_TYPE_RECORD:
                 int fieldNum = DecodeUtils.bytesToInt32(
-                    reader.read(RECORD_FIELD_NUM_SIZE), byteOrder);
+                        reader.read(RECORD_FIELD_NUM_SIZE), byteOrder);
                 Map<String, DataType> fieldTypes = new HashMap<>();
                 for (int i = 0; i < fieldNum; i++) {
                     String fieldName = reader.readSizedString(byteOrder);
@@ -108,13 +107,6 @@ public class ValueTypeParser {
                     throw new RuntimeException("unexpected child type:" + vecElementType.getType());
                 }
                 return new EmbeddingVectorType(dim, vecElementType);
-            case COLUMN_TYPE_SET:
-                DataType setDataType = decodeValueType(reader);
-                return new SetType(setDataType);
-            case COLUMN_TYPE_MAP:
-                DataType mapKeyType = decodeValueType(reader);
-                DataType mapValueType = decodeValueType(reader);
-                return new MapType(mapKeyType, mapValueType);
             default:
                 throw new RuntimeException("unsupported type:" + type);
         }
@@ -126,9 +118,9 @@ public class ValueTypeParser {
      * graphId -> (typeId -> (propName -> prop DataType))
      */
     private Map<Integer, Map<Integer, Map<String, DataType>>> getPropertyNameAndTypeFromValueType(
-        BytesReader reader,
-        int typeIdSize,
-        ByteOrder byteOrder) {
+            BytesReader reader,
+            int typeIdSize,
+            ByteOrder byteOrder) {
         // 1-5: node or edge type number, 4 bytes
         int typeNum = DecodeUtils.bytesToInt32(reader.read(GRAPH_ELEMENT_TYPE_NUM_SIZE), byteOrder);
 
@@ -141,12 +133,12 @@ public class ValueTypeParser {
             }
             // node type ID or edge type ID
             final int typeId =
-                typeIdSize == NODE_TYPE_ID_SIZE
-                    ? DecodeUtils.bytesToInt16(reader.read(typeIdSize), byteOrder)
-                    : DecodeUtils.bytesToInt32(reader.read(typeIdSize), byteOrder);
+                    typeIdSize == NODE_TYPE_ID_SIZE
+                            ? DecodeUtils.bytesToInt16(reader.read(typeIdSize), byteOrder)
+                            : DecodeUtils.bytesToInt32(reader.read(typeIdSize), byteOrder);
             // node or edge type property number, 4 bytes
             int typePropertyNum = DecodeUtils.bytesToInt32(
-                reader.read(PROPERTY_NUM_SIZE), byteOrder);
+                    reader.read(PROPERTY_NUM_SIZE), byteOrder);
             Map<String, DataType> propertyAndType = new HashMap<>();
             //read the property name and data type for node or edge type, property name end with \0.
             for (int j = 0; j < typePropertyNum; j++) {

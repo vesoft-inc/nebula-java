@@ -9,7 +9,6 @@ import static com.vesoft.nebula.driver.graph.net.Constants.DEFAULT_DISABLE_VERIF
 import static com.vesoft.nebula.driver.graph.net.Constants.DEFAULT_ENABLE_TLS;
 import static com.vesoft.nebula.driver.graph.net.Constants.DEFAULT_MAX_LIFE_TIME_MS;
 import static com.vesoft.nebula.driver.graph.net.Constants.DEFAULT_MAX_PING_TIMEOUT_MS;
-import static com.vesoft.nebula.driver.graph.net.Constants.DEFAULT_MAX_WAIT_MS;
 
 import com.vesoft.nebula.driver.graph.data.HostAddress;
 import com.vesoft.nebula.driver.graph.exception.AuthFailedException;
@@ -358,11 +357,7 @@ public class NebulaPool implements Serializable {
          * @return NebulaPool.Builder
          */
         public Builder withMaxWaitMills(long maxWaitMills) {
-            if (maxWaitMills <= 0 || maxWaitMills > DEFAULT_MAX_WAIT_MS) {
-                this.maxWaitMills = DEFAULT_MAX_WAIT_MS;
-            } else {
-                this.maxWaitMills = maxWaitMills;
-            }
+            this.maxWaitMills = maxWaitMills <= 0 ? Long.MAX_VALUE : maxWaitMills;
             return this;
         }
 
