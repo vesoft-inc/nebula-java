@@ -1,3 +1,0 @@
-ignore:
-  - "client/src/main/generated"
-  - "client/src/main/fbthrift"

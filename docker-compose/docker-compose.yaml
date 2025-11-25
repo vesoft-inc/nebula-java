@@ -1,0 +1,218 @@
+version: '3'
+services:
+  metad0: &metad
+    image: ${IMAGE_GROUP}/nebula-metad:${IMAGE_VERSION}
+    environment:
+      USER: root
+      TZ:   "${TZ}"
+      LOCAL_IP: metad0
+    entrypoint: ""
+    command:
+      - sh
+      - -c
+      - |
+        ./bin/nebula-metad \
+        --flagfile=/usr/local/nebula/etc/nebula-metad.conf \
+        --daemonize=false \
+        --meta_server_addrs=metad0:9559,metad1:9559,metad2:9559 \
+        --port=9559 \
+        --data_path=/data/meta \
+        --host=$${LOCAL_IP} \
+        --containerized=true \
+        --license_manager_url=license.vesoft-inc.com:9119
+    # healthcheck:
+    #   test: ["CMD", "curl", "-sf", "http://${NAME}:19559/status"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 3
+    #   start_period: 20s
+    ports:
+      - 9559
+      - 19559
+      - 19560
+    networks:
+      - nebula-ng
+    restart: "no"
+    cap_add:
+      - SYS_PTRACE
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1G
+
+  metad1:
+    <<: *metad
+    environment:
+      USER: root
+      TZ:   "${TZ}"
+      LOCAL_IP: metad1
+
+  metad2:
+    <<: *metad
+    environment:
+      USER: root
+      TZ:   "${TZ}"
+      LOCAL_IP: metad2
+
+  storaged0: &storaged
+    image: ${IMAGE_GROUP}/nebula-storaged:${IMAGE_VERSION}
+    environment:
+      USER: root
+      TZ:   "${TZ}"
+      LOCAL_IP: storaged0
+    entrypoint: ""
+    command:
+      - sh
+      - -c
+      - |
+        ./bin/nebula-storaged \
+         --flagfile=/usr/local/nebula/etc/nebula-storaged.conf \
+         --daemonize=false \
+         --meta_server_addrs=metad0:9559,metad1:9559,metad2:9559 \
+         --port=9779 \
+         --data_path=/data/storage \
+         --host=$${LOCAL_IP} \
+         --containerized=true \
+         --memory_strategy=static
+    depends_on:
+      - metad0
+      - metad1
+      - metad2
+    # healthcheck:
+    #   test: ["CMD", "curl", "-sf", "http://${NAME}:19779/status"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 3
+    #   start_period: 20s
+    ports:
+      - 9779
+      - 19779
+    networks:
+      - nebula-ng
+    restart: "no"
+    cap_add:
+      - SYS_PTRACE
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 4G
+
+  storaged1:
+    <<: *storaged
+    environment:
+      USER: root
+      TZ:   "${TZ}"
+      LOCAL_IP: storaged1
+
+  storaged2:
+    <<: *storaged
+    environment:
+      USER: root
+      TZ:   "${TZ}"
+      LOCAL_IP: storaged2
+
+  graphd0: &graphd
+    image: ${IMAGE_GROUP}/nebula-graphd:${IMAGE_VERSION}
+    environment:
+      USER: root
+      TZ:   "${TZ}"
+      LOCAL_IP: graphd0
+    entrypoint: ""
+    command:
+      - sh
+      - -c
+      - |
+        ./bin/nebula-graphd \
+        --flagfile=/usr/local/nebula/etc/nebula-graphd.conf \
+        --daemonize=false \
+        --containerized=true \
+        --meta_server_addrs=metad0:9559,metad1:9559,metad2:9559 \
+        --port=9669 \
+        --host=$${LOCAL_IP} \
+        --memory_strategy=static \
+        --redirect_stdout=true
+    depends_on:
+      - storaged0
+      - storaged1
+      - storaged2
+    # healthcheck:
+    #   test: ["CMD", "curl", "-sf", "http://graphd:19669/status"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 3
+    #   start_period: 20s
+    ports:
+      - "3820:9669"
+      - 19669
+      - 19670
+    networks:
+      - nebula-ng
+    restart: "no"
+    cap_add:
+      - SYS_PTRACE
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 4G
+
+  graphd1:
+    <<: *graphd
+    environment:
+      USER: root
+      TZ:   "${TZ}"
+      LOCAL_IP: graphd1
+    ports:
+      - "3821:9669"
+      - 19669
+      - 19670
+
+  graphd2:
+    <<: *graphd
+    environment:
+      USER: root
+      TZ:   "${TZ}"
+      LOCAL_IP: graphd2
+    ports:
+      - "3822:9669"
+      - 19669
+      - 19670
+
+  console:
+    image: reg.vesoft-inc.com/vesoft-ng/ngctl:nightly
+    entrypoint: ""
+    command:
+      - sh
+      - -c
+      - |
+        for i in `seq 1 20`;do
+          ngctl auth passwd -H metad0 -P 9559 -u root -c passwd -p NebulaGraph01 > /dev/null 2>&1
+          if [[ $$? == 0 ]];then
+            break;
+          fi;
+          sleep 1;
+          echo "retry to connect metad0";
+        done ;
+        sleep 1
+        ngctl auth login -H metad0 -P 9559 -u root  -p NebulaGraph01
+        ngctl svcgrp create my_cluster1 --replica-factor 3
+        for i in `seq 0 2`;do
+          ngctl svcgrp add-host my_cluster1 -H graphd$${i} 
+          ngctl svcgrp add-host my_cluster1 -H storaged$${i} 
+          ngctl svcgrp add-service my_cluster1 --type graphd -H graphd$${i} --port 9669
+          ngctl svcgrp add-service my_cluster1 --type storaged -H storaged$${i} --port 9779
+        done;
+        ngctl svcgrp init my_cluster1
+        tail -f /dev/null;
+
+    depends_on:
+      - metad0
+      - metad1
+      - metad2
+    networks:
+      - nebula-ng
+
+networks:
+  nebula-ng:

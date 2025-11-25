@@ -1,0 +1,83 @@
+# Copyright (c) 2025 vesoft inc. All rights reserved.
+
+name: snapshot
+
+on:
+  push:
+    branches: [ test ]
+
+
+jobs:
+  deploy-java-driver-snapshot:
+    runs-on: [ self-hosted, linux ]
+    steps:
+      - name: Clean runner
+        uses: webiny/action-post-run@3.1.0
+        with:
+          run: find . -mindepth 1 -delete
+
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+
+      - name: Set up Maven
+        uses: stCarolas/setup-maven@v5
+        with:
+          maven-version: 3.8.2
+
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "8"
+          server-id: central
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_PASSWORD
+          gpg-private-key: ${{ secrets.JAVA_GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
+
+
+      - name: install nebula
+        run: |
+          docker compose pull && docker compose up -d
+          sleep 40
+        working-directory: docker-compose
+
+      - name: install nebula-ssl
+        run: |
+          docker compose pull && docker compose up -d
+          sleep 40
+        working-directory: docker-compose-ssl
+
+      - name: Deploy Snapshot to maven central
+        run: |
+          mvn clean deploy -Pdeploy
+        env:
+          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ""
+
+      - name: setup minio
+        uses: vesoft-inc/.github/actions/setup-minio@master
+        with:
+          minio_url: ${{ secrets.MINIO_ENDPOINT }}
+          access_key: ${{ secrets.MINIO_KEY }}
+          secret_key: ${{ secrets.MINIO_SECRET }}
+
+      - name: Copy java sdk to release on MinIO
+        run: |
+          mv target/ nebula-graph-java-sdk/
+          tar czf ./nebula-graph-java-sdk-5.2-SNAPSHOT.tgz nebula-graph-java-sdk/driver-5.2-SNAPSHOT.jar
+          mc cp nebula-graph-java-sdk-5.2-SNAPSHOT.tgz minio/nightly-build/nebula-ng-java/5.2-SNAPSHOT/
+        working-directory: client
+
+      - name: stop nebula
+        if: always()
+        run: |
+          docker compose down
+        working-directory: docker-compose
+
+      - name: stop nebula-ssl
+        if: always()
+        run: |
+          docker compose down
+        working-directory: docker-compose-ssl

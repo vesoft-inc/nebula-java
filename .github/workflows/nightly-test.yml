@@ -1,0 +1,61 @@
+# Copyright (c) 2025 vesoft inc. All rights reserved.
+
+name: nightly-test
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+
+
+jobs:
+  deploy-java-driver-snapshot:
+    runs-on: [ self-hosted, linux ]
+    if: github.ref == 'refs/heads/dev'
+    steps:
+      - name: Clean runner
+        uses: webiny/action-post-run@3.1.0
+        with:
+          run: find . -mindepth 1 -delete
+
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "8"
+
+      - name: Set up Maven
+        uses: stCarolas/setup-maven@v5
+        with:
+          maven-version: 3.8.2
+
+      - name: install nebula
+        run: |
+          docker compose pull && docker compose up -d
+          sleep 40
+        working-directory: docker-compose
+
+      - name: install nebula-ssl
+        run: |
+          docker compose pull && docker compose up -d
+          sleep 40
+        working-directory: docker-compose-ssl
+
+      - name: run test
+        run: |
+          mvn clean compile test
+        working-directory: client
+
+      - name: stop nebula
+        if: always()
+        run: |
+          docker compose down
+        working-directory: docker-compose
+
+      - name: stop nebula-ssl
+        if: always()
+        run: |
+          docker compose down
+        working-directory: docker-compose-ssl
