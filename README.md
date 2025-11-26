@@ -1,4 +1,4 @@
-#NebulaGraph Java SDK for NebulaGraph 5.0
+# NebulaGraph Java SDK for NebulaGraph 5
 
 NebulaGraph Java SDK is a Java client for developers to connect their projects to Nebula Graph.
 
@@ -10,7 +10,7 @@ NebulaGraph Java SDK is a Java client for developers to connect their projects t
 ./mvnw clean package -Dmaven.test.skip=true
 ```
 
-the sdk jar will be generated in java/client/target/driver-5.0.0.jar
+the sdk jar will be generated in client/target/driver-5.3-SNAPSHOT.jar
 
 ## Example to use Java SDK
 
@@ -19,7 +19,7 @@ add dependency in your pom.xml:
         <dependency>
             <groupId>com.vesoft</groupId>
             <artifactId>driver</artifactId>
-            <version>5.1.1</version>
+            <version>5.2.0</version>
         </dependency>
 ```
 
@@ -35,10 +35,10 @@ yourself.
                     .builder(addresses, userName, password)
                     .withMaxClientSize(10)
                     .withMinClientSize(1)
-                    .withConnectTimeoutMills(1000)
+                    .withConnectTimeoutMills(5000)
                     .withRequestTimeoutMills(30000)
                     .withBlockWhenExhausted(true)
-                    .withMaxWaitMills(Long.MAX_VALUE)
+                    .withMaxWaitMills(60000)
                     .build();
             NebulaClient client = pool.getClient();
             client.execute("USE nba MATCH (v:player) RETURN v.id, v.name, v.score, v.gender, v.rate");
@@ -59,8 +59,8 @@ yourself.
         try {
             client = NebulaClient.builder(address, user, passwd)
                     .withAuthOptions(Collections.emptyMap())
-                    .withConnectTimeoutMills(1000)
-                    .withRequestTimeoutMills(3000)
+                    .withConnectTimeoutMills(5000)
+                    .withRequestTimeoutMills(30000)
                     .build();
             client.execute("USE nba MATCH (v:player) RETURN v.id, v.name, v.score, v.gender, v.rate");
         } catch (Exception e) {
@@ -114,6 +114,8 @@ Here is the version correspondence between Java Driver and NebulaGraph:
 
 | Driver Version | Nebula Version |
 |:--------------:|:--------------:|
+|     5.2.0      |     5.x.x      |
+|     5.1.2      |     5.x.x      |
 |     5.1.1      |     5.x.x      |
 |     5.1.0      |     5.x.x      |
 |     5.0.1      |     5.x.x      |
