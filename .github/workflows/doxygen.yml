@@ -5,13 +5,11 @@ on:
     inputs:
       branch_name:
         description: 'Which git branch should I check out?'
-        required: true
-        default: 'master'           
+        required: true     
 
       java_version:
         description: 'Java SDK version to use for documentation'
         required: true
-        default: '5.1.0'
 
 
 jobs:
