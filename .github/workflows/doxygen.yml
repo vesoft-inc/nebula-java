@@ -5,16 +5,11 @@ on:
     inputs:
       branch_name:
         description: 'Which git branch should I check out?'
-        required: true
-        default: 'master'           
-      doc_version:
-        description: 'Documentation version to generate'
-        required: true
-        default: '5.1.0'
+        required: true     
+
       java_version:
         description: 'Java SDK version to use for documentation'
         required: true
-        default: '5.1.0'
 
 
 jobs:
@@ -22,11 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       BRANCH_NAME: ${{ github.event.inputs.branch_name }}        
-      DOC_VERSION: ${{ github.event.inputs.doc_version }}
       JAVA_VERSION: ${{ github.event.inputs.java_version }}
-      ENSITE_PASSWORD: ${{ secrets.ENSITE_PASSWORD }}
-      ZHSITE_PASSWORD: ${{ secrets.ZHSITE_PASSWORD }}    
-
 
     steps:
     - name: Checkout code
@@ -45,62 +36,12 @@ jobs:
       run: |
         echo "PROJECT_NUMBER=${JAVA_VERSION}" >> doxygen/java-config
         mkdir -p "${BRANCH_NAME}/java/${JAVA_VERSION}"
-        echo "OUTPUT_DIRECTORY=${BRANCH_NAME}/java/${JAVA_VERSION}" >> doxygen/java-config
+        echo "OUTPUT_DIRECTORY=${JAVA_VERSION}" >> doxygen/java-config
         doxygen doxygen/java-config
     
-     # Compresses HTML files into a tar.gz file
-    - name: compress all API reference
-      run: |
-        tar -zcvf api_doc.tar.gz "${BRANCH_NAME}"
-        ls -ll  
-
-    - name: check if file exists
-      run: |
-        if [ -f api_doc.tar.gz ]; then
-          echo "File exists"
-        else
-          echo "File does not exist"
-          exit 1
-        fi
-
-    - name: transfer api reference to nebula server
-      uses: appleboy/scp-action@v0.1.7
+    # Deploy the generated HTML files to the gh-pages branch
+    - name: Deploy to gh-pages
+      uses: JamesIves/github-pages-deploy-action@v4
       with:
-        host: 20.163.77.63
-        username: azureuser
-        password: ${{ env.ENSITE_PASSWORD }}
-        port: 404
-        source: api_doc.tar.gz   
-        target: /var/www/ent-docs/${{ env.DOC_VERSION }}/
-        
-    - name: uncompress api reference in nebula server
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: 20.163.77.63
-        username: azureuser
-        password: ${{ env.ENSITE_PASSWORD }}
-        port: 404
-        script: |
-          tar -zxf /var/www/ent-docs/${{ env.DOC_VERSION}}/api_doc.tar.gz -C /var/www/ent-docs/${{ env.DOC_VERSION}}/
-          tar -zxf /var/www/ent-docs/${{ env.DOC_VERSION}}/api_doc.tar.gz -C /var/www/cloud/master/
-
-    - name: transfer api reference to yueshu server
-      uses: appleboy/scp-action@v0.1.7
-      with:
-        host: 121.40.218.31
-        username: root
-        password: ${{ env.ZHSITE_PASSWORD }}
-        port: 404
-        source: api_doc.tar.gz   
-        target: /var/www/ent-docs/${{ env.DOC_VERSION }}/      
-
-    - name: uncompress api reference in yueshu server
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: 121.40.218.31
-        username: root
-        password: ${{ env.ZHSITE_PASSWORD }}
-        port: 404
-        script: |
-          tar -zxf /var/www/ent-docs/${{ env.DOC_VERSION}}/api_doc.tar.gz -C /var/www/ent-docs/${{ env.DOC_VERSION}}/
-          tar -zxf /var/www/ent-docs/${{ env.DOC_VERSION}}/api_doc.tar.gz -C /var/www/cloud/master/          
+        folder: ${JAVA_VERSION}/html
+        target-folder: ${JAVA_VERSION}
