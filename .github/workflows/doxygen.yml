@@ -24,9 +24,6 @@ jobs:
       BRANCH_NAME: ${{ github.event.inputs.branch_name }}        
       DOC_VERSION: ${{ github.event.inputs.doc_version }}
       JAVA_VERSION: ${{ github.event.inputs.java_version }}
-      ENSITE_PASSWORD: ${{ secrets.ENSITE_PASSWORD }}
-      ZHSITE_PASSWORD: ${{ secrets.ZHSITE_PASSWORD }}    
-
 
     steps:
     - name: Checkout code
@@ -63,44 +60,3 @@ jobs:
           exit 1
         fi
 
-    - name: transfer api reference to nebula server
-      uses: appleboy/scp-action@v0.1.7
-      with:
-        host: 20.163.77.63
-        username: azureuser
-        password: ${{ env.ENSITE_PASSWORD }}
-        port: 404
-        source: api_doc.tar.gz   
-        target: /var/www/ent-docs/${{ env.DOC_VERSION }}/
-        
-    - name: uncompress api reference in nebula server
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: 20.163.77.63
-        username: azureuser
-        password: ${{ env.ENSITE_PASSWORD }}
-        port: 404
-        script: |
-          tar -zxf /var/www/ent-docs/${{ env.DOC_VERSION}}/api_doc.tar.gz -C /var/www/ent-docs/${{ env.DOC_VERSION}}/
-          tar -zxf /var/www/ent-docs/${{ env.DOC_VERSION}}/api_doc.tar.gz -C /var/www/cloud/master/
-
-    - name: transfer api reference to yueshu server
-      uses: appleboy/scp-action@v0.1.7
-      with:
-        host: 121.40.218.31
-        username: root
-        password: ${{ env.ZHSITE_PASSWORD }}
-        port: 404
-        source: api_doc.tar.gz   
-        target: /var/www/ent-docs/${{ env.DOC_VERSION }}/      
-
-    - name: uncompress api reference in yueshu server
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: 121.40.218.31
-        username: root
-        password: ${{ env.ZHSITE_PASSWORD }}
-        port: 404
-        script: |
-          tar -zxf /var/www/ent-docs/${{ env.DOC_VERSION}}/api_doc.tar.gz -C /var/www/ent-docs/${{ env.DOC_VERSION}}/
-          tar -zxf /var/www/ent-docs/${{ env.DOC_VERSION}}/api_doc.tar.gz -C /var/www/cloud/master/          
