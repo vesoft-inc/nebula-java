@@ -7,10 +7,7 @@ on:
         description: 'Which git branch should I check out?'
         required: true
         default: 'master'           
-      doc_version:
-        description: 'Documentation version to generate'
-        required: true
-        default: '5.1.0'
+
       java_version:
         description: 'Java SDK version to use for documentation'
         required: true
@@ -22,7 +19,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       BRANCH_NAME: ${{ github.event.inputs.branch_name }}        
-      DOC_VERSION: ${{ github.event.inputs.doc_version }}
       JAVA_VERSION: ${{ github.event.inputs.java_version }}
 
     steps:
@@ -45,18 +41,9 @@ jobs:
         echo "OUTPUT_DIRECTORY=${BRANCH_NAME}/java/${JAVA_VERSION}" >> doxygen/java-config
         doxygen doxygen/java-config
     
-     # Compresses HTML files into a tar.gz file
-    - name: compress all API reference
-      run: |
-        tar -zcvf api_doc.tar.gz "${BRANCH_NAME}"
-        ls -ll  
-
-    - name: check if file exists
-      run: |
-        if [ -f api_doc.tar.gz ]; then
-          echo "File exists"
-        else
-          echo "File does not exist"
-          exit 1
-        fi
-
+    # Deploy the generated HTML files to the gh-pages branch
+    - name: Deploy to gh-pages
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        folder: ${BRANCH_NAME}/html
+        target-folder: ${BRANCH_NAME}
