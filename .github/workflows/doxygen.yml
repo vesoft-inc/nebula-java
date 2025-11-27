@@ -36,12 +36,12 @@ jobs:
       run: |
         echo "PROJECT_NUMBER=${JAVA_VERSION}" >> doxygen/java-config
         mkdir -p "${BRANCH_NAME}/java/${JAVA_VERSION}"
-        echo "OUTPUT_DIRECTORY=${BRANCH_NAME}/java/${JAVA_VERSION}" >> doxygen/java-config
+        echo "OUTPUT_DIRECTORY=${JAVA_VERSION}" >> doxygen/java-config
         doxygen doxygen/java-config
     
     # Deploy the generated HTML files to the gh-pages branch
     - name: Deploy to gh-pages
       uses: JamesIves/github-pages-deploy-action@v4
       with:
-        folder: ${BRANCH_NAME}/html
-        target-folder: ${BRANCH_NAME}
+        folder: ${JAVA_VERSION}/html
+        target-folder: ${JAVA_VERSION}
