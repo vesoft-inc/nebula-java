@@ -1,0 +1,11 @@
+<map id="scanEdge" name="scanEdge">
+<area shape="rect" id="Node000001" title="scan the data of specific edgeType" alt="" coords="5,29,89,55"/>
+<area shape="rect" id="Node000002" href="$dd/daf/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1net_1_1NebulaClient.html#a915e98109e748ac1376defeb2add17db" title="get edge type&#39;s properties" alt="" coords="137,29,279,55"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,39,124,39,124,45,89,45"/>
+<area shape="rect" id="Node000003" href="$dd/daf/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1net_1_1NebulaClient.html#a3f38632b322f5bc2eeb1252b1b04b1a6" title=" " alt="" coords="487,29,560,55"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="279,39,473,39,473,45,279,45"/>
+<area shape="rect" id="Node000004" href="$dd/daf/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1net_1_1NebulaClient.html#aee1b239bb8dc0136359994b0492d5e2c" title="get the graph&#39;s graph type" alt="" coords="327,55,439,80"/>
+<area shape="poly" id="edge4_Node000002_Node000004" title=" " alt="" coords="279,50,313,55,313,60,278,55"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="500,30,495,21,497,11,507,5,523,3,543,6,551,15,547,18,540,11,523,8,509,10,502,15,500,20,504,28"/>
+<area shape="poly" id="edge5_Node000004_Node000003" title=" " alt="" coords="438,55,472,48,473,54,439,60"/>
+</map>

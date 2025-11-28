@@ -1,0 +1,12 @@
+<map id="scanEdge" name="scanEdge">
+<area shape="rect" id="Node000001" title="scan the data of specific edgeType the result will contain src node&#39;s primary key,..." alt="" coords="5,29,89,55"/>
+<area shape="rect" id="Node000002" href="$dd/daf/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1net_1_1NebulaClient.html#aaef0d435cf51c050348ec65bf8da792f" title="get all parts" alt="" coords="269,29,361,55"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,33,137,27,221,27,256,31,255,36,221,33,137,33,90,38"/>
+<area shape="rect" id="Node000004" href="$dd/daf/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1net_1_1NebulaClient.html#ae32526d34f296a65f777f6ea5f7817ee" title=" " alt="" coords="137,67,221,92"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="90,51,125,61,123,66,89,56"/>
+<area shape="rect" id="Node000003" href="$dd/daf/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1net_1_1NebulaClient.html#a3f38632b322f5bc2eeb1252b1b04b1a6" title=" " alt="" coords="409,29,483,55"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="361,39,395,39,395,45,361,45"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="423,30,419,21,421,11,431,5,446,3,464,6,472,14,468,18,461,11,446,8,433,10,426,14,424,20,428,28"/>
+<area shape="poly" id="edge5_Node000004_Node000002" title=" " alt="" coords="221,65,255,56,257,61,222,70"/>
+<area shape="poly" id="edge6_Node000004_Node000004" title=" " alt="" coords="157,68,152,58,155,49,164,42,179,40,197,43,205,52,201,55,195,48,179,45,166,47,159,52,158,58,162,65"/>
+</map>

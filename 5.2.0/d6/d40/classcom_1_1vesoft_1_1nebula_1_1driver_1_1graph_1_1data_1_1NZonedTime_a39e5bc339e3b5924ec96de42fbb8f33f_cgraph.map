@@ -1,0 +1,13 @@
+<map id="equals" name="equals">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,104,71,129"/>
+<area shape="rect" id="Node000002" href="$d6/d40/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1data_1_1NZonedTime.html#a0967267e214bd955511a7c637d185e9e" title=" " alt="" coords="132,5,207,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="49,102,78,72,117,40,124,35,127,40,120,44,82,76,53,106"/>
+<area shape="rect" id="Node000003" href="$d6/d40/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1data_1_1NZonedTime.html#a39ad4f4a43135e3529d7ba10b6c3651f" title=" " alt="" coords="119,55,220,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="70,102,121,82,123,87,72,107"/>
+<area shape="rect" id="Node000004" href="$d6/d40/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1data_1_1NZonedTime.html#ab34f3c89ff80f4ce7087d1900eb7187c" title=" " alt="" coords="125,104,213,129"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="71,114,111,114,111,119,71,119"/>
+<area shape="rect" id="Node000005" href="$d6/d40/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1data_1_1NZonedTime.html#a59719a5faf3fc13537237ba43f159eed" title="get zone offset in seconds" alt="" coords="128,153,211,179"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="72,126,123,146,121,151,70,131"/>
+<area shape="rect" id="Node000006" href="$d6/d40/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1data_1_1NZonedTime.html#a38fd2228e2bbaab19c04532b93d058cc" title=" " alt="" coords="124,203,215,228"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="53,128,83,157,120,188,129,194,126,198,117,192,79,161,49,132"/>
+</map>
