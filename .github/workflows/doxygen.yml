@@ -35,7 +35,7 @@ jobs:
     - name: Generate Documentation for Java
       run: |
         echo "PROJECT_NUMBER=${JAVA_VERSION}" >> doxygen/java-config
-        mkdir -p "${BRANCH_NAME}/java/${JAVA_VERSION}"
+        mkdir -p "${JAVA_VERSION}"
         echo "OUTPUT_DIRECTORY=${JAVA_VERSION}" >> doxygen/java-config
         doxygen doxygen/java-config
     
