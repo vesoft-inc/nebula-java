@@ -52,26 +52,30 @@ public class GrpcConnection extends Connection {
         this.serverAddr = address;
         this.connectTimeout = builder.connectTimeoutMills;
         this.requestTimeout = builder.requestTimeoutMills;
+        String formattedHost = address.getHost();
+        if (formattedHost.contains(":") && !formattedHost.startsWith("[")) {
+            formattedHost = "[" + formattedHost + "]";
+        }
         if (builder.enableTls) {
             try {
                 NettyChannelBuilder channelBuilder = NettyChannelBuilder
-                    .forAddress(address.getHost(), address.getPort())
-                    .useTransportSecurity()
-                    .sslContext(TlsUtil.getSslContext(builder.disableVerifyServerCert,
-                                                      builder.tlsCa,
-                                                      builder.tlsCert,
-                                                      builder.tlsKey))
-                    .maxInboundMessageSize(Integer.MAX_VALUE);
+                        .forAddress(formattedHost, address.getPort())
+                        .useTransportSecurity()
+                        .sslContext(TlsUtil.getSslContext(builder.disableVerifyServerCert,
+                                                          builder.tlsCa,
+                                                          builder.tlsCert,
+                                                          builder.tlsKey))
+                        .maxInboundMessageSize(Integer.MAX_VALUE);
                 channel = channelBuilder.build();
             } catch (SSLException e) {
                 throw new IOErrorException(IOErrorException.E_SSL_ERROR, e.getMessage());
             }
         } else {
             channel = NettyChannelBuilder
-                .forAddress(address.getHost(), address.getPort())
-                .usePlaintext()
-                .maxInboundMessageSize(Integer.MAX_VALUE)
-                .build();
+                    .forAddress(formattedHost, address.getPort())
+                    .usePlaintext()
+                    .maxInboundMessageSize(Integer.MAX_VALUE)
+                    .build();
         }
         stub = GraphServiceGrpc.newBlockingStub(channel);
     }
@@ -88,32 +92,32 @@ public class GrpcConnection extends Connection {
     public boolean ping(long sessionID, long timeoutMs) throws IOErrorException {
         ExecuteResponse response = execute(sessionID, "RETURN 1", timeoutMs);
         return ErrorCode.SUCCESSFUL_COMPLETION.code
-            .equals(response.getStatus().getCode().toString(charset));
+                .equals(response.getStatus().getCode().toString(charset));
     }
 
     public AuthResult authenticate(String user, Map<String, Object> authOptions)
-        throws AuthFailedException, IOErrorException {
+            throws AuthFailedException, IOErrorException {
         try {
             ClientInfo clientInfo = ClientInfo.newBuilder()
-                .setLang(ClientInfo.Language.JAVA)
-                .setProtocolVersion(Common
-                                        .getDescriptor()
-                                        .getOptions()
-                                        .getExtension(Common.protocolVersion))
-                .setVersion(ByteString.copyFrom(ClientVersion.clientVersion, charset))
-                .build();
+                    .setLang(ClientInfo.Language.JAVA)
+                    .setProtocolVersion(Common
+                                                .getDescriptor()
+                                                .getOptions()
+                                                .getExtension(Common.protocolVersion))
+                    .setVersion(ByteString.copyFrom(ClientVersion.clientVersion, charset))
+                    .build();
             ByteString userString = user == null ? ByteString.copyFrom("", charset)
-                : ByteString.copyFrom(user, charset);
+                    : ByteString.copyFrom(user, charset);
             String authInfoString = JSON.toJSONString(authOptions);
             AuthRequest authReq = AuthRequest.newBuilder()
-                .setUsername(userString)
-                .setAuthInfo(ByteString.copyFrom(authInfoString, charset))
-                .setClientInfo(clientInfo)
-                .build();
+                    .setUsername(userString)
+                    .setAuthInfo(ByteString.copyFrom(authInfoString, charset))
+                    .setClientInfo(clientInfo)
+                    .build();
 
             AuthResponse resp = stub
-                .withDeadlineAfter(connectTimeout, TimeUnit.MILLISECONDS)
-                .authenticate(authReq);
+                    .withDeadlineAfter(connectTimeout, TimeUnit.MILLISECONDS)
+                    .authenticate(authReq);
             String code = resp.getStatus().getCode().toString(charset);
             if (!ErrorCode.SUCCESSFUL_COMPLETION.code.equals(code)) {
                 close();
@@ -123,7 +127,7 @@ public class GrpcConnection extends Connection {
         } catch (Exception e) {
             close();
             if (e instanceof StatusRuntimeException
-                && (((StatusRuntimeException) e).getStatus().getCode() == Code.DEADLINE_EXCEEDED)) {
+                    && (((StatusRuntimeException) e).getStatus().getCode() == Code.DEADLINE_EXCEEDED)) {
                 throw new AuthFailedException(String.format("authenticate to %s timeout after %dms",
                                                             serverAddr.toString(),
                                                             connectTimeout));
@@ -136,20 +140,20 @@ public class GrpcConnection extends Connection {
     }
 
     public ExecuteResponse execute(long sessionID, String stmt, long timeout)
-        throws IOErrorException {
+            throws IOErrorException {
         if (stmt == null) {
             throw new NullPointerException("statement is null.");
         }
         try {
             ExecuteRequest request = ExecuteRequest.newBuilder()
-                .setSessionId(sessionID)
-                .setStmt(ByteString.copyFrom(stmt, charset))
-                .build();
+                    .setSessionId(sessionID)
+                    .setStmt(ByteString.copyFrom(stmt, charset))
+                    .build();
 
             return stub.withDeadlineAfter(timeout, TimeUnit.MILLISECONDS).execute(request);
         } catch (Exception e) {
             if (e instanceof StatusRuntimeException
-                && (((StatusRuntimeException) e).getStatus().getCode() == Code.DEADLINE_EXCEEDED)) {
+                    && (((StatusRuntimeException) e).getStatus().getCode() == Code.DEADLINE_EXCEEDED)) {
                 throw new IOErrorException(E_TIME_OUT,
                                            String.format("request to %s timeout after %dms",
                                                          serverAddr.toString(),
