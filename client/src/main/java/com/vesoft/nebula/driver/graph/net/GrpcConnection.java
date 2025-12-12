@@ -127,7 +127,8 @@ public class GrpcConnection extends Connection {
         } catch (Exception e) {
             close();
             if (e instanceof StatusRuntimeException
-                    && (((StatusRuntimeException) e).getStatus().getCode() == Code.DEADLINE_EXCEEDED)) {
+                    && (((StatusRuntimeException) e)
+                    .getStatus().getCode() == Code.DEADLINE_EXCEEDED)) {
                 throw new AuthFailedException(String.format("authenticate to %s timeout after %dms",
                                                             serverAddr.toString(),
                                                             connectTimeout));
@@ -153,7 +154,9 @@ public class GrpcConnection extends Connection {
             return stub.withDeadlineAfter(timeout, TimeUnit.MILLISECONDS).execute(request);
         } catch (Exception e) {
             if (e instanceof StatusRuntimeException
-                    && (((StatusRuntimeException) e).getStatus().getCode() == Code.DEADLINE_EXCEEDED)) {
+                    && (((StatusRuntimeException) e)
+                    .getStatus()
+                    .getCode() == Code.DEADLINE_EXCEEDED)) {
                 throw new IOErrorException(E_TIME_OUT,
                                            String.format("request to %s timeout after %dms",
                                                          serverAddr.toString(),
