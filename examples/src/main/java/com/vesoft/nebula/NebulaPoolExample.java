@@ -20,20 +20,21 @@ public class NebulaPoolExample {
     private static final Logger logger = LoggerFactory.getLogger(NebulaPoolExample.class);
 
     public static void main(String[] args) {
-        String     addresses = "127.0.0.1:9669";
-        String     userName  = "root";
-        String     password  = "NebulaGraph01";
-        NebulaPool pool      = null;
+        String addresses = "127.0.0.1:9669";
+        // String     addresses = "ip1:9669,ip2:9669";
+        String     userName = "root";
+        String     password = "NebulaGraph01";
+        NebulaPool pool     = null;
         try {
             pool = NebulaPool
-                .builder(addresses, userName, password)
-                .withMaxClientSize(10)
-                .withMinClientSize(1)
-                .withConnectTimeoutMills(1000)
-                .withRequestTimeoutMills(30000)
-                .withBlockWhenExhausted(true)
-                .withMaxWaitMills(Long.MAX_VALUE)
-                .build();
+                    .builder(addresses, userName, password)
+                    .withMaxClientSize(10)
+                    .withMinClientSize(1)
+                    .withConnectTimeoutMills(1000)
+                    .withRequestTimeoutMills(30000)
+                    .withBlockWhenExhausted(true)
+                    .withMaxWaitMills(Long.MAX_VALUE)
+                    .build();
             queryWithMultipleThreads(pool);
         } catch (Exception e) {
             logger.error("failed :", e);
@@ -48,7 +49,7 @@ public class NebulaPoolExample {
 
     public static void queryWithMultipleThreads(NebulaPool pool) {
         String queryNode = "USE nba MATCH (v:player) RETURN v.id, v.name, v.score, v.gender, "
-            + "v.rate";
+                + "v.rate";
         int parallel = 200;
 
         CountDownLatch  countDownLatch  = new CountDownLatch(parallel);
@@ -60,7 +61,7 @@ public class NebulaPoolExample {
                 try {
                     client = pool.getClient();
                     ResultSet result = client.execute(
-                        "USE nba MATCH ()-[e:follow]->() RETURN e.followness, e.likeness");
+                            "USE nba MATCH ()-[e:follow]->() RETURN e.followness, e.likeness");
                     if (!result.isSucceeded()) {
                         logger.error(String.format("Execute: `%s', failed: %s",
                                                    queryNode, result.getErrorMessage()));
