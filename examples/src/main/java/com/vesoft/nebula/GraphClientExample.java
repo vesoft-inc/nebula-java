@@ -31,6 +31,7 @@ public class GraphClientExample {
 
     private static final Logger log    = LoggerFactory.getLogger(GraphClientExample.class);
     static               String host   = "127.0.0.1:9669";
+    //    static               String multipleHosts = "ip1:9669,ip2:9669";
     static               String user   = "root";
     static               String passwd = "NebulaGraph01";
 
@@ -38,10 +39,10 @@ public class GraphClientExample {
         NebulaClient client = null;
         try {
             client = NebulaClient.builder(host, user, passwd)
-                .withAuthOptions(Collections.emptyMap())
-                .withConnectTimeoutMills(1000)
-                .withRequestTimeoutMills(3000)
-                .build();
+                    .withAuthOptions(Collections.emptyMap())
+                    .withConnectTimeoutMills(1000)
+                    .withRequestTimeoutMills(3000)
+                    .build();
             createGraphType(client);
             createGraph(client);
             insertData(client);
@@ -63,10 +64,10 @@ public class GraphClientExample {
     private static void createGraphType(NebulaClient client) throws IOErrorException,
                                                                     InterruptedException {
         String createSchema = "CREATE GRAPH TYPE IF NOT EXISTS graph_type_nba AS {"
-            + "NODE TYPE node_type_player (LABEL player {id INT PRIMARY KEY, name STRING, "
-            + "score FLOAT, gender bool, rate DOUBLE}),"
-            + "EDGE TYPE edge_type_follow(node_type_player)-[LABEL follow "
-            + "{followness INT, likeness FLOAT64}]->(node_type_player)}";
+                + "NODE TYPE node_type_player (LABEL player {id INT PRIMARY KEY, name STRING, "
+                + "score FLOAT, gender bool, rate DOUBLE}),"
+                + "EDGE TYPE edge_type_follow(node_type_player)-[LABEL follow "
+                + "{followness INT, likeness FLOAT64}]->(node_type_player)}";
         ResultSet resp = client.execute(createSchema);
         if (!resp.isSucceeded()) {
             log.error(String.format("Execute: `%s', failed: %s",
@@ -96,13 +97,13 @@ public class GraphClientExample {
 
     private static void insertData(NebulaClient client) throws IOErrorException {
         String insertVertexes = "TABLE t{id,name,score,gender,rate} =\n"
-            + "(1,\"Tim\",87.0,true,7.32),\n"
-            + "(2,\"Jerry\",95.0,false,4.01),\n"
-            + "(3,\"Kyle\",100,true,9.99)\n"
-            + "USE nba \n"
-            + "FOR r IN t\n"
-            + "INSERT OR IGNORE(@node_type_player"
-            + "{id:r.id,name:r.name,score:r.score,gender:r.gender,rate:r.rate})";
+                + "(1,\"Tim\",87.0,true,7.32),\n"
+                + "(2,\"Jerry\",95.0,false,4.01),\n"
+                + "(3,\"Kyle\",100,true,9.99)\n"
+                + "USE nba \n"
+                + "FOR r IN t\n"
+                + "INSERT OR IGNORE(@node_type_player"
+                + "{id:r.id,name:r.name,score:r.score,gender:r.gender,rate:r.rate})";
         ResultSet resp = client.execute(insertVertexes);
         if (!resp.isSucceeded()) {
             log.error(String.format("Execute: `%s', failed: %s",
@@ -113,15 +114,15 @@ public class GraphClientExample {
         log.info("insert graph node succeed!");
 
         String insertEdges = "TABLE t{id1,id2,followness,likeness}=\n"
-            + "(1,2,90,66.8),\n"
-            + "(2,3,100,93.35)\n"
-            + "USE nba \n"
-            + "FOR r IN t\n"
-            + "OPTIONAL MATCH(src_node) WHERE src_node.id=r.id1 \n"
-            + "OPTIONAL MATCH(dst_node) WHERE dst_node.id=r.id2\n"
-            + "INSERT OR IGNORE (src_node)-"
-            + "[@edge_type_follow{followness:r.followness,likeness:r.likeness}]"
-            + "->(dst_node)";
+                + "(1,2,90,66.8),\n"
+                + "(2,3,100,93.35)\n"
+                + "USE nba \n"
+                + "FOR r IN t\n"
+                + "OPTIONAL MATCH(src_node) WHERE src_node.id=r.id1 \n"
+                + "OPTIONAL MATCH(dst_node) WHERE dst_node.id=r.id2\n"
+                + "INSERT OR IGNORE (src_node)-"
+                + "[@edge_type_follow{followness:r.followness,likeness:r.likeness}]"
+                + "->(dst_node)";
         resp = client.execute(insertEdges);
         if (!resp.isSucceeded()) {
             log.error(String.format("Execute: `%s', failed: %s",
@@ -134,7 +135,7 @@ public class GraphClientExample {
 
     private static void query(NebulaClient client) throws IOErrorException {
         String queryNode = "USE nba MATCH (v:player) RETURN v.id, v.name, v.score, v.gender, "
-            + "v.rate";
+                + "v.rate";
         ResultSet resp = client.execute(queryNode);
         if (!resp.isSucceeded()) {
             log.error(String.format("Execute: `%s', failed: %s",
@@ -166,7 +167,7 @@ public class GraphClientExample {
      */
     private static void queryWithMultiThread(NebulaClient client) {
         String queryNode = "USE nba MATCH (v:player) RETURN v.id, v.name, v.score, v.gender, "
-            + "v.rate";
+                + "v.rate";
         int parallel = 200;
 
         CountDownLatch  countDownLatch  = new CountDownLatch(parallel);
@@ -176,7 +177,7 @@ public class GraphClientExample {
             executorService.submit(() -> {
                 try {
                     ResultSet result = client.execute(
-                        "USE nba MATCH ()-[e:follow]->() RETURN e.followness, e.likeness");
+                            "USE nba MATCH ()-[e:follow]->() RETURN e.followness, e.likeness");
                     if (!result.isSucceeded()) {
                         log.error(String.format("Execute: `%s', failed: %s",
                                                 queryNode, result.getErrorMessage()));
@@ -206,7 +207,7 @@ public class GraphClientExample {
      */
     private static void queryWithMultiThread() {
         String queryNode = "USE nba MATCH (v:player) RETURN v.id, v.name, v.score, v.gender, "
-            + "v.rate";
+                + "v.rate";
         int parallel = 200;
 
         CountDownLatch  countDownLatch  = new CountDownLatch(parallel);
@@ -217,12 +218,12 @@ public class GraphClientExample {
                 NebulaClient client = null;
                 try {
                     client = NebulaClient.builder(host, user, passwd)
-                        .withAuthOptions(Collections.emptyMap())
-                        .withConnectTimeoutMills(5000)
-                        .withRequestTimeoutMills(3000)
-                        .build();
+                            .withAuthOptions(Collections.emptyMap())
+                            .withConnectTimeoutMills(5000)
+                            .withRequestTimeoutMills(3000)
+                            .build();
                     ResultSet result = client.execute(
-                        "USE nba MATCH ()-[e:follow]->() RETURN e.followness, e.likeness");
+                            "USE nba MATCH ()-[e:follow]->() RETURN e.followness, e.likeness");
                     if (!result.isSucceeded()) {
                         log.error(String.format("Execute: `%s', failed: %s",
                                                 queryNode, result.getErrorMessage()));
