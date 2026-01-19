@@ -971,7 +971,7 @@ public class ValueParser {
             case COLUMN_TYPE_LIST:
                 ColumnType eleType = ColumnType.getColumnType(
                     bytesToInt8(reader.read(VALUE_TYPE_SIZE)));
-                int listSize = bytesToInt16(
+                int listSize = bytesToUInt16(
                     reader.read(ELEMENT_NUMBER_SIZE_FOR_ANY_VALUE), byteOrder);
                 int nullBitSize = (listSize % 8 == 0) ? (listSize / 8) : (listSize / 8 + 1);
                 ByteString nullBitBytes = reader.read(nullBitSize);
@@ -986,7 +986,7 @@ public class ValueParser {
                 }
                 return values;
             case COLUMN_TYPE_RECORD:
-                int recordSize = bytesToInt16(
+                int recordSize = bytesToUInt16(
                     reader.read(ELEMENT_NUMBER_SIZE_FOR_ANY_VALUE), byteOrder);
                 Map<String, ValueWrapper> map = new HashMap<>();
                 for (int i = 0; i < recordSize; i++) {
@@ -1002,7 +1002,7 @@ public class ValueParser {
                 long nodeId = bytesToInt64(reader.read(NODE_ID_SIZE), byteOrder);
                 int nodeTypeId = getNodeTypeIdFromNodeId(nodeId);
                 int nodeGraphId = bytesToInt32(reader.read(GRAPH_ID_SIZE), byteOrder);
-                int nodePropNum = bytesToInt16(
+                int nodePropNum = bytesToUInt16(
                     reader.read(ELEMENT_NUMBER_SIZE_FOR_ANY_VALUE), byteOrder);
                 Map<String, ValueWrapper> nodeProperties = new HashMap<>();
                 for (int i = 0; i < nodePropNum; i++) {
@@ -1020,7 +1020,7 @@ public class ValueParser {
                 long rank = bytesToInt64(reader.read(RANK_SIZE), byteOrder);
                 int edgeGraphId = bytesToInt32(reader.read(GRAPH_ID_SIZE), byteOrder);
                 int edgeTypeId = bytesToInt32(reader.read(EDGE_TYPE_ID_SIZE), byteOrder);
-                int edgePropNum = bytesToInt16(
+                int edgePropNum = bytesToUInt16(
                     reader.read(ELEMENT_NUMBER_SIZE_FOR_ANY_VALUE), byteOrder);
                 Map<String, ValueWrapper> edgeProperties = new HashMap<>();
                 for (int i = 0; i < edgePropNum; i++) {
@@ -1038,7 +1038,7 @@ public class ValueParser {
                                 edgeProperties,
                                 graphSchemas);
             case COLUMN_TYPE_PATH:
-                int elementNum = bytesToInt16(
+                int elementNum = bytesToUInt16(
                     reader.read(ELEMENT_NUMBER_SIZE_FOR_ANY_VALUE), byteOrder);
                 List<ValueWrapper> eleValues = new ArrayList<>();
                 for (int i = 0; i < elementNum; i++) {

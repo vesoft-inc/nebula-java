@@ -17,7 +17,7 @@ public class Constants {
     static final long    DEFAULT_HEALTH_CHECK_TIME_MS       = 5 * 60 * 1000;
     static final boolean DEFAULT_TEST_ON_BORROW             = true;
     static final boolean DEFAULT_BLOCK_WHEN_EXHAUSTED       = false;
-    static final long    DEFAULT_MAX_WAIT_MS                = Long.MAX_VALUE;
+    static final long    DEFAULT_MAX_WAIT_MS                = Long.MAX_VALUE / 1000;
     static final long    DEFAULT_IDLE_EVICT_SCHEDULE_MS     = -1;
     static final long    DEFAULT_MIN_EVICTABLE_IDLE_TIME_MS = 30 * 60 * 1000;
     static final boolean DEFAULT_STRICT_SERVER_HEALTHY      = false;
