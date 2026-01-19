@@ -19,7 +19,7 @@ add dependency in your pom.xml:
         <dependency>
             <groupId>com.vesoft</groupId>
             <artifactId>driver</artifactId>
-            <version>5.1.1</version>
+            <version>5.2.0</version>
         </dependency>
 ```
 
@@ -84,7 +84,7 @@ pom.xml.
   <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.4.1</version>
+                <version>5.2.0</version>
                 <configuration>
                     <!-- put your configurations here -->
                     <filters>
@@ -114,6 +114,7 @@ Here is the version correspondence between Java Driver and NebulaGraph:
 
 | Driver Version | Nebula Version |
 |:--------------:|:--------------:|
+|     5.2.0      |     5.x.x      |
 |     5.1.1      |     5.x.x      |
 |     5.1.0      |     5.x.x      |
 |     5.0.1      |     5.x.x      |
