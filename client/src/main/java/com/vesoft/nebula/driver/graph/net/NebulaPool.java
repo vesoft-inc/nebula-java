@@ -9,6 +9,7 @@ import static com.vesoft.nebula.driver.graph.net.Constants.DEFAULT_DISABLE_VERIF
 import static com.vesoft.nebula.driver.graph.net.Constants.DEFAULT_ENABLE_TLS;
 import static com.vesoft.nebula.driver.graph.net.Constants.DEFAULT_MAX_LIFE_TIME_MS;
 import static com.vesoft.nebula.driver.graph.net.Constants.DEFAULT_MAX_PING_TIMEOUT_MS;
+import static com.vesoft.nebula.driver.graph.net.Constants.DEFAULT_MAX_WAIT_MS;
 
 import com.vesoft.nebula.driver.graph.data.HostAddress;
 import com.vesoft.nebula.driver.graph.exception.AuthFailedException;
@@ -75,8 +76,8 @@ public class NebulaPool implements Serializable {
         }
 
         ClientPoolFactory factory = new ClientPoolFactory(
-            loadBalancer,
-            builder);
+                loadBalancer,
+                builder);
         pool = new GenericObjectPool<>(factory, objConfig);
         hasInit.compareAndSet(false, true);
     }
@@ -96,7 +97,7 @@ public class NebulaPool implements Serializable {
      */
     public void returnClient(NebulaClient client) {
         if (client.isClosed()
-            || (System.currentTimeMillis() - client.getCreateTime()) >= maxLifeMills) {
+                || (System.currentTimeMillis() - client.getCreateTime()) >= maxLifeMills) {
             try {
                 pool.invalidateObject(client);
             } catch (Exception e) {
@@ -168,7 +169,7 @@ public class NebulaPool implements Serializable {
 
         // the max wait time if blockWhenExhausted is true. if value is less than 0, always wait.
         // unit: millisecond
-        protected long maxWaitMills = Constants.DEFAULT_MAX_WAIT_MS;
+        protected long maxWaitMills = DEFAULT_MAX_WAIT_MS;
 
         // the schedule time for test the idle session and evict it. if value is less than 0,
         // never evict the idle sessions.
@@ -272,7 +273,7 @@ public class NebulaPool implements Serializable {
          */
         public Builder withConnectTimeoutMills(long connectTimeoutMills) {
             if (connectTimeoutMills <= 0
-                || connectTimeoutMills > Constants.DEFAULT_MAX_TIMEOUT_MS) {
+                    || connectTimeoutMills > Constants.DEFAULT_MAX_TIMEOUT_MS) {
                 this.connectTimeoutMills = Constants.DEFAULT_MAX_TIMEOUT_MS;
             } else {
                 this.connectTimeoutMills = connectTimeoutMills;
@@ -289,7 +290,7 @@ public class NebulaPool implements Serializable {
          */
         public Builder withRequestTimeoutMills(long requestTimeoutMills) {
             if (requestTimeoutMills <= 0
-                || requestTimeoutMills > Constants.DEFAULT_MAX_TIMEOUT_MS) {
+                    || requestTimeoutMills > Constants.DEFAULT_MAX_TIMEOUT_MS) {
                 this.requestTimeoutMills = Constants.DEFAULT_MAX_TIMEOUT_MS;
             } else {
                 this.requestTimeoutMills = requestTimeoutMills;
@@ -306,7 +307,7 @@ public class NebulaPool implements Serializable {
          */
         public Builder withServerPingTimeoutMills(long serverPingTimeoutMills) {
             if (serverPingTimeoutMills < 0
-                || serverPingTimeoutMills > DEFAULT_MAX_PING_TIMEOUT_MS) {
+                    || serverPingTimeoutMills > DEFAULT_MAX_PING_TIMEOUT_MS) {
                 this.serverPingTimeoutMills = DEFAULT_MAX_PING_TIMEOUT_MS;
             } else {
                 this.serverPingTimeoutMills = serverPingTimeoutMills;
@@ -357,7 +358,11 @@ public class NebulaPool implements Serializable {
          * @return NebulaPool.Builder
          */
         public Builder withMaxWaitMills(long maxWaitMills) {
-            this.maxWaitMills = maxWaitMills <= 0 ? Long.MAX_VALUE : maxWaitMills;
+            if (maxWaitMills <= 0 || maxWaitMills > DEFAULT_MAX_WAIT_MS) {
+                this.maxWaitMills = DEFAULT_MAX_WAIT_MS;
+            } else {
+                this.maxWaitMills = maxWaitMills;
+            }
             return this;
         }
 
