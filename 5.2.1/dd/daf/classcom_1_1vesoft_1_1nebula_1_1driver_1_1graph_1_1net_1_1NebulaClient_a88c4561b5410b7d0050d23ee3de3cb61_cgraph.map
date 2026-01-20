@@ -1,0 +1,9 @@
+<map id="getNodeProperties" name="getNodeProperties">
+<area shape="rect" id="Node000001" title="get node type&#39;s properties" alt="" coords="5,29,148,55"/>
+<area shape="rect" id="Node000002" href="$dd/daf/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1net_1_1NebulaClient.html#a3f38632b322f5bc2eeb1252b1b04b1a6" title=" " alt="" coords="356,29,429,55"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="148,39,342,39,342,45,148,45"/>
+<area shape="rect" id="Node000003" href="$dd/daf/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1net_1_1NebulaClient.html#aee1b239bb8dc0136359994b0492d5e2c" title="get the graph&#39;s graph type" alt="" coords="196,55,308,80"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="149,50,183,55,182,60,148,55"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="369,30,364,21,367,11,377,5,393,3,412,6,420,15,416,18,409,11,393,8,378,10,371,15,369,20,374,28"/>
+<area shape="poly" id="edge4_Node000003_Node000002" title=" " alt="" coords="308,55,342,48,343,54,309,60"/>
+</map>

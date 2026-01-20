@@ -1,0 +1,7 @@
+<map id="checkClosed" name="checkClosed">
+<area shape="rect" id="Node000001" title="check if the client already closed" alt="" coords="127,31,231,56"/>
+<area shape="rect" id="Node000002" href="$dd/daf/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1net_1_1NebulaClient.html#af67b6aff1f1d47d164aeac15eb872e11" title=" " alt="" coords="5,5,79,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="113,34,78,27,79,22,114,29"/>
+<area shape="rect" id="Node000003" href="$dd/daf/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1net_1_1NebulaClient.html#a48b750635b28b823a39c0df364e1ac5e" title="ping the NebulaGraph server" alt="" coords="17,55,67,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="113,58,68,66,67,60,112,52"/>
+</map>

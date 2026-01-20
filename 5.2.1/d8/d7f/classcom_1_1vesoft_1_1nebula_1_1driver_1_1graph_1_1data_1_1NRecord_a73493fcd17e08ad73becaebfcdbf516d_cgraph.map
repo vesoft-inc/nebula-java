@@ -1,0 +1,5 @@
+<map id="getValue" name="getValue">
+<area shape="rect" id="Node000001" title="get the Value of specified key in this record" alt="" coords="5,5,84,31"/>
+<area shape="rect" id="Node000002" href="$d8/d7f/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1data_1_1NRecord.html#ab021e3e1a912a8f0935a7f1eea4a9f31" title="returns true if this record contains a mapping for the specified key." alt="" coords="132,5,233,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="84,15,118,15,118,21,84,21"/>
+</map>

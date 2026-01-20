@@ -1,0 +1,11 @@
+<map id="getGraphType" name="getGraphType">
+<area shape="rect" id="Node000001" title="get the graph&#39;s graph type" alt="" coords="331,31,443,56"/>
+<area shape="rect" id="Node000002" href="$dd/daf/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1net_1_1NebulaClient.html#a915e98109e748ac1376defeb2add17db" title="get edge type&#39;s properties" alt="" coords="141,5,282,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="316,36,282,31,283,26,317,31"/>
+<area shape="rect" id="Node000004" href="$dd/daf/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1net_1_1NebulaClient.html#a88c4561b5410b7d0050d23ee3de3cb61" title="get node type&#39;s properties" alt="" coords="140,55,283,80"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="317,55,283,60,283,55,317,50"/>
+<area shape="rect" id="Node000003" href="$dd/daf/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1net_1_1NebulaClient.html#a0642754f595c839c54e404c436e3b0fd" title="scan the data of specific edgeType" alt="" coords="7,5,91,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="127,21,91,21,91,15,127,15"/>
+<area shape="rect" id="Node000005" href="$dd/daf/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1net_1_1NebulaClient.html#a4eed1482f2e129d3524753ff6ccf48b8" title="scan the data of specific nodeType the result will contain primary key and specific return properties..." alt="" coords="5,55,92,80"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="126,70,92,70,92,65,126,65"/>
+</map>

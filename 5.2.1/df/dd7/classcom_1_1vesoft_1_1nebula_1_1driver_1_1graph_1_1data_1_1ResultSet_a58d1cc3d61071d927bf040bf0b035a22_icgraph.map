@@ -1,0 +1,5 @@
+<map id="hasNext" name="hasNext">
+<area shape="rect" id="Node000001" title="if the ResultSet has row Record" alt="" coords="104,5,180,31"/>
+<area shape="rect" id="Node000002" href="$df/dd7/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1data_1_1ResultSet.html#a64882f88c678e86ccb656ca48f024b2e" title="get the next row Record" alt="" coords="5,5,56,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="90,21,56,21,56,15,90,15"/>
+</map>
