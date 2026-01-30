@@ -128,14 +128,14 @@ public class ValueParser {
     private ByteOrder          byteOrder;
 
     private static final byte[] kOneBitmasks = {
-        (byte) (1 << 0), // 0000 0001
-        (byte) (1 << 1), // 0000 0010
-        (byte) (1 << 2), // 0000 0100
-        (byte) (1 << 3), // 0000 1000
-        (byte) (1 << 4), // 0001 0000
-        (byte) (1 << 5), // 0010 0000
-        (byte) (1 << 6), // 0100 0000
-        (byte) (1 << 7)  // 1000 0000
+            (byte) (1 << 0), // 0000 0001
+            (byte) (1 << 1), // 0000 0010
+            (byte) (1 << 2), // 0000 0100
+            (byte) (1 << 3), // 0000 1000
+            (byte) (1 << 4), // 0001 0000
+            (byte) (1 << 5), // 0010 0000
+            (byte) (1 << 6), // 0100 0000
+            (byte) (1 << 7)  // 1000 0000
     };
 
 
@@ -306,10 +306,10 @@ public class ValueParser {
                 NodeType nodeType = (NodeType) type;
                 // nodePropColumnType: graphId->(nodeTypeId -> (propName-> propType))
                 Map<Integer, Map<Integer, Map<String, DataType>>> nodePropColumnType =
-                    nodeType.getNodeTypes();
+                        nodeType.getNodeTypes();
                 // nodePropVectorIndex: nodeTypeId -> (propName -> prop vector index)
                 Map<Integer, Map<Integer, Map<String, Integer>>> nodePropVectorIndex =
-                    vector.getGraphElementTypeIdAndPropVectorIndexMap(NODE_TYPE_ID_SIZE);
+                        vector.getGraphElementTypeIdAndPropVectorIndexMap(NODE_TYPE_ID_SIZE);
 
                 // decode the node's nodeId and graphId from node header
                 ByteString nodeHeaderBinary = getSubBytes(vectorData,
@@ -318,22 +318,22 @@ public class ValueParser {
                 NodeHeader nodeHeader = new NodeHeader(nodeHeaderBinary, byteOrder);
                 // decode the record node's property values from sub vectors
                 if (!nodePropColumnType.containsKey(nodeHeader.getGraphId())
-                    || !nodePropColumnType.get(nodeHeader.getGraphId())
-                    .containsKey(nodeHeader.getNodeTypeId())) {
+                        || !nodePropColumnType.get(nodeHeader.getGraphId())
+                        .containsKey(nodeHeader.getNodeTypeId())) {
                     throw new RuntimeException(String.format(
-                        "Value type for NODE does not contain graphId %d or node type id %d",
-                        nodeHeader.getGraphId(),
-                        nodeHeader.getNodeTypeId()));
+                            "Value type for NODE does not contain graphId %d or node type id %d",
+                            nodeHeader.getGraphId(),
+                            nodeHeader.getNodeTypeId()));
                 }
                 Map<String, DataType> propTypeMap = nodePropColumnType
-                    .get(nodeHeader.getGraphId())
-                    .get(nodeHeader.getNodeTypeId());
+                        .get(nodeHeader.getGraphId())
+                        .get(nodeHeader.getNodeTypeId());
                 Map<String, ValueWrapper> props = new HashMap<>();
                 for (String propName : propTypeMap.keySet()) {
                     int vectorIndex = nodePropVectorIndex
-                        .get(nodeHeader.getGraphId())
-                        .get(nodeHeader.getNodeTypeId())
-                        .get(propName);
+                            .get(nodeHeader.getGraphId())
+                            .get(nodeHeader.getNodeTypeId())
+                            .get(propName);
                     Object propValue = decodeValue(vector.getVectorWrapper(vectorIndex),
                                                    propTypeMap.get(propName),
                                                    rowIndex);
@@ -349,10 +349,10 @@ public class ValueParser {
                 EdgeType edgeType = (EdgeType) type;
                 // edgePropColumnType: graphId -> (edgeTypeId -> (propName-> propType))
                 Map<Integer, Map<Integer, Map<String, DataType>>> edgePropColumnType =
-                    edgeType.getEdgeTypes();
+                        edgeType.getEdgeTypes();
                 // edgePropVectorIndex: edgeTypeId -> (propName -> prop vector index)
                 Map<Integer, Map<Integer, Map<String, Integer>>> edgePropVectorIndex =
-                    vector.getGraphElementTypeIdAndPropVectorIndexMap(EDGE_TYPE_ID_SIZE);
+                        vector.getGraphElementTypeIdAndPropVectorIndexMap(EDGE_TYPE_ID_SIZE);
 
                 // decode the record edge's edgeTypeId from edge header.
                 // edgeTypeID+graphID+rank+dstID+srcID
@@ -364,30 +364,30 @@ public class ValueParser {
                 // decode the record edge's property values from sub vectors
                 int noDirectedTypeId = edgeHeader.getEdgeTypeId() & 0x3FFFFFFF;
                 if (!edgePropColumnType.containsKey(edgeHeader.getGraphId())
-                    || !edgePropColumnType.get(edgeHeader.getGraphId())
-                    .containsKey(noDirectedTypeId)) {
+                        || !edgePropColumnType.get(edgeHeader.getGraphId())
+                        .containsKey(noDirectedTypeId)) {
                     throw new RuntimeException(String.format(
-                        "Value type for NODE does not contain graphId %d or edge type id %d",
-                        edgeHeader.getGraphId(),
-                        noDirectedTypeId));
+                            "Value type for NODE does not contain graphId %d or edge type id %d",
+                            edgeHeader.getGraphId(),
+                            noDirectedTypeId));
                 }
 
                 Map<String, DataType> edgePropTypeMap = edgePropColumnType
-                    .get(edgeHeader.getGraphId())
-                    .get(noDirectedTypeId);
+                        .get(edgeHeader.getGraphId())
+                        .get(noDirectedTypeId);
                 Map<String, ValueWrapper> edgeProps = new HashMap<>();
                 for (String propName : edgePropTypeMap.keySet()) {
                     int vectorIndex = edgePropVectorIndex
-                        .get(edgeHeader.getGraphId())
-                        .get(noDirectedTypeId)
-                        .get(propName);
+                            .get(edgeHeader.getGraphId())
+                            .get(noDirectedTypeId)
+                            .get(propName);
                     Object propValue = decodeValue(vector.getVectorWrapper(vectorIndex),
                                                    edgePropTypeMap.get(propName),
                                                    rowIndex);
                     edgeProps.put(propName, new ValueWrapper(propValue,
                                                              edgePropTypeMap
-                                                                 .get(propName)
-                                                                 .getType()));
+                                                                     .get(propName)
+                                                                     .getType()));
                 }
                 Edge edgeValue = new Edge(edgeHeader.getGraphId(),
                                           edgeHeader.getEdgeTypeId(),
@@ -411,9 +411,9 @@ public class ValueParser {
                 PathSpecialMetaData pathSpecialMetaData = vector.getPathSpecialMetaData();
                 // graphId -> (NodeTypeId -> vecIndex),  graphId -> (EdgeTypeId -> vecIndex)
                 Map<Integer, Map<Integer, Integer>> nodeTypes =
-                    pathSpecialMetaData.getGraphIdAndNodeTypes();
+                        pathSpecialMetaData.getGraphIdAndNodeTypes();
                 Map<Integer, Map<Integer, Integer>> edgeTypes =
-                    pathSpecialMetaData.getGraphIdAndEdgeTypes();
+                        pathSpecialMetaData.getGraphIdAndEdgeTypes();
 
                 // construct map: uint16 pair index-> (node vector, adj vector)
                 Map<Integer, PathVectorPair> indexAndNodes = pathSpecialMetaData.getIndexAndNodes();
@@ -437,42 +437,42 @@ public class ValueParser {
                                         pathType.getDataTypes().get(0),
                                         pathHeader.getHeadOffset());
                 elements.add(new ValueWrapper(firstNode, ColumnType.COLUMN_TYPE_NODE));
-                PathAdjHeader pathAdjHeader = new PathAdjHeader(
-                    new ValueWrapper(decodeValue(firstNodeAdjVector,
-                                                 adjDataType,
-                                                 pathHeader.getHeadOffset()),
-                                     adjDataType.getType()).asLong());
+                PathAdjHeader pathAdjHeader = new PathAdjHeader(bytesToInt64(getSubBytes(firstNodeAdjVector.getVectorData(),
+                                                                                         INT64_SIZE,
+                                                                                         pathHeader.getHeadOffset()),
+                                                                             byteOrder));
 
                 VectorWrapper adjVector = null;
+                final EdgeType pathEdgeType = new EdgeType(pathType.getEdgeTypes());
+                final NodeType pathNodeType = new NodeType(pathType.getNodeTypes());
+
                 while (!pathAdjHeader.isEnd()) {
                     int vecIndex  = pathAdjHeader.getVecIdxOfNextEle();
                     int vecOffset = pathAdjHeader.getOffsetOfNextEle();
                     if (pathAdjHeader.isNextEdge()) {
                         PathVectorPair edgeVectorPair = indexAndEdges.get(vecIndex);
                         Object edge = decodeValue(edgeVectorPair.getVector(),
-                                                  new EdgeType(pathType.getEdgeTypes()),
+                                                  pathEdgeType,
                                                   vecOffset);
                         adjVector = edgeVectorPair.getAdjVector();
                         elements.add(new ValueWrapper(edge, ColumnType.COLUMN_TYPE_EDGE));
                         // update the adj header
-                        pathAdjHeader = new PathAdjHeader(
-                            new ValueWrapper(decodeValue(adjVector,
-                                                         adjDataType,
-                                                         vecOffset),
-                                             adjDataType.getType()).asLong());
+                        pathAdjHeader = new PathAdjHeader(bytesToInt64(getSubBytes(adjVector.getVectorData(),
+                                                                                   INT64_SIZE,
+                                                                                   vecOffset),
+                                                                       byteOrder));
                     } else {
                         PathVectorPair nodeVectorPair = indexAndNodes.get(vecIndex);
                         Object node = decodeValue(nodeVectorPair.getVector(),
-                                                  new NodeType(pathType.getNodeTypes()),
+                                                  pathNodeType,
                                                   vecOffset);
                         adjVector = nodeVectorPair.getAdjVector();
                         elements.add(new ValueWrapper(node, ColumnType.COLUMN_TYPE_NODE));
                         // update the adj header
-                        pathAdjHeader = new PathAdjHeader(
-                            new ValueWrapper(decodeValue(adjVector,
-                                                         adjDataType,
-                                                         vecOffset),
-                                             adjDataType.getType()).asLong());
+                        pathAdjHeader = new PathAdjHeader(bytesToInt64(getSubBytes(adjVector.getVectorData(),
+                                                                                   INT64_SIZE,
+                                                                                   vecOffset),
+                                                                       byteOrder));
                     }
                 }
                 return new Path(elements);
@@ -490,14 +490,14 @@ public class ValueParser {
             case COLUMN_TYPE_GEOGRAPHY:
                 ByteString header = getSubBytes(vectorData, GEO_HEADER_SIZE, rowIndex);
                 int chunkIndex = bytesToInt32(
-                    header.substring(0, CHUNK_INDEX_LENGTH_IN_STRING_HEADER), byteOrder);
+                        header.substring(0, CHUNK_INDEX_LENGTH_IN_STRING_HEADER), byteOrder);
                 int chunkOffset = bytesToInt32(
-                    header.substring(CHUNK_INDEX_LENGTH_IN_STRING_HEADER), byteOrder);
+                        header.substring(CHUNK_INDEX_LENGTH_IN_STRING_HEADER), byteOrder);
                 ByteString data = vector
-                    .getNestedVectors()
-                    .get(chunkIndex)
-                    .getVectorData()
-                    .substring(chunkOffset);
+                        .getNestedVectors()
+                        .get(chunkIndex)
+                        .getVectorData()
+                        .substring(chunkOffset);
                 return bytesToGeography(new BytesReader(data));
             case COLUMN_TYPE_SET:
                 // get the type for set element
@@ -580,30 +580,30 @@ public class ValueParser {
         // if the string is less than 12 bytes, no need to get data from chunk,
         // else get data from chunk and no need to decode the data of 4:8.
         int stringValueLength = bytesToInt32(
-            stringHeader.substring(0, STRING_VALUE_LENGTH_SIZE),
-            byteOrder);
+                stringHeader.substring(0, STRING_VALUE_LENGTH_SIZE),
+                byteOrder);
         if (stringValueLength <= STRING_MAX_VALUE_LENGTH_IN_HEADER) {
             return stringHeader.substring(STRING_VALUE_LENGTH_SIZE,
                                           STRING_VALUE_LENGTH_SIZE + stringValueLength)
-                .toString(charset);
+                    .toString(charset);
         }
 
         int chunkIndex = bytesToInt32(
-            stringHeader.substring(
-                CHUNK_INDEX_START_POSITION_IN_STRING_HEADER,
-                CHUNK_INDEX_START_POSITION_IN_STRING_HEADER
-                    + CHUNK_INDEX_LENGTH_IN_STRING_HEADER),
-            byteOrder);
+                stringHeader.substring(
+                        CHUNK_INDEX_START_POSITION_IN_STRING_HEADER,
+                        CHUNK_INDEX_START_POSITION_IN_STRING_HEADER
+                                + CHUNK_INDEX_LENGTH_IN_STRING_HEADER),
+                byteOrder);
         int chunkOffset = bytesToInt32(
-            stringHeader.substring(
-                CHUNK_OFFSET_START_POSITION_IN_STRING_HEADER,
-                CHUNK_OFFSET_START_POSITION_IN_STRING_HEADER
-                    + CHUNK_OFFSET_LENGTH_IN_STRING_HEADER),
-            byteOrder);
+                stringHeader.substring(
+                        CHUNK_OFFSET_START_POSITION_IN_STRING_HEADER,
+                        CHUNK_OFFSET_START_POSITION_IN_STRING_HEADER
+                                + CHUNK_OFFSET_LENGTH_IN_STRING_HEADER),
+                byteOrder);
         NestedVector stringChunkVector = vector.getNestedVectors(chunkIndex);
         ByteString valueData = stringChunkVector
-            .getVectorData()
-            .substring(chunkOffset, chunkOffset + stringValueLength);
+                .getVectorData()
+                .substring(chunkOffset, chunkOffset + stringValueLength);
         return valueData.toString(charset);
     }
 
@@ -656,8 +656,8 @@ public class ValueParser {
         buffer.get(); // Skip the padding byte
         int microsecond = buffer.getInt();
         LocalTime localUtcTime = LocalTime
-            .of(hour % 24, minute, second, microsecond * 1000)
-            .plusMinutes(currentOffset);
+                .of(hour % 24, minute, second, microsecond * 1000)
+                .plusMinutes(currentOffset);
         ZoneOffset offset = ZoneOffset.ofTotalSeconds(timeZoneOffset * 60);
         return OffsetTime.of(localUtcTime, offset);
     }
@@ -774,7 +774,7 @@ public class ValueParser {
             }
             case GeoShapeLineString: {
                 int numCoords = bytesToInt32(
-                    reader.read(GEO_COORDINATE_NUMBER_SIZE), byteOrder);
+                        reader.read(GEO_COORDINATE_NUMBER_SIZE), byteOrder);
                 List<NPoint> points = new ArrayList<>();
                 for (int i = 0; i < numCoords; i++) {
                     double x = bytesToDouble(reader.read(GEO_POINT_COORDINATE_SIZE), byteOrder);
@@ -785,7 +785,7 @@ public class ValueParser {
             }
             case GeoShapePolygon: {
                 int numLinearRing = bytesToInt32(
-                    reader.read(GEO_LINEAR_RING_NUMBER_SIZE), byteOrder);
+                        reader.read(GEO_LINEAR_RING_NUMBER_SIZE), byteOrder);
                 List<List<NPoint>> loops = new ArrayList<>();
                 // row index stores the different linearRing points' start index and end index.
                 int           numRowIndexes = numLinearRing + 1;
@@ -825,7 +825,7 @@ public class ValueParser {
     private AnyValue bytesToAny(ByteString value, VectorWrapper vector, int rowIndex) {
         VectorWrapper dataTypeVector = vector.getVectorWrapper(0);
         ColumnType valueType = ColumnType.getColumnType(bytesToInt8(
-            getSubBytes(dataTypeVector.getVectorData(), VALUE_TYPE_SIZE, rowIndex)));
+                getSubBytes(dataTypeVector.getVectorData(), VALUE_TYPE_SIZE, rowIndex)));
         AnyHeader anyHeader = new AnyHeader(value, valueType, byteOrder);
         Object    obj       = null;
 
@@ -834,7 +834,7 @@ public class ValueParser {
             obj = bytesBasicToObject(basicReader, valueType);
         }
         if (valueType == ColumnType.COLUMN_TYPE_STRING
-            || valueType == ColumnType.COLUMN_TYPE_DECIMAL) {
+                || valueType == ColumnType.COLUMN_TYPE_DECIMAL) {
             VectorWrapper stringVec = vector.getVectorWrapper((int) anyHeader.getChunkIndex());
             obj = DecodeUtils.bytesToSizedString(stringVec.getVectorData(),
                                                  (int) anyHeader.getOffset(),
@@ -843,9 +843,9 @@ public class ValueParser {
         if (ColumnType.isComposite(valueType)) {
             VectorWrapper subVector = vector.getVectorWrapper((int) anyHeader.getChunkIndex());
             BytesReader reader = new BytesReader(
-                subVector
-                    .getVectorData()
-                    .substring((int) anyHeader.getOffset()));
+                    subVector
+                            .getVectorData()
+                            .substring((int) anyHeader.getOffset()));
             obj = decodeCompositeValue(reader, valueType);
         }
         return new AnyValue(obj, valueType);
@@ -859,7 +859,7 @@ public class ValueParser {
      */
     private AnyValue bytesToConstAny(BytesReader reader) {
         ColumnType columnType = ColumnType.getColumnType(
-            bytesToUInt8(reader.read(VALUE_TYPE_SIZE)));
+                bytesToUInt8(reader.read(VALUE_TYPE_SIZE)));
         Object obj;
         if (ColumnType.isBasic(columnType)) {
             obj = bytesBasicToObject(reader, columnType);
@@ -1014,9 +1014,9 @@ public class ValueParser {
                 return reader.readSizedString(byteOrder);
             case COLUMN_TYPE_LIST:
                 ColumnType eleType = ColumnType.getColumnType(
-                    bytesToInt8(reader.read(VALUE_TYPE_SIZE)));
+                        bytesToInt8(reader.read(VALUE_TYPE_SIZE)));
                 int listSize = bytesToUInt16(
-                    reader.read(ELEMENT_NUMBER_SIZE_FOR_ANY_VALUE), byteOrder);
+                        reader.read(ELEMENT_NUMBER_SIZE_FOR_ANY_VALUE), byteOrder);
                 int nullBitSize = (listSize % 8 == 0) ? (listSize / 8) : (listSize / 8 + 1);
                 ByteString nullBitBytes = reader.read(nullBitSize);
                 List<ValueWrapper> values = new ArrayList<>();
@@ -1031,12 +1031,12 @@ public class ValueParser {
                 return values;
             case COLUMN_TYPE_RECORD:
                 int recordSize = bytesToUInt16(
-                    reader.read(ELEMENT_NUMBER_SIZE_FOR_ANY_VALUE), byteOrder);
+                        reader.read(ELEMENT_NUMBER_SIZE_FOR_ANY_VALUE), byteOrder);
                 Map<String, ValueWrapper> map = new HashMap<>();
                 for (int i = 0; i < recordSize; i++) {
                     String fieldName = reader.readSizedString(byteOrder);
                     ColumnType fieldType = ColumnType.getColumnType(
-                        bytesToUInt8(reader.read(VALUE_TYPE_SIZE)));
+                            bytesToUInt8(reader.read(VALUE_TYPE_SIZE)));
                     Object fieldValue = decodeCompositeValue(reader, fieldType);
                     map.put(fieldName, new ValueWrapper(fieldValue, fieldType));
                 }
@@ -1047,12 +1047,12 @@ public class ValueParser {
                 int nodeTypeId = getNodeTypeIdFromNodeId(nodeId);
                 int nodeGraphId = bytesToInt32(reader.read(GRAPH_ID_SIZE), byteOrder);
                 int nodePropNum = bytesToUInt16(
-                    reader.read(ELEMENT_NUMBER_SIZE_FOR_ANY_VALUE), byteOrder);
+                        reader.read(ELEMENT_NUMBER_SIZE_FOR_ANY_VALUE), byteOrder);
                 Map<String, ValueWrapper> nodeProperties = new HashMap<>();
                 for (int i = 0; i < nodePropNum; i++) {
                     String propName = reader.readSizedString(byteOrder);
                     ColumnType propType = ColumnType.getColumnType(
-                        bytesToUInt8(reader.read(VALUE_TYPE_SIZE)));
+                            bytesToUInt8(reader.read(VALUE_TYPE_SIZE)));
                     Object propValue = decodeCompositeValue(reader, propType);
                     nodeProperties.put(propName, new ValueWrapper(propValue, propType));
                 }
@@ -1065,12 +1065,12 @@ public class ValueParser {
                 int edgeGraphId = bytesToInt32(reader.read(GRAPH_ID_SIZE), byteOrder);
                 int edgeTypeId = bytesToInt32(reader.read(EDGE_TYPE_ID_SIZE), byteOrder);
                 int edgePropNum = bytesToUInt16(
-                    reader.read(ELEMENT_NUMBER_SIZE_FOR_ANY_VALUE), byteOrder);
+                        reader.read(ELEMENT_NUMBER_SIZE_FOR_ANY_VALUE), byteOrder);
                 Map<String, ValueWrapper> edgeProperties = new HashMap<>();
                 for (int i = 0; i < edgePropNum; i++) {
                     String propName = reader.readSizedString(byteOrder);
                     ColumnType propType = ColumnType.getColumnType(
-                        bytesToUInt8(reader.read(VALUE_TYPE_SIZE)));
+                            bytesToUInt8(reader.read(VALUE_TYPE_SIZE)));
                     Object propValue = decodeCompositeValue(reader, propType);
                     edgeProperties.put(propName, new ValueWrapper(propValue, propType));
                 }
@@ -1083,11 +1083,11 @@ public class ValueParser {
                                 graphSchemas);
             case COLUMN_TYPE_PATH:
                 int elementNum = bytesToUInt16(
-                    reader.read(ELEMENT_NUMBER_SIZE_FOR_ANY_VALUE), byteOrder);
+                        reader.read(ELEMENT_NUMBER_SIZE_FOR_ANY_VALUE), byteOrder);
                 List<ValueWrapper> eleValues = new ArrayList<>();
                 for (int i = 0; i < elementNum; i++) {
                     ColumnType elementType = ColumnType.getColumnType(
-                        bytesToUInt8(reader.read(VALUE_TYPE_SIZE)));
+                            bytesToUInt8(reader.read(VALUE_TYPE_SIZE)));
                     Object element = decodeCompositeValue(reader, elementType);
                     eleValues.add(new ValueWrapper(element, elementType));
                 }
@@ -1098,7 +1098,7 @@ public class ValueParser {
                 return bytesToEmbeddingVector(reader, vectorEleNum);
             case COLUMN_TYPE_SET:
                 ColumnType setEleType = ColumnType.getColumnType(
-                    bytesToInt8(reader.read(VALUE_TYPE_SIZE)));
+                        bytesToInt8(reader.read(VALUE_TYPE_SIZE)));
                 int setSize = bytesToInt32(reader.read(ELEMENT_NUMBER_SIZE_FOR_SET), byteOrder);
                 int setNullBitSize = (setSize % 8 == 0) ? (setSize / 8) : (setSize / 8 + 1);
                 ByteString setNullBitBytes = reader.read(setNullBitSize);
@@ -1114,10 +1114,10 @@ public class ValueParser {
                 return setValues;
             case COLUMN_TYPE_MAP:
                 ColumnType mapKeyType = ColumnType.getColumnType(
-                    bytesToInt8(reader.read(VALUE_TYPE_SIZE)));
+                        bytesToInt8(reader.read(VALUE_TYPE_SIZE)));
                 int mapKeySize = bytesToInt32(reader.read(ELEMENT_NUMBER_SIZE_FOR_MAP), byteOrder);
                 int mapKeyNullBitSize =
-                    (mapKeySize % 8 == 0) ? (mapKeySize / 8) : (mapKeySize / 8 + 1);
+                        (mapKeySize % 8 == 0) ? (mapKeySize / 8) : (mapKeySize / 8 + 1);
                 ByteString mapKeyNullBitBytes = reader.read(mapKeyNullBitSize);
 
                 List<ValueWrapper> keys = new ArrayList<>();
@@ -1130,11 +1130,11 @@ public class ValueParser {
                     }
                 }
                 ColumnType mapValueType = ColumnType.getColumnType(
-                    bytesToInt8(reader.read(VALUE_TYPE_SIZE)));
+                        bytesToInt8(reader.read(VALUE_TYPE_SIZE)));
                 int mapValueSize = bytesToInt32(reader.read(ELEMENT_NUMBER_SIZE_FOR_MAP),
                                                 byteOrder);
                 int mapValueNullBitSize =
-                    (mapValueSize % 8 == 0) ? (mapValueSize / 8) : (mapValueSize / 8 + 1);
+                        (mapValueSize % 8 == 0) ? (mapValueSize / 8) : (mapValueSize / 8 + 1);
                 ByteString mapValueNullBitBytes = reader.read(mapValueNullBitSize);
 
                 List<ValueWrapper> mapValues = new ArrayList<>();
