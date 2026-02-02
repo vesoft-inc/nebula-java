@@ -129,7 +129,7 @@ public class ValueParser {
     private ByteOrder          byteOrder;
 
     // Reusable ByteBuffer for DateTime decoding to avoid repeated allocation
-    private ByteBuffer         dateTimeBuffer;
+    private ByteBuffer dateTimeBuffer;
 
     // LRU cache for decoded strings to handle repetitive data
     private Map<String, String> stringCache;
@@ -154,10 +154,10 @@ public class ValueParser {
         this.graphSchemas = graphSchemas;
         this.timeZoneOffset = timeZoneOffset;
         this.byteOrder = byteOrder;
-        
+
         // Initialize reusable ByteBuffer for DateTime decoding
         this.dateTimeBuffer = ByteBuffer.allocate(8).order(byteOrder);
-        
+
         // Initialize LRU cache for strings (max 10000 entries)
         this.stringCache = new LinkedHashMap<String, String>(10000, 0.75f, true) {
             @Override
@@ -165,7 +165,7 @@ public class ValueParser {
                 return size() > 10000;
             }
         };
-        
+
         // Initialize LRU cache for LocalDateTime (max 10000 entries)
         this.dateTimeCache = new LinkedHashMap<Long, LocalDateTime>(10000, 0.75f, true) {
             @Override
@@ -465,10 +465,11 @@ public class ValueParser {
                                         pathType.getDataTypes().get(0),
                                         pathHeader.getHeadOffset());
                 elements.add(new ValueWrapper(firstNode, ColumnType.COLUMN_TYPE_NODE));
-                PathAdjHeader pathAdjHeader = new PathAdjHeader(bytesToInt64(getSubBytes(firstNodeAdjVector.getVectorData(),
-                                                                                         INT64_SIZE,
-                                                                                         pathHeader.getHeadOffset()),
-                                                                             byteOrder));
+                PathAdjHeader pathAdjHeader = new PathAdjHeader(bytesToInt64(
+                        getSubBytes(firstNodeAdjVector.getVectorData(),
+                                    INT64_SIZE,
+                                    pathHeader.getHeadOffset()),
+                        byteOrder));
 
                 VectorWrapper adjVector = null;
                 final EdgeType pathEdgeType = new EdgeType(pathType.getEdgeTypes());
@@ -485,10 +486,11 @@ public class ValueParser {
                         adjVector = edgeVectorPair.getAdjVector();
                         elements.add(new ValueWrapper(edge, ColumnType.COLUMN_TYPE_EDGE));
                         // update the adj header
-                        pathAdjHeader = new PathAdjHeader(bytesToInt64(getSubBytes(adjVector.getVectorData(),
-                                                                                   INT64_SIZE,
-                                                                                   vecOffset),
-                                                                       byteOrder));
+                        pathAdjHeader = new PathAdjHeader(bytesToInt64(
+                                getSubBytes(adjVector.getVectorData(),
+                                            INT64_SIZE,
+                                            vecOffset),
+                                byteOrder));
                     } else {
                         PathVectorPair nodeVectorPair = indexAndNodes.get(vecIndex);
                         Object node = decodeValue(nodeVectorPair.getVector(),
@@ -497,10 +499,11 @@ public class ValueParser {
                         adjVector = nodeVectorPair.getAdjVector();
                         elements.add(new ValueWrapper(node, ColumnType.COLUMN_TYPE_NODE));
                         // update the adj header
-                        pathAdjHeader = new PathAdjHeader(bytesToInt64(getSubBytes(adjVector.getVectorData(),
-                                                                                   INT64_SIZE,
-                                                                                   vecOffset),
-                                                                       byteOrder));
+                        pathAdjHeader = new PathAdjHeader(bytesToInt64(
+                                getSubBytes(adjVector.getVectorData(),
+                                            INT64_SIZE,
+                                            vecOffset),
+                                byteOrder));
                     }
                 }
                 return new Path(elements);
@@ -613,14 +616,14 @@ public class ValueParser {
         if (stringValueLength <= STRING_MAX_VALUE_LENGTH_IN_HEADER) {
             // Generate cache key for short strings
             String cacheKey = "short:" + stringValueLength + ":"
-                             + stringHeader.substring(STRING_VALUE_LENGTH_SIZE,
-                                                   STRING_VALUE_LENGTH_SIZE
-                                                   + stringValueLength);
+                    + stringHeader.substring(STRING_VALUE_LENGTH_SIZE,
+                                             STRING_VALUE_LENGTH_SIZE
+                                                     + stringValueLength);
             return stringCache.computeIfAbsent(cacheKey, k ->
                     stringHeader.substring(STRING_VALUE_LENGTH_SIZE,
-                                          STRING_VALUE_LENGTH_SIZE
-                                          + stringValueLength)
-                    .toString(charset));
+                                           STRING_VALUE_LENGTH_SIZE
+                                                   + stringValueLength)
+                            .toString(charset));
         }
 
         // Long string: read chunkIndex and chunkOffset in one go to reduce substring calls
@@ -636,16 +639,16 @@ public class ValueParser {
                         CHUNK_OFFSET_START_POSITION_IN_STRING_HEADER
                                 + CHUNK_OFFSET_LENGTH_IN_STRING_HEADER),
                 byteOrder);
-        
+
         // Generate cache key for long strings
-        String cacheKey = "long:" + System.identityHashCode(vector) + ":" 
-                         + chunkIndex + ":" + chunkOffset + ":" + stringValueLength;
-        
+        String cacheKey = "long:" + System.identityHashCode(vector) + ":"
+                + chunkIndex + ":" + chunkOffset + ":" + stringValueLength;
+
         return stringCache.computeIfAbsent(cacheKey, k -> {
             NestedVector stringChunkVector = vector.getNestedVectors(chunkIndex);
 
             ByteString valueData = stringChunkVector.getVectorData()
-                .substring(chunkOffset, chunkOffset + stringValueLength);
+                    .substring(chunkOffset, chunkOffset + stringValueLength);
             return valueData.toString(charset);
         });
     }
@@ -677,7 +680,7 @@ public class ValueParser {
             dateTimeBuffer.put(i, data.byteAt(i));
         }
         dateTimeBuffer.rewind();
-        
+
         int hour   = dateTimeBuffer.get();
         int minute = dateTimeBuffer.get();
         int second = dateTimeBuffer.get();
@@ -698,8 +701,8 @@ public class ValueParser {
             dateTimeBuffer.put(i, data.byteAt(i));
         }
         dateTimeBuffer.rewind();
-        
-        int hour = dateTimeBuffer.get();
+
+        int hour          = dateTimeBuffer.get();
         int currentOffset = timeZoneOffset;
         if (hour < 0) {
             hour = -hour;
@@ -727,13 +730,13 @@ public class ValueParser {
             dateTimeBuffer.put(i, data.byteAt(i));
         }
         dateTimeBuffer.rewind();
-        
+
         long qword = dateTimeBuffer.getLong();
-        
+
         // Check cache first
         return dateTimeCache.computeIfAbsent(qword, key -> {
-            long temp = key;
-            final int year  = (int) (temp & 0xFFFF);
+            long      temp = key;
+            final int year = (int) (temp & 0xFFFF);
             temp = temp >> 16;
             final int month = (int) (temp & 0xF);
             temp = temp >> 4;
@@ -782,7 +785,7 @@ public class ValueParser {
             dateTimeBuffer.put(i, data.byteAt(i));
         }
         dateTimeBuffer.rewind();
-        
+
         long qword = dateTimeBuffer.getLong();
 
         boolean isMonthBased  = (qword & 0x1) == 1;
