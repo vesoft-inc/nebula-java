@@ -117,6 +117,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -127,17 +128,25 @@ public class ValueParser {
     private int                timeZoneOffset;
     private ByteOrder          byteOrder;
 
-    private static final byte[] kOneBitmasks = {
-            (byte) (1 << 0), // 0000 0001
-            (byte) (1 << 1), // 0000 0010
-            (byte) (1 << 2), // 0000 0100
-            (byte) (1 << 3), // 0000 1000
-            (byte) (1 << 4), // 0001 0000
-            (byte) (1 << 5), // 0010 0000
-            (byte) (1 << 6), // 0100 0000
-            (byte) (1 << 7)  // 1000 0000
-    };
+    // Reusable ByteBuffer for DateTime decoding to avoid repeated allocation
+    private ByteBuffer         dateTimeBuffer;
 
+    // LRU cache for decoded strings to handle repetitive data
+    private Map<String, String> stringCache;
+
+    // LRU cache for decoded LocalDateTime to handle repetitive dates
+    private Map<Long, LocalDateTime> dateTimeCache;
+
+    private static final byte[] kOneBitmasks = {
+        (byte) (1 << 0), // 0000 0001
+        (byte) (1 << 1), // 0000 0010
+        (byte) (1 << 2), // 0000 0100
+        (byte) (1 << 3), // 0000 1000
+        (byte) (1 << 4), // 0001 0000
+        (byte) (1 << 5), // 0010 0000
+        (byte) (1 << 6), // 0100 0000
+        (byte) (1 << 7)  // 1000 0000
+    };
 
     public ValueParser(ResultGraphSchemas graphSchemas,
                        int timeZoneOffset,
@@ -145,6 +154,25 @@ public class ValueParser {
         this.graphSchemas = graphSchemas;
         this.timeZoneOffset = timeZoneOffset;
         this.byteOrder = byteOrder;
+        
+        // Initialize reusable ByteBuffer for DateTime decoding
+        this.dateTimeBuffer = ByteBuffer.allocate(8).order(byteOrder);
+        
+        // Initialize LRU cache for strings (max 10000 entries)
+        this.stringCache = new LinkedHashMap<String, String>(10000, 0.75f, true) {
+            @Override
+            protected boolean removeEldestEntry(Map.Entry<String, String> eldest) {
+                return size() > 10000;
+            }
+        };
+        
+        // Initialize LRU cache for LocalDateTime (max 10000 entries)
+        this.dateTimeCache = new LinkedHashMap<Long, LocalDateTime>(10000, 0.75f, true) {
+            @Override
+            protected boolean removeEldestEntry(Map.Entry<Long, LocalDateTime> eldest) {
+                return size() > 10000;
+            }
+        };
     }
 
     public ValueWrapper decodeValueWrapper(VectorWrapper vector, DataType type, int rowIndex) {
@@ -583,11 +611,19 @@ public class ValueParser {
                 stringHeader.substring(0, STRING_VALUE_LENGTH_SIZE),
                 byteOrder);
         if (stringValueLength <= STRING_MAX_VALUE_LENGTH_IN_HEADER) {
-            return stringHeader.substring(STRING_VALUE_LENGTH_SIZE,
-                                          STRING_VALUE_LENGTH_SIZE + stringValueLength)
-                    .toString(charset);
+            // Generate cache key for short strings
+            String cacheKey = "short:" + stringValueLength + ":"
+                             + stringHeader.substring(STRING_VALUE_LENGTH_SIZE,
+                                                   STRING_VALUE_LENGTH_SIZE
+                                                   + stringValueLength);
+            return stringCache.computeIfAbsent(cacheKey, k ->
+                    stringHeader.substring(STRING_VALUE_LENGTH_SIZE,
+                                          STRING_VALUE_LENGTH_SIZE
+                                          + stringValueLength)
+                    .toString(charset));
         }
 
+        // Long string: read chunkIndex and chunkOffset in one go to reduce substring calls
         int chunkIndex = bytesToInt32(
                 stringHeader.substring(
                         CHUNK_INDEX_START_POSITION_IN_STRING_HEADER,
@@ -600,11 +636,18 @@ public class ValueParser {
                         CHUNK_OFFSET_START_POSITION_IN_STRING_HEADER
                                 + CHUNK_OFFSET_LENGTH_IN_STRING_HEADER),
                 byteOrder);
-        NestedVector stringChunkVector = vector.getNestedVectors(chunkIndex);
-        ByteString valueData = stringChunkVector
-                .getVectorData()
+        
+        // Generate cache key for long strings
+        String cacheKey = "long:" + System.identityHashCode(vector) + ":" 
+                         + chunkIndex + ":" + chunkOffset + ":" + stringValueLength;
+        
+        return stringCache.computeIfAbsent(cacheKey, k -> {
+            NestedVector stringChunkVector = vector.getNestedVectors(chunkIndex);
+
+            ByteString valueData = stringChunkVector.getVectorData()
                 .substring(chunkOffset, chunkOffset + stringValueLength);
-        return valueData.toString(charset);
+            return valueData.toString(charset);
+        });
     }
 
 
@@ -629,12 +672,17 @@ public class ValueParser {
      * @return {@link LocalTime} value
      */
     private LocalTime bytesToLocalTime(ByteString data) {
-        ByteBuffer buffer = ByteBuffer.wrap(data.toByteArray()).order(byteOrder);
-        int        hour   = buffer.get();
-        int        minute = buffer.get();
-        int        second = buffer.get();
-        buffer.get(); // Skip the padding byte
-        int microsecond = buffer.getInt();
+        // Use reusable ByteBuffer to avoid toByteArray() call
+        for (int i = 0; i < 8; i++) {
+            dateTimeBuffer.put(i, data.byteAt(i));
+        }
+        dateTimeBuffer.rewind();
+        
+        int hour   = dateTimeBuffer.get();
+        int minute = dateTimeBuffer.get();
+        int second = dateTimeBuffer.get();
+        dateTimeBuffer.get(); // Skip the padding byte
+        int microsecond = dateTimeBuffer.getInt();
         return LocalTime.of(hour, minute, second, microsecond * 1000);
     }
 
@@ -645,16 +693,21 @@ public class ValueParser {
      * @return {@link OffsetTime}value
      */
     private OffsetTime bytesToZonedTime(ByteString data) {
-        ByteBuffer buffer        = ByteBuffer.wrap(data.toByteArray()).order(byteOrder);
-        int        hour          = buffer.get();
-        int        currentOffset = timeZoneOffset;
+        // Use reusable ByteBuffer to avoid toByteArray() call
+        for (int i = 0; i < 8; i++) {
+            dateTimeBuffer.put(i, data.byteAt(i));
+        }
+        dateTimeBuffer.rewind();
+        
+        int hour = dateTimeBuffer.get();
+        int currentOffset = timeZoneOffset;
         if (hour < 0) {
             hour = -hour;
         }
-        int minute = buffer.get();
-        int second = buffer.get();
-        buffer.get(); // Skip the padding byte
-        int microsecond = buffer.getInt();
+        int minute = dateTimeBuffer.get();
+        int second = dateTimeBuffer.get();
+        dateTimeBuffer.get(); // Skip the padding byte
+        int microsecond = dateTimeBuffer.getInt();
         LocalTime localUtcTime = LocalTime
                 .of(hour % 24, minute, second, microsecond * 1000)
                 .plusMinutes(currentOffset);
@@ -669,28 +722,39 @@ public class ValueParser {
      * @return DateTime value
      */
     private LocalDateTime bytesToLocalDateTime(ByteString data) {
-        long      qword = ByteBuffer.wrap(data.toByteArray()).order(byteOrder).getLong();
-        final int year  = (int) (qword & 0xFFFF);
-        qword = qword >> 16;
-        final int month = (int) (qword & 0xF);
-        qword = qword >> 4;
-        final int day = (int) (qword & 0x1F);
-        qword = qword >> 5;
-        final int hour = (int) (qword & 0x1F);
-        qword = qword >> 5;
-        final int minute = (int) (qword & 0x3F);
-        qword = qword >> 6;
-        final int second = (int) (qword & 0x3F);
-        qword = qword >> 6;
-        final int microsecond = (int) (qword & 0x3FFFFF);
+        // Use reusable ByteBuffer to avoid repeated allocation and toByteArray() calls
+        for (int i = 0; i < 8; i++) {
+            dateTimeBuffer.put(i, data.byteAt(i));
+        }
+        dateTimeBuffer.rewind();
+        
+        long qword = dateTimeBuffer.getLong();
+        
+        // Check cache first
+        return dateTimeCache.computeIfAbsent(qword, key -> {
+            long temp = key;
+            final int year  = (int) (temp & 0xFFFF);
+            temp = temp >> 16;
+            final int month = (int) (temp & 0xF);
+            temp = temp >> 4;
+            final int day = (int) (temp & 0x1F);
+            temp = temp >> 5;
+            final int hour = (int) (temp & 0x1F);
+            temp = temp >> 5;
+            final int minute = (int) (temp & 0x3F);
+            temp = temp >> 6;
+            final int second = (int) (temp & 0x3F);
+            temp = temp >> 6;
+            final int microsecond = (int) (temp & 0x3FFFFF);
 
-        return LocalDateTime.of(year,
-                                month,
-                                day,
-                                hour,
-                                minute,
-                                second,
-                                microsecond * 1000);
+            return LocalDateTime.of(year,
+                                    month,
+                                    day,
+                                    hour,
+                                    minute,
+                                    second,
+                                    microsecond * 1000);
+        });
     }
 
     /**
@@ -713,8 +777,13 @@ public class ValueParser {
      * @return Duration value
      */
     private NDuration bytesToDuration(ByteString data) {
-        ByteBuffer buffer = ByteBuffer.wrap(data.toByteArray()).order(byteOrder);
-        long       qword  = buffer.getLong();
+        // Use reusable ByteBuffer to avoid toByteArray() call
+        for (int i = 0; i < 8; i++) {
+            dateTimeBuffer.put(i, data.byteAt(i));
+        }
+        dateTimeBuffer.rewind();
+        
+        long qword = dateTimeBuffer.getLong();
 
         boolean isMonthBased  = (qword & 0x1) == 1;
         long    durationValue = qword >> 1;
