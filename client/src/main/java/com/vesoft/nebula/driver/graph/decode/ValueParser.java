@@ -750,7 +750,8 @@ public class ValueParser {
      * @return String value
      */
     public String bytesToString(ByteString stringHeader, NestedVector vector) {
-        // Read string length once
+        // if the string is less than 12 bytes, no need to get data from chunk,
+        // else get data from chunk and no need to decode the data of 4:8.
         int stringValueLength = bytesToInt32(
                 stringHeader.substring(0, STRING_VALUE_LENGTH_SIZE),
                 byteOrder);
