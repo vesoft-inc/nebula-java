@@ -35,6 +35,7 @@ import static com.vesoft.nebula.driver.graph.decode.ColumnType.COLUMN_TYPE_ZONED
 import static com.vesoft.nebula.driver.graph.decode.ColumnType.COLUMN_TYPE_ZONEDTIME;
 
 import com.vesoft.nebula.driver.graph.decode.ColumnType;
+import com.vesoft.nebula.driver.graph.decode.DateFormatterConst;
 import com.vesoft.nebula.driver.graph.exception.InvalidValueException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -53,13 +54,6 @@ public class ValueWrapper {
 
     private final Object     value;
     private final ColumnType type;
-
-    DateTimeFormatter zonedDateTimeFormatter =
-        DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXXXX");
-    DateTimeFormatter localDateTimeFormatter =
-        DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
-    DateTimeFormatter zonedTimeFormatter     = DateTimeFormatter.ofPattern("HH:mm:ss.SSSSSSXXXXX");
-    DateTimeFormatter localTimeFormatter     = DateTimeFormatter.ofPattern("HH:mm:ss.SSSSSS");
 
     public ValueWrapper(Object value, ColumnType type) {
         this.value = value;
@@ -727,13 +721,13 @@ public class ValueWrapper {
         } else if (isEdge()) {
             return asEdge().toString();
         } else if (isLocalTime()) {
-            return asLocalTime().format(localTimeFormatter);
+            return asLocalTime().format(DateFormatterConst.localTimeFormatter);
         } else if (isZonedTime()) {
-            return asZonedTime().format(zonedTimeFormatter);
+            return asZonedTime().format(DateFormatterConst.zonedTimeFormatter);
         } else if (isLocalDateTime()) {
-            return asLocalDateTime().format(localDateTimeFormatter);
+            return asLocalDateTime().format(DateFormatterConst.localDateTimeFormatter);
         } else if (isZonedDateTime()) {
-            return asZonedDateTime().format(zonedDateTimeFormatter);
+            return asZonedDateTime().format(DateFormatterConst.zonedDateTimeFormatter);
         } else if (isDate()) {
             return asDate().toString();
         } else if (isDuration()) {

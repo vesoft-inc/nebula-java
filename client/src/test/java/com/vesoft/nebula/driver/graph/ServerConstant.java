@@ -7,7 +7,7 @@ package com.vesoft.nebula.driver.graph;
 
 public class ServerConstant {
 
-    public static String host       = "127.0.0.1";
+    public static String host       = "192.168.8.6";
     public static int    port       = 3820;
     public static int    sslPort    = 4820;
     public static String address    = host + ":" + port;
