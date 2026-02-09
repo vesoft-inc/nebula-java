@@ -312,14 +312,14 @@ public class ValueParser {
             case COLUMN_TYPE_STRING:
                 int stringOffset = rowIndex * STRING_SIZE;
                 int stringValueLength = bytesToInt32AtOffset(vectorData, stringOffset, byteOrder);
-                
+
                 if (stringValueLength <= STRING_MAX_VALUE_LENGTH_IN_HEADER) {
                     // Short string: decode directly without creating intermediate ByteString
                     int dataOffset = stringOffset + STRING_VALUE_LENGTH_SIZE;
                     return vectorData.substring(dataOffset, dataOffset + stringValueLength)
                             .toString(charset);
                 }
-                
+
                 // Long string: fallback to original method
                 valueData = getSubBytes(vectorData, STRING_SIZE, rowIndex);
                 return bytesToString(valueData, vector.getVector());
@@ -401,13 +401,24 @@ public class ValueParser {
                                     int                   nodeTypeId = typeEntry.getKey();
                                     Map<String, PropInfo> typeCache  = new HashMap<>();
 
-                                    Map<String, Integer> vectorIndexMap =
-                                            nodePropVectorIndex.get(graphId).get(nodeTypeId);
+                                    Map<Integer, Map<String, Integer>> graphVectorIndexMap =
+                                            nodePropVectorIndex.get(graphId);
+                                    if (graphVectorIndexMap == null) {
+                                        continue;
+                                    }
+                                    Map<String, Integer> vectorIndexMap = graphVectorIndexMap
+                                            .get(nodeTypeId);
+                                    if (vectorIndexMap == null) {
+                                        continue;
+                                    }
 
                                     for (Map.Entry<String, DataType> propEntry :
                                             typeEntry.getValue().entrySet()) {
-                                        String propName    = propEntry.getKey();
-                                        int    vectorIndex = vectorIndexMap.get(propName);
+                                        String  propName    = propEntry.getKey();
+                                        Integer vectorIndex = vectorIndexMap.get(propName);
+                                        if (vectorIndex == null) {
+                                            continue;
+                                        }
                                         typeCache.put(propName,
                                                       new PropInfo(propEntry.getValue(),
                                                                    vectorIndex));
@@ -494,24 +505,35 @@ public class ValueParser {
                                         graphEntry.getValue().entrySet()) {
                                     int                   edgeTypeId = typeEntry.getKey();
                                     Map<String, PropInfo> typeCache  = new HashMap<>();
-
-                                    Map<String, Integer> vectorIndexMap =
-                                            edgePropVectorIndex.get(graphId).get(edgeTypeId);
+                                    Map<Integer, Map<String, Integer>> graphVectorIndexMap =
+                                            edgePropVectorIndex.get(graphId);
+                                    if (graphVectorIndexMap == null) {
+                                        continue;
+                                    }
+                                    Map<String, Integer> vectorIndexMap = graphVectorIndexMap
+                                            .get(edgeTypeId);
+                                    if (vectorIndexMap == null) {
+                                        continue;
+                                    }
 
                                     for (Map.Entry<String, DataType> propEntry :
+
                                             typeEntry.getValue().entrySet()) {
-                                        String propName    = propEntry.getKey();
-                                        int    vectorIndex = vectorIndexMap.get(propName);
+
+                                        String propName = propEntry.getKey();
+
+                                        Integer vectorIndex = vectorIndexMap.get(propName);
+
+                                        if (vectorIndex == null) {
+                                            continue;
+                                        }
                                         typeCache.put(propName, new PropInfo(propEntry.getValue(),
                                                                              vectorIndex));
                                     }
-
                                     graphCache.put(edgeTypeId, typeCache);
                                 }
-
                                 cache.put(graphId, graphCache);
                             }
-
                             return cache;
                         });
 
@@ -862,9 +884,9 @@ public class ValueParser {
         }
         dateTimeBuffer.rewind();
 
-        long qword = dateTimeBuffer.getLong();
-        long temp = qword;
-        final int year = (int) (temp & 0xFFFF);
+        long      qword = dateTimeBuffer.getLong();
+        long      temp  = qword;
+        final int year  = (int) (temp & 0xFFFF);
         temp = temp >> 16;
         final int month = (int) (temp & 0xF);
         temp = temp >> 4;
