@@ -279,6 +279,7 @@ public class NebulaClientTest {
             for (int i = 0; i < 10; i++) {
                 client = NebulaClient.builder(addresses, user, passwd)
                     .build();
+                System.out.println("===== host:" + client.getHost());
                 assert client.getHost().equals("127.0.0.1:3820")
                     || client.getHost().equals("127.0.0.1:3821")
                     || client.getHost().equals("127.0.0.1:3822");
