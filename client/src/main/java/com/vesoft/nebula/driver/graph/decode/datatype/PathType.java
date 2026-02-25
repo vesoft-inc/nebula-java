@@ -32,6 +32,8 @@ public class PathType extends DataType {
                 edgeTypes.add((EdgeType) dataType);
             }
         }
+        getNodeTypes();
+        getEdgeTypes();
     }
 
     public List<DataType> getDataTypes() {
@@ -42,14 +44,14 @@ public class PathType extends DataType {
         if (nodeTypesMap.isEmpty()) {
             for (NodeType nodeType : nodeTypes) {
                 for (Map.Entry<Integer, Map<Integer, Map<String, DataType>>> graphEntry :
-                    nodeType.getNodeTypes().entrySet()) {
+                        nodeType.getNodeTypes().entrySet()) {
                     int                                 graphId     = graphEntry.getKey();
                     Map<Integer, Map<String, DataType>> nodeTypeMap = graphEntry.getValue();
                     if (nodeTypesMap.containsKey(graphId)) {
                         Map<Integer, Map<String, DataType>> existNodeTypeMap =
-                            nodeTypesMap.get(graphId);
+                                nodeTypesMap.get(graphId);
                         for (Map.Entry<Integer, Map<String, DataType>> nodeTypeEntry :
-                            nodeTypeMap.entrySet()) {
+                                nodeTypeMap.entrySet()) {
                             int                   nodeTypeId = nodeTypeEntry.getKey();
                             Map<String, DataType> propMap    = nodeTypeEntry.getValue();
                             if (existNodeTypeMap.containsKey(nodeTypeId)) {
@@ -71,17 +73,17 @@ public class PathType extends DataType {
         if (edgeTypesMap.isEmpty()) {
             for (EdgeType edgeType : edgeTypes) {
                 for (Map.Entry<Integer, Map<Integer, Map<String, DataType>>> graphEntry :
-                    edgeType.getEdgeTypes()
-                        .entrySet()) {
+                        edgeType.getEdgeTypes()
+                                .entrySet()) {
                     Integer                             graphId     = graphEntry.getKey();
                     Map<Integer, Map<String, DataType>> edgeTypeMap = graphEntry.getValue();
 
                     if (edgeTypesMap.containsKey(graphId)) {
                         Map<Integer, Map<String, DataType>> existEdgeTypeMap =
-                            edgeTypesMap.get(graphId);
+                                edgeTypesMap.get(graphId);
 
                         for (Map.Entry<Integer, Map<String, DataType>> edgeTypeEntry :
-                            edgeTypeMap.entrySet()) {
+                                edgeTypeMap.entrySet()) {
                             Integer               edgeTypeId = edgeTypeEntry.getKey();
                             Map<String, DataType> propMap    = edgeTypeEntry.getValue();
 
