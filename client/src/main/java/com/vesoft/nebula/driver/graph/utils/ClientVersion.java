@@ -6,5 +6,5 @@
 package com.vesoft.nebula.driver.graph.utils;
 
 public class ClientVersion {
-    public static final String clientVersion = "5.2-SNAPSHOT";
+    public static final String clientVersion = "5.2.2";
 }
