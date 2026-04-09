@@ -1,0 +1,9 @@
+<map id="ScanResultIterator" name="ScanResultIterator">
+<area shape="rect" id="Node000001" title=" " alt="" coords="121,79,264,104"/>
+<area shape="rect" id="Node000003" href="$dc/d81/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1scan_1_1ScanEdgeResultIterator.html" title=" " alt="" coords="5,152,180,177"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="167,114,111,154,107,150,164,110"/>
+<area shape="rect" id="Node000004" href="$d5/dee/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1scan_1_1ScanNodeResultIterator.html" title=" " alt="" coords="205,152,381,177"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="221,110,278,150,275,154,218,114"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="143,5,242,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="195,44,195,79,190,79,190,44"/>
+</map>

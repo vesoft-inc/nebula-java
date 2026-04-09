@@ -1,0 +1,6 @@
+<map id="getAllParts" name="getAllParts">
+<area shape="rect" id="Node000001" title="get all parts" alt="" coords="5,29,97,55"/>
+<area shape="rect" id="Node000002" href="$dd/daf/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1net_1_1NebulaClient.html#a3f38632b322f5bc2eeb1252b1b04b1a6" title=" " alt="" coords="145,29,219,55"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="97,39,131,39,131,45,97,45"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="159,30,155,21,157,11,167,5,182,3,200,6,208,14,204,18,197,11,182,8,169,10,162,14,160,20,164,28"/>
+</map>

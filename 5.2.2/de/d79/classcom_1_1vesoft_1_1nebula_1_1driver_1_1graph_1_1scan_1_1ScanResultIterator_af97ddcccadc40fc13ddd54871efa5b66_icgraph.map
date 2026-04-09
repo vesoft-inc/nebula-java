@@ -1,0 +1,7 @@
+<map id="scan" name="scan">
+<area shape="rect" id="Node000001" title=" " alt="" coords="316,45,368,70"/>
+<area shape="rect" id="Node000002" href="$dc/d81/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1scan_1_1ScanEdgeResultIterator.html#a5b2e48b0f8deac96661e05decb520184" title=" " alt="" coords="5,5,268,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="302,54,264,48,265,43,303,49"/>
+<area shape="rect" id="Node000003" href="$d5/dee/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1scan_1_1ScanNodeResultIterator.html#a0d5c1c08f870ef89a3d58134d5a236a9" title=" " alt="" coords="5,69,268,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="303,66,265,72,264,67,302,61"/>
+</map>

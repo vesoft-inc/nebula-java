@@ -1,0 +1,7 @@
+<map id="ping" name="ping">
+<area shape="rect" id="Node000001" title="ping the NebulaGraph server" alt="" coords="5,31,56,56"/>
+<area shape="rect" id="Node000002" href="$dd/daf/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1net_1_1NebulaClient.html#a66add762d56e9cac497ce873cbd915aa" title="check if the client already closed" alt="" coords="104,5,208,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="56,36,90,29,91,34,57,41"/>
+<area shape="rect" id="Node000003" href="$dd/daf/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1net_1_1NebulaClient.html#a976c78af5cffbf292c6a1ad4f8f5f352" title="get the NebulaGraph host address that this client is connecting to." alt="" coords="119,55,193,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="57,45,107,55,106,60,56,51"/>
+</map>
