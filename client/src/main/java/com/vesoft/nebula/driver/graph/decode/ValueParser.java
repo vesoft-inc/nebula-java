@@ -350,10 +350,15 @@ public class ValueParser {
                 ListHeader listHeader = new ListHeader(valueData, byteOrder);
 
                 for (int i = 0; i < listHeader.getSize(); i++) {
-                    list.add(new ValueWrapper(decodeValue(vector.getVectorWrapper(0),
-                                                          listType.getValueType(),
-                                                          listHeader.getOffset() + i),
-                                              listType.getValueType().getType()));
+                    Object value = decodeValue(vector.getVectorWrapper(0),
+                                               listType.getValueType(),
+                                               listHeader.getOffset() + i);
+                    if (value == null) {
+                        list.add(new ValueWrapper(value, ColumnType.COLUMN_TYPE_NULL));
+                    } else {
+                        list.add(new ValueWrapper(value, listType.getValueType().getType()));
+                    }
+
                 }
                 return list;
             case COLUMN_TYPE_RECORD:
@@ -369,8 +374,13 @@ public class ValueParser {
                     Object value = decodeValue(vector.getVectorWrapper(i),
                                                fieldAndDataType.get(fieldName),
                                                rowIndex);
-                    map.put(fieldName,
-                            new ValueWrapper(value, fieldAndDataType.get(fieldName).getType()));
+                    if (value == null) {
+                        map.put(fieldName, new ValueWrapper(value, ColumnType.COLUMN_TYPE_NULL));
+                    } else {
+                        map.put(fieldName,
+                                new ValueWrapper(value, fieldAndDataType.get(fieldName).getType()));
+                    }
+
                 }
                 return new NRecord(map);
             case COLUMN_TYPE_NODE:
@@ -470,7 +480,13 @@ public class ValueParser {
 
                     Object propValue = decodeValue(propVector,
                                                    propInfo.propType, rowIndex);
-                    props.put(propName, new ValueWrapper(propValue, propInfo.propType.getType()));
+                    if (propValue == null) {
+                        props.put(propName,
+                                  new ValueWrapper(propValue, ColumnType.COLUMN_TYPE_NULL));
+                    } else {
+                        props.put(propName,
+                                  new ValueWrapper(propValue, propInfo.propType.getType()));
+                    }
                 }
 
                 return new Node(nodeHeader.getGraphId(),
@@ -577,8 +593,13 @@ public class ValueParser {
                                     vector.getVectorWrapper(propInfo.vectorIndex));
 
                     Object propValue = decodeValue(propVector, propInfo.propType, rowIndex);
-                    edgeProps.put(propName, new ValueWrapper(propValue,
-                                                             propInfo.propType.getType()));
+                    if (propValue == null) {
+                        edgeProps.put(propName, new ValueWrapper(propValue,
+                                                                 ColumnType.COLUMN_TYPE_NULL));
+                    } else {
+                        edgeProps.put(propName, new ValueWrapper(propValue,
+                                                                 propInfo.propType.getType()));
+                    }
                 }
 
                 Edge edgeValue = new Edge(edgeHeader.getGraphId(),
@@ -703,10 +724,14 @@ public class ValueParser {
                 SetHeader setHeader = new SetHeader(valueData, byteOrder);
 
                 for (int i = 0; i < setHeader.getSize(); i++) {
-                    set.add(new ValueWrapper(decodeValue(vector.getVectorWrapper(0),
-                                                         setType.getValueType(),
-                                                         setHeader.getOffset() + i),
-                                             setType.getValueType().getType()));
+                    Object value = decodeValue(vector.getVectorWrapper(0),
+                                               setType.getValueType(),
+                                               setHeader.getOffset() + i);
+                    if (value == null) {
+                        set.add(new ValueWrapper(value, ColumnType.COLUMN_TYPE_NULL));
+                    } else {
+                        set.add(new ValueWrapper(value, setType.getValueType().getType()));
+                    }
                 }
                 return set;
             case COLUMN_TYPE_MAP:
@@ -717,14 +742,25 @@ public class ValueParser {
                 MapHeader mapHeader = new MapHeader(valueData, byteOrder);
 
                 for (int i = 0; i < mapHeader.getSize(); i++) {
-                    ValueWrapper key = new ValueWrapper(decodeValue(vector.getVectorWrapper(0),
-                                                                    mapType.getKeyType(),
-                                                                    mapHeader.getOffset() + i),
-                                                        mapType.getKeyType().getType());
-                    ValueWrapper value = new ValueWrapper(decodeValue(vector.getVectorWrapper(1),
-                                                                      mapType.getKeyType(),
-                                                                      mapHeader.getOffset() + i),
-                                                          mapType.getKeyType().getType());
+                    Object keyV = decodeValue(vector.getVectorWrapper(0),
+                                              mapType.getKeyType(),
+                                              mapHeader.getOffset() + i);
+                    ValueWrapper key;
+                    if (keyV == null) {
+                        key = new ValueWrapper(keyV, ColumnType.COLUMN_TYPE_NULL);
+                    } else {
+                        key = new ValueWrapper(keyV, mapType.getKeyType().getType());
+                    }
+
+                    Object valueV = decodeValue(vector.getVectorWrapper(1),
+                                                mapType.getKeyType(),
+                                                mapHeader.getOffset() + i);
+                    ValueWrapper value;
+                    if (valueV == null) {
+                        value = new ValueWrapper(valueV, ColumnType.COLUMN_TYPE_NULL);
+                    } else {
+                        value = new ValueWrapper(valueV, mapType.getKeyType().getType());
+                    }
                     mapValue.put(key, value);
                 }
                 return mapValue;
@@ -1259,7 +1295,12 @@ public class ValueParser {
                     ColumnType fieldType = ColumnType.getColumnType(
                             bytesToUInt8(reader.read(VALUE_TYPE_SIZE)));
                     Object fieldValue = decodeCompositeValue(reader, fieldType);
-                    map.put(fieldName, new ValueWrapper(fieldValue, fieldType));
+                    if (fieldValue == null) {
+                        map.put(fieldName, new ValueWrapper(fieldValue,
+                                                            ColumnType.COLUMN_TYPE_NULL));
+                    } else {
+                        map.put(fieldName, new ValueWrapper(fieldValue, fieldType));
+                    }
                 }
                 return new NRecord(map);
             case COLUMN_TYPE_NODE:
@@ -1275,7 +1316,13 @@ public class ValueParser {
                     ColumnType propType = ColumnType.getColumnType(
                             bytesToUInt8(reader.read(VALUE_TYPE_SIZE)));
                     Object propValue = decodeCompositeValue(reader, propType);
-                    nodeProperties.put(propName, new ValueWrapper(propValue, propType));
+                    if (propValue == null) {
+                        nodeProperties.put(propName, new ValueWrapper(propValue,
+                                                                      ColumnType.COLUMN_TYPE_NULL));
+                    } else {
+                        nodeProperties.put(propName, new ValueWrapper(propValue, propType));
+                    }
+
                 }
                 return new Node(nodeGraphId, nodeTypeId, nodeId, nodeProperties, graphSchemas);
             case COLUMN_TYPE_EDGE:
@@ -1293,7 +1340,12 @@ public class ValueParser {
                     ColumnType propType = ColumnType.getColumnType(
                             bytesToUInt8(reader.read(VALUE_TYPE_SIZE)));
                     Object propValue = decodeCompositeValue(reader, propType);
-                    edgeProperties.put(propName, new ValueWrapper(propValue, propType));
+                    if (propValue == null) {
+                        edgeProperties.put(propName, new ValueWrapper(propValue,
+                                                                      ColumnType.COLUMN_TYPE_NULL));
+                    } else {
+                        edgeProperties.put(propName, new ValueWrapper(propValue, propType));
+                    }
                 }
                 return new Edge(edgeGraphId,
                                 edgeTypeId,
