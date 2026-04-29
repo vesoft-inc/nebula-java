@@ -154,7 +154,17 @@ message Path {
   repeated Value values = 1;
 }
 
-message Ref {
+// message Ref {
+//     uint32 code   = 1;
+//    uint32 offset = 2;
+// }
+
+message GraphRef {
+  uint32 code   = 1;
+  uint32 offset = 2;
+}
+
+message TableRef {
   uint32 code   = 1;
   uint32 offset = 2;
 }
@@ -246,7 +256,7 @@ message Value {
     kDate          = 21;
     kLocalDatetime = 22;
     kZonedDatetime = 23;
-    kRef           = 24;
+    // kRef           = 24;
     kDecimal       = 25;
     kVector        = 26;
     kPoint         = 27;
@@ -256,6 +266,8 @@ message Value {
     kGeometry      = 31;
     kSet           = 32;
     kMap           = 33;
+    kGraphRef      = 34;
+    kTableRef      = 35;
   }
 
   oneof data {
@@ -282,7 +294,7 @@ message Value {
     Date          date_value           = 21;
     LocalDatetime local_datetime_value = 22;
     ZonedDatetime zoned_datetime_value = 23;
-    Ref           ref_value            = 24;
+    // Ref           ref_value            = 24;
     Decimal       decimal_value        = 25;
     Vector        vector_value         = 26;
     Point         point_value          = 27;
@@ -292,6 +304,8 @@ message Value {
     Geometry      geometry_value       = 31;
     Set           set_value            = 32;
     Map           map_value            = 33;
+    GraphRef      graph_ref_value      = 34;
+    TableRef      table_ref_value      = 35;
   }
 }
 
@@ -330,6 +344,12 @@ message Status {
 message DirInfo {
   bytes          install_path = 1;
   repeated bytes data_paths   = 2;
+}
+
+// Payload for WAL replication: applied index + WAL entries.
+message WalReplicatePayload {
+  int64          applied_index = 1;
+  repeated bytes wals          = 2;
 }
 
 //*********************** client ***********************
