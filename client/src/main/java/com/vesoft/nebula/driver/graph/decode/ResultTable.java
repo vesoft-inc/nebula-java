@@ -5,7 +5,6 @@
 
 package com.vesoft.nebula.driver.graph.decode;
 
-import com.google.common.base.Charsets;
 import com.vesoft.nebula.driver.graph.data.ValueWrapper;
 import com.vesoft.nebula.driver.graph.decode.datatype.DataType;
 import com.vesoft.nebula.driver.graph.decode.datatype.ValueTypeParser;
@@ -14,7 +13,6 @@ import com.vesoft.nebula.proto.graph.ValueType;
 import com.vesoft.nebula.proto.graph.VectorBatch;
 import com.vesoft.nebula.proto.graph.VectorResultTable;
 import java.nio.ByteOrder;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -118,7 +116,7 @@ public class ResultTable {
             currentBatchRowSize = currentBatch.getBatchRowSize();
         }
         // the current batch is empty or already finished the batch, jump the batch
-        if (currentBatch.getVectorsCount() == 0 || currentBatchRowIndex >= currentBatchRowSize) {
+        while (currentBatch.getVectorsCount() == 0 || currentBatchRowIndex >= currentBatchRowSize) {
             batchIndex++;
             if (batchIndex >= numBatches) {
                 throw new RuntimeException("no more batch data");
@@ -126,6 +124,7 @@ public class ResultTable {
             // reset currentBatchRowIndex to 0
             currentBatchRowIndex = 0;
             currentBatch = new Batch(resultTable.getBatch(batchIndex), byteOrder);
+            currentBatchRowSize = currentBatch.getBatchRowSize();
         }
 
         // resolve the current batch
