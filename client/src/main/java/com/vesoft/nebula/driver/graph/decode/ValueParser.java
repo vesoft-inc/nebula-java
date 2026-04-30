@@ -1269,6 +1269,8 @@ public class ValueParser {
                 return new BigDecimal(reader.readSizedString(byteOrder));
             case COLUMN_TYPE_STRING:
                 return reader.readSizedString(byteOrder);
+            case COLUMN_TYPE_GEOGRAPHY:
+                return bytesToGeography(reader);
             case COLUMN_TYPE_LIST:
                 ColumnType eleType = ColumnType.getColumnType(
                         bytesToInt8(reader.read(VALUE_TYPE_SIZE)));
