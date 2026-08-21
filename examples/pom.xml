@@ -26,6 +26,11 @@
             <version>5.3-SNAPSHOT</version>
         </dependency>
         <dependency>
+            <groupId>com.vesoft</groupId>
+            <artifactId>client-v3compat</artifactId>
+            <version>5.3-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <version>1.7.25</version>

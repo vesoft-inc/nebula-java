@@ -72,6 +72,79 @@ yourself.
         }
 ```
 
+## Migrate from the NebulaGraph v3 Java client
+
+`client-v3compat` is a source-compatible re-implementation of the NebulaGraph v3 Java client
+(`com.vesoft.nebula.client.*`) under the `com.vesoft.nebula.driver.v3client` namespace. It keeps the
+v3 API surface (`NebulaPool` / `Session` / `SessionPool` / `ResultSet` / `ValueWrapper` / `Node` /
+`Relationship` / `PathWrapper`, …) and delegates to the v5 `driver` internally, so an existing v3
+application can be migrated with minimal changes.
+
+### Steps
+
+1. Replace the Maven dependency:
+
+```xml
+<!-- old (v3) -->
+<dependency>
+    <groupId>com.vesoft</groupId>
+    <artifactId>client</artifactId>
+    <version>3.x.x</version>
+</dependency>
+
+<!-- new (v5, with the v3-compatible layer) -->
+<dependency>
+    <groupId>com.vesoft</groupId>
+    <artifactId>client-v3compat</artifactId>
+    <version>5.3-SNAPSHOT</version>
+</dependency>
+```
+
+2. Rewrite the imports: `com.vesoft.nebula.client.` → `com.vesoft.nebula.driver.v3client.`
+   (and `com.vesoft.nebula.ErrorCode` → `com.vesoft.nebula.driver.v3client.graph.ErrorCode`).
+
+3. Migrate the GQL statements from nGQL to ISO-GQL. This is **not** handled by the compatibility
+   layer — e.g. `USE space` → `USE graph`, `INSERT VERTEX/EDGE` → `INSERT OR IGNORE`, `GO/FETCH/
+   LOOKUP` → `MATCH`, and the old `MATCH` syntax → v5 `MATCH`.
+
+### Example
+
+```java
+import com.vesoft.nebula.driver.v3client.graph.NebulaPoolConfig;
+import com.vesoft.nebula.driver.v3client.graph.data.HostAddress;
+import com.vesoft.nebula.driver.v3client.graph.data.ResultSet;
+import com.vesoft.nebula.driver.v3client.graph.net.NebulaPool;
+import com.vesoft.nebula.driver.v3client.graph.net.Session;
+import java.util.Arrays;
+
+NebulaPool pool = new NebulaPool();
+NebulaPoolConfig config = new NebulaPoolConfig();
+config.setMaxConnSize(10);
+pool.init(Arrays.asList(new HostAddress("127.0.0.1", 9669)), config);
+
+Session session = pool.getSession("root", "nebula", false);
+ResultSet rs = session.execute("MATCH (v:player) RETURN v LIMIT 1"); // ISO-GQL
+if (rs.isSucceeded()) {
+    System.out.println(rs.rowValues(0).get("v"));
+}
+session.release();
+pool.close();
+```
+
+A `SessionPool` variant is shown in
+`examples/src/main/java/com/vesoft/nebula/V3SessionPoolExample.java`.
+
+### Scope and declared differences
+
+- Only the v3 `graph` package is covered; `meta` / `storage` / `encoder` have no v5 equivalents.
+- `Node.getId()` and `Relationship.srcId()/dstId()` return the v5 numeric id as a `ValueWrapper`;
+  string ids are no longer recoverable in v5.
+- Thrift-coupled methods (`ResultSet.getRows()`, `getPlanDesc()`, `ValueWrapper.getValue()`) are
+  adapted or removed; v5 `DECIMAL` values are exposed via `ValueWrapper.isDouble()/asDouble()`.
+
+See `migration_guide_v3.md` for the full migration guide, including GQL rewrites and the
+complete list of known differences.
+
 ## Note
 
 If your packaged jar project that imports the NebulaGraph client dependency happens
