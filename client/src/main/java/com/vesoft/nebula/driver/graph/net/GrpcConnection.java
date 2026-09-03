@@ -7,7 +7,6 @@ package com.vesoft.nebula.driver.graph.net;
 
 import static com.vesoft.nebula.driver.graph.exception.IOErrorException.E_TIME_OUT;
 
-import com.alibaba.fastjson.JSON;
 import com.google.common.base.Charsets;
 import com.google.protobuf.ByteString;
 import com.vesoft.nebula.driver.graph.ErrorCode;
@@ -30,6 +29,7 @@ import io.grpc.StatusRuntimeException;
 import io.grpc.netty.shaded.io.grpc.netty.NettyChannelBuilder;
 import java.nio.charset.Charset;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 import javax.net.ssl.SSLException;
 import org.slf4j.Logger;
@@ -108,7 +108,7 @@ public class GrpcConnection extends Connection {
                     .build();
             ByteString userString = user == null ? ByteString.copyFrom("", charset)
                     : ByteString.copyFrom(user, charset);
-            String authInfoString = JSON.toJSONString(authOptions);
+            String authInfoString = toJsonString(authOptions);
             AuthRequest authReq = AuthRequest.newBuilder()
                     .setUsername(userString)
                     .setAuthInfo(ByteString.copyFrom(authInfoString, charset))
@@ -138,6 +138,61 @@ public class GrpcConnection extends Connection {
             }
             throw e;
         }
+    }
+
+    static String toJsonString(Map<String, Object> options) {
+        if (options == null) {
+            return "null";
+        }
+        StringBuilder json = new StringBuilder("{");
+        boolean first = true;
+        for (Entry<String, Object> entry : options.entrySet()) {
+            if (!first) {
+                json.append(',');
+            }
+            appendJsonString(json, entry.getKey());
+            json.append(':');
+            appendJsonString(json, String.valueOf(entry.getValue()));
+            first = false;
+        }
+        return json.append('}').toString();
+    }
+
+    private static void appendJsonString(StringBuilder json, String value) {
+        json.append('"');
+        for (int index = 0; index < value.length(); index++) {
+            char character = value.charAt(index);
+            switch (character) {
+                case '"':
+                    json.append("\\\"");
+                    break;
+                case '\\':
+                    json.append("\\\\");
+                    break;
+                case '\b':
+                    json.append("\\b");
+                    break;
+                case '\f':
+                    json.append("\\f");
+                    break;
+                case '\n':
+                    json.append("\\n");
+                    break;
+                case '\r':
+                    json.append("\\r");
+                    break;
+                case '\t':
+                    json.append("\\t");
+                    break;
+                default:
+                    if (character < 0x20) {
+                        json.append(String.format("\\u%04x", (int) character));
+                    } else {
+                        json.append(character);
+                    }
+            }
+        }
+        json.append('"');
     }
 
     public ExecuteResponse execute(long sessionID, String stmt, long timeout)
