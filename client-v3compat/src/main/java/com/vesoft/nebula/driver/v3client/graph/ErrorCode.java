@@ -1,0 +1,263 @@
+/* Copyright (c) 2025 vesoft inc. All rights reserved.
+ *
+ * This source code is licensed under Apache 2.0 License.
+ */
+
+package com.vesoft.nebula.driver.v3client.graph;
+
+/**
+ * v3-style integer error codes.
+ *
+ * <p>This enum mirrors the v3 client's {@code com.vesoft.nebula.ErrorCode} so that v3
+ * applications can keep using checks like {@code resultSet.getErrorCode() ==
+ * ErrorCode.E_SEMANTIC_ERROR.getValue()} after switching to the compatibility namespace.
+ */
+public enum ErrorCode {
+    SUCCEEDED(0),
+    E_DISCONNECTED(-1),
+    E_FAIL_TO_CONNECT(-2),
+    E_RPC_FAILURE(-3),
+    E_LEADER_CHANGED(-4),
+    E_SPACE_NOT_FOUND(-5),
+    E_TAG_NOT_FOUND(-6),
+    E_EDGE_NOT_FOUND(-7),
+    E_INDEX_NOT_FOUND(-8),
+    E_EDGE_PROP_NOT_FOUND(-9),
+    E_TAG_PROP_NOT_FOUND(-10),
+    E_ROLE_NOT_FOUND(-11),
+    E_CONFIG_NOT_FOUND(-12),
+    E_MACHINE_NOT_FOUND(-13),
+    E_ZONE_NOT_FOUND(-14),
+    E_LISTENER_NOT_FOUND(-15),
+    E_PART_NOT_FOUND(-16),
+    E_KEY_NOT_FOUND(-17),
+    E_USER_NOT_FOUND(-18),
+    E_STATS_NOT_FOUND(-19),
+    E_SERVICE_NOT_FOUND(-20),
+    E_DRAINER_NOT_FOUND(-21),
+    E_DRAINER_CLIENT_NOT_FOUND(-22),
+    E_PART_STOPPED(-23),
+    E_BACKUP_FAILED(-24),
+    E_BACKUP_EMPTY_TABLE(-25),
+    E_BACKUP_TABLE_FAILED(-26),
+    E_PARTIAL_RESULT(-27),
+    E_REBUILD_INDEX_FAILED(-28),
+    E_INVALID_PASSWORD(-29),
+    E_FAILED_GET_ABS_PATH(-30),
+    E_LISTENER_PROGRESS_FAILED(-31),
+    E_SYNC_LISTENER_NOT_FOUND(-32),
+    E_DRAINER_PROGRESS_FAILED(-33),
+    E_PART_DISABLED(-34),
+    E_PART_ALREADY_STARTED(-35),
+    E_PART_ALREADY_STOPPED(-36),
+    E_QUERY_TIMEDOUT(-37),
+    E_BAD_USERNAME_PASSWORD(-1001),
+    E_SESSION_INVALID(-1002),
+    E_SESSION_TIMEOUT(-1003),
+    E_SYNTAX_ERROR(-1004),
+    E_EXECUTION_ERROR(-1005),
+    E_STATEMENT_EMPTY(-1006),
+    E_BAD_PERMISSION(-1008),
+    E_SEMANTIC_ERROR(-1009),
+    E_TOO_MANY_CONNECTIONS(-1010),
+    E_PARTIAL_SUCCEEDED(-1011),
+    E_NO_HOSTS(-2001),
+    E_EXISTED(-2002),
+    E_INVALID_HOST(-2003),
+    E_UNSUPPORTED(-2004),
+    E_NOT_DROP(-2005),
+    E_BALANCER_RUNNING(-2006),
+    E_CONFIG_IMMUTABLE(-2007),
+    E_CONFLICT(-2008),
+    E_INVALID_PARM(-2009),
+    E_WRONGCLUSTER(-2010),
+    E_ZONE_NOT_ENOUGH(-2011),
+    E_ZONE_IS_EMPTY(-2012),
+    E_LISTENER_CONFLICT(-2013),
+    E_SCHEMA_NAME_EXISTS(-2014),
+    E_RELATED_INDEX_EXISTS(-2015),
+    E_RELATED_SPACE_EXISTS(-2016),
+    E_RELATED_FULLTEXT_INDEX_EXISTS(-2017),
+    E_HISTORY_CONFLICT(-2018),
+    E_ZONE_IS_ENABLED(-2019),
+    E_STORE_FAILURE(-2021),
+    E_STORE_SEGMENT_ILLEGAL(-2022),
+    E_BAD_BALANCE_PLAN(-2023),
+    E_BALANCED(-2024),
+    E_NO_RUNNING_BALANCE_PLAN(-2025),
+    E_NO_VALID_HOST(-2026),
+    E_CORRUPTED_BALANCE_PLAN(-2027),
+    E_NO_INVALID_BALANCE_PLAN(-2028),
+    E_NO_VALID_DRAINER(-2029),
+    E_IMPROPER_ROLE(-2030),
+    E_INVALID_PARTITION_NUM(-2031),
+    E_INVALID_REPLICA_FACTOR(-2032),
+    E_INVALID_CHARSET(-2033),
+    E_INVALID_COLLATE(-2034),
+    E_CHARSET_COLLATE_NOT_MATCH(-2035),
+    E_PRIVILEGE_ALL_TAG_EDGE_SETTLED(-2036),
+    E_PRIVILEGE_NOT_EXIST(-2037),
+    E_PRIVILEGE_NEED_BASIC_ROLE(-2038),
+    E_PRIVILEGE_ACTION_INVALID(-2039),
+    E_STORAGE_ENABLE_AUTH(-2058),
+    E_SNAPSHOT_FAILURE(-2040),
+    E_SNAPSHOT_RUNNING_JOBS(-2056),
+    E_SNAPSHOT_NOT_FOUND(-2057),
+    E_BLOCK_WRITE_FAILURE(-2041),
+    E_REBUILD_INDEX_FAILURE(-2042),
+    E_INDEX_WITH_TTL(-2043),
+    E_ADD_JOB_FAILURE(-2044),
+    E_STOP_JOB_FAILURE(-2045),
+    E_SAVE_JOB_FAILURE(-2046),
+    E_BALANCER_FAILURE(-2047),
+    E_JOB_NOT_FINISHED(-2048),
+    E_TASK_REPORT_OUT_DATE(-2049),
+    E_JOB_NOT_IN_SPACE(-2050),
+    E_JOB_NEED_RECOVER(-2051),
+    E_JOB_ALREADY_FINISH(-2052),
+    E_JOB_SUBMITTED(-2053),
+    E_JOB_NOT_STOPPABLE(-2054),
+    E_JOB_HAS_NO_TARGET_STORAGE(-2055),
+    E_INVALID_JOB(-2065),
+    E_BACKUP_RUNNING_JOBS(-2066),
+    E_BACKUP_SPACE_NOT_FOUND(-2067),
+    E_RESTORE_FAILURE(-2068),
+    E_SESSION_NOT_FOUND(-2069),
+    E_LIST_CLUSTER_FAILURE(-2070),
+    E_LIST_CLUSTER_GET_ABS_PATH_FAILURE(-2071),
+    E_LIST_CLUSTER_NO_AGENT_FAILURE(-2072),
+    E_QUERY_NOT_FOUND(-2073),
+    E_AGENT_HB_FAILUE(-2074),
+    E_INVALID_VARIABLE(-2080),
+    E_VARIABLE_TYPE_VALUE_MISMATCH(-2081),
+    E_HOST_CAN_NOT_BE_ADDED(-2082),
+    E_ACCESS_ES_FAILURE(-2090),
+    E_GRAPH_MEMORY_EXCEEDED(-2600),
+    E_CONSENSUS_ERROR(-3001),
+    E_KEY_HAS_EXISTS(-3002),
+    E_DATA_TYPE_MISMATCH(-3003),
+    E_INVALID_FIELD_VALUE(-3004),
+    E_INVALID_OPERATION(-3005),
+    E_NOT_NULLABLE(-3006),
+    E_FIELD_UNSET(-3007),
+    E_OUT_OF_RANGE(-3008),
+    E_DATA_CONFLICT_ERROR(-3010),
+    E_WRITE_STALLED(-3011),
+    E_IMPROPER_DATA_TYPE(-3021),
+    E_INVALID_SPACEVIDLEN(-3022),
+    E_INVALID_FILTER(-3031),
+    E_INVALID_UPDATER(-3032),
+    E_INVALID_STORE(-3033),
+    E_INVALID_PEER(-3034),
+    E_RETRY_EXHAUSTED(-3035),
+    E_TRANSFER_LEADER_FAILED(-3036),
+    E_INVALID_STAT_TYPE(-3037),
+    E_INVALID_VID(-3038),
+    E_NO_TRANSFORMED(-3039),
+    E_LOAD_META_FAILED(-3040),
+    E_FAILED_TO_CHECKPOINT(-3041),
+    E_CHECKPOINT_BLOCKED(-3042),
+    E_FILTER_OUT(-3043),
+    E_INVALID_DATA(-3044),
+    E_MUTATE_EDGE_CONFLICT(-3045),
+    E_MUTATE_TAG_CONFLICT(-3046),
+    E_OUTDATED_LOCK(-3047),
+    E_INVALID_TASK_PARA(-3051),
+    E_USER_CANCEL(-3052),
+    E_TASK_EXECUTION_FAILED(-3053),
+    E_PLAN_IS_KILLED(-3060),
+    E_NO_TERM(-3070),
+    E_OUTDATED_TERM(-3071),
+    E_OUTDATED_EDGE(-3072),
+    E_WRITE_WRITE_CONFLICT(-3073),
+    E_CLIENT_SERVER_INCOMPATIBLE(-3061),
+    E_ID_FAILED(-3062),
+    E_RAFT_UNKNOWN_PART(-3500),
+    E_RAFT_LOG_GAP(-3501),
+    E_RAFT_LOG_STALE(-3502),
+    E_RAFT_TERM_OUT_OF_DATE(-3503),
+    E_RAFT_UNKNOWN_APPEND_LOG(-3504),
+    E_RAFT_WAITING_SNAPSHOT(-3511),
+    E_RAFT_SENDING_SNAPSHOT(-3512),
+    E_RAFT_INVALID_PEER(-3513),
+    E_RAFT_NOT_READY(-3514),
+    E_RAFT_STOPPED(-3515),
+    E_RAFT_BAD_ROLE(-3516),
+    E_RAFT_WAL_FAIL(-3521),
+    E_RAFT_HOST_STOPPED(-3522),
+    E_RAFT_TOO_MANY_REQUESTS(-3523),
+    E_RAFT_PERSIST_SNAPSHOT_FAILED(-3524),
+    E_RAFT_RPC_EXCEPTION(-3525),
+    E_RAFT_NO_WAL_FOUND(-3526),
+    E_RAFT_HOST_PAUSED(-3527),
+    E_RAFT_WRITE_BLOCKED(-3528),
+    E_RAFT_BUFFER_OVERFLOW(-3529),
+    E_RAFT_ATOMIC_OP_FAILED(-3530),
+    E_LEADER_LEASE_FAILED(-3531),
+    E_RAFT_CAUGHT_UP(-3532),
+    E_LOG_GAP(-4001),
+    E_LOG_STALE(-4002),
+    E_INVALID_DRAINER_STORE(-4003),
+    E_SPACE_MISMATCH(-4004),
+    E_PART_MISMATCH(-4005),
+    E_DATA_CONFLICT(-4006),
+    E_REQ_CONFLICT(-4007),
+    E_DATA_ILLEGAL(-4008),
+    E_CACHE_CONFIG_ERROR(-5001),
+    E_NOT_ENOUGH_SPACE(-5002),
+    E_CACHE_MISS(-5003),
+    E_POOL_NOT_FOUND(-5004),
+    E_CACHE_WRITE_FAILURE(-5005),
+    E_NODE_NUMBER_EXCEED_LIMIT(-7001),
+    E_TOTAL_CPU_CORE_EXCEED_LIMIT(-7002),
+    E_INVALID_LICENSE_MANAGER_STATUS(-7003),
+    E_STORAGE_MEMORY_EXCEEDED(-3600),
+    E_UNKNOWN(-8000);
+
+    private final int value;
+
+    ErrorCode(int value) {
+        this.value = value;
+    }
+
+    /**
+     * @return the integer value of this error code, matching the v3 client.
+     */
+    public int getValue() {
+        return value;
+    }
+
+    /**
+     * Map a v5 driver {@link com.vesoft.nebula.driver.graph.ErrorCode} to a v3-style integer
+     * error code. The mapping is best-effort: syntax/semantic/timeout codes are translated to
+     * their v3 equivalents, everything else falls back to {@link #E_EXECUTION_ERROR}.
+     *
+     * @param code the v5 error code
+     * @return the corresponding v3-style integer error code
+     */
+    public static int fromV5ErrorCode(com.vesoft.nebula.driver.graph.ErrorCode code) {
+        if (code == null) {
+            return E_UNKNOWN.getValue();
+        }
+        switch (code) {
+            case SUCCESSFUL_COMPLETION:
+                return SUCCEEDED.getValue();
+            case SYNTAX_ERROR_OR_ACCESS_RULE_VIOLATION:
+            case INVALID_SYNTAX:
+                return E_SYNTAX_ERROR.getValue();
+            case DATA_EXCEPTION:
+            case INVALID_VALUE_TYPE:
+            case VALUES_NOT_COMPARABLE:
+                return E_SEMANTIC_ERROR.getValue();
+            default:
+                String c = code.code;
+                if (c != null && c.startsWith("42")) {
+                    return E_SYNTAX_ERROR.getValue();
+                }
+                if (c != null && c.startsWith("22")) {
+                    return E_SEMANTIC_ERROR.getValue();
+                }
+                return E_EXECUTION_ERROR.getValue();
+        }
+    }
+}

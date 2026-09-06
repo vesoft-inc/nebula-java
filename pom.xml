@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>client</module>
+        <module>client-v3compat</module>
         <module>examples</module>
     </modules>
 
