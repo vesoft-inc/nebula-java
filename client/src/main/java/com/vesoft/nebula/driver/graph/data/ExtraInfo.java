@@ -31,6 +31,8 @@ public class ExtraInfo {
 
     private long optimizeTimeUs;
 
+    private long executionTimeUs;
+
     private long serializeTimeUs;
 
     private long numWarnings;
@@ -74,6 +76,10 @@ public class ExtraInfo {
         this.optimizeTimeUs = optimizeTimeUs;
     }
 
+    public void setExecutionTimeUs(long executionTimeUs) {
+        this.executionTimeUs = executionTimeUs;
+    }
+
     public void setSerializeTimeUs(long serializeTimeUs) {
         this.serializeTimeUs = serializeTimeUs;
     }
@@ -105,6 +111,10 @@ public class ExtraInfo {
 
     public long getOptimizeTimeUs() {
         return optimizeTimeUs;
+    }
+
+    public long getExecutionTimeUs() {
+        return executionTimeUs;
     }
 
     public long getSerializeTimeUs() {
@@ -147,6 +157,7 @@ public class ExtraInfo {
             + ", parseTimeUs=" + parseTimeUs
             + ", buildTimeUs=" + buildTimeUs
             + ", optimizeTimeUs=" + optimizeTimeUs
+            + ", executionTimeUs=" + executionTimeUs
             + ", serializeTimeUs=" + serializeTimeUs
             + ", numWarnings=" + numWarnings
             + ", numExportedRecords=" + numExportedRecords
