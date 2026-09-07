@@ -1,0 +1,26 @@
+var searchData=
+[
+  ['backup_5fdrop_5fname_5fempty_0',['BACKUP_DROP_NAME_EMPTY',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#a99b67e9900efcb4b039cbd8499924c85',1,'com::vesoft::nebula::driver::graph::ErrorCode']]],
+  ['backup_5fdrop_5fname_5fnot_5fexist_1',['BACKUP_DROP_NAME_NOT_EXIST',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#ad171430dbdd5358e1895818754713616',1,'com::vesoft::nebula::driver::graph::ErrorCode']]],
+  ['backup_5fduplicate_5fpart_2',['BACKUP_DUPLICATE_PART',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#ac86885c6c8efe4eaa097beaa8bb40a01',1,'com::vesoft::nebula::driver::graph::ErrorCode']]],
+  ['backup_5ferror_3',['BACKUP_ERROR',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#acb385319ced8d61963f2f15d7f36ca64',1,'com::vesoft::nebula::driver::graph::ErrorCode']]],
+  ['backup_5flost_5fpart_4',['BACKUP_LOST_PART',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#abb3263ee393896604c297944fdb0ac41',1,'com::vesoft::nebula::driver::graph::ErrorCode']]],
+  ['backup_5fmeta_5ftable_5fempty_5',['BACKUP_META_TABLE_EMPTY',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#a2dcc68c0fd2fafe6793c4e25435df626',1,'com::vesoft::nebula::driver::graph::ErrorCode']]],
+  ['backup_5frecord_5fexists_6',['BACKUP_RECORD_EXISTS',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#ac6713a9beee15f6f87cc4d3da9620d9d',1,'com::vesoft::nebula::driver::graph::ErrorCode']]],
+  ['backup_5fremap_5fpart_5ffailed_7',['BACKUP_REMAP_PART_FAILED',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#ae84f793d08952626a5535a6f995c4a13',1,'com::vesoft::nebula::driver::graph::ErrorCode']]],
+  ['backup_5frestore_5finvalid_5frequest_8',['BACKUP_RESTORE_INVALID_REQUEST',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#acc05a03ab4d1d963e6c7e81369ee1a05',1,'com::vesoft::nebula::driver::graph::ErrorCode']]],
+  ['backup_5frestore_5ftable_5ffailed_9',['BACKUP_RESTORE_TABLE_FAILED',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#abd9cf5b2a42112b197fb8ef8efeca218',1,'com::vesoft::nebula::driver::graph::ErrorCode']]],
+  ['backup_5frunning_5fjobs_10',['BACKUP_RUNNING_JOBS',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#a31e17950c9389146f818905c9943fde4',1,'com::vesoft::nebula::driver::graph::ErrorCode']]],
+  ['backup_5fwal_5fhas_5fgap_11',['BACKUP_WAL_HAS_GAP',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#a7bd2f568b4aa52a2abc19c17a4703017',1,'com::vesoft::nebula::driver::graph::ErrorCode']]],
+  ['backup_5fwal_5fis_5fbroken_12',['BACKUP_WAL_IS_BROKEN',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#a30399e2b3163da1931b9afc403db092e',1,'com::vesoft::nebula::driver::graph::ErrorCode']]],
+  ['backup_5fwal_5fnot_5ffound_13',['BACKUP_WAL_NOT_FOUND',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#a04f0daab303de27033803081ce9695ed',1,'com::vesoft::nebula::driver::graph::ErrorCode']]],
+  ['bad_5fplan_5fnode_5ftype_14',['BAD_PLAN_NODE_TYPE',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#ac191834856e8599ad1c4694706db23c8',1,'com::vesoft::nebula::driver::graph::ErrorCode']]],
+  ['batches_15',['batches',['../d8/d73/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1data_1_1PlanInfoNode.html#a90273fb671e272ddfe24ca15a08ab897',1,'com::vesoft::nebula::driver::graph::data::PlanInfoNode']]],
+  ['batchsize_16',['batchSize',['../de/d79/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1scan_1_1ScanResultIterator.html#ae1308bf8270beedf52432b840eac4beb',1,'com::vesoft::nebula::driver::graph::scan::ScanResultIterator']]],
+  ['binding_5ftable_5fno_5fspace_17',['BINDING_TABLE_NO_SPACE',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#af3856ed7baf680164e98371384a5c200',1,'com::vesoft::nebula::driver::graph::ErrorCode']]],
+  ['binding_5ftable_5fwrite_5ffailed_18',['BINDING_TABLE_WRITE_FAILED',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#a38ba55d2c70d077f0b89e43397d93d95',1,'com::vesoft::nebula::driver::graph::ErrorCode']]],
+  ['blockedms_19',['blockedMs',['../d8/d73/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1data_1_1PlanInfoNode.html#a9667bc4bd6b8a531282205fae8d307a3',1,'com::vesoft::nebula::driver::graph::data::PlanInfoNode']]],
+  ['blockwhenexhausted_20',['blockWhenExhausted',['../d9/d92/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1net_1_1NebulaPool_1_1Builder.html#afa38d9326fdfcaee87d6f35c4ea643c5',1,'com::vesoft::nebula::driver::graph::net::NebulaPool::Builder']]],
+  ['builder_21',['builder',['../dd/daf/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1net_1_1NebulaClient.html#aeadefc9e3d2de1953d16800a15493a47',1,'com::vesoft::nebula::driver::graph::net::NebulaClient']]],
+  ['buildtimeus_22',['buildTimeUs',['../d3/dab/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1data_1_1ExtraInfo.html#a16ad3771fefcc03c2a8f53b723ae4479',1,'com::vesoft::nebula::driver::graph::data::ExtraInfo']]]
+];

@@ -1,0 +1,11 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,92,92,117"/>
+<area shape="rect" id="Node000001" href="$d2/db2/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1exception_1_1AuthFailedException.html" title=" " alt="" coords="156,5,311,31"/>
+<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="75,81,105,60,139,41,174,28,175,33,141,46,108,65,78,85"/>
+<area shape="rect" id="Node000002" href="$d3/df5/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1exception_1_1ClientServerIncompatibleException.html" title=" " alt="" coords="140,55,327,95"/>
+<area shape="poly" id="edge2_Node000000_Node000002" title=" " alt="" coords="105,93,139,88,140,93,106,98"/>
+<area shape="rect" id="Node000003" href="$d7/d97/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1exception_1_1IOErrorException.html" title=" " alt="" coords="168,120,299,145"/>
+<area shape="poly" id="edge3_Node000000_Node000003" title=" " alt="" coords="106,111,168,120,167,125,106,116"/>
+<area shape="rect" id="Node000004" href="$dc/d73/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1exception_1_1NoValidSessionException.html" title=" " alt="" coords="140,169,327,195"/>
+<area shape="poly" id="edge4_Node000000_Node000004" title=" " alt="" coords="82,122,141,154,178,167,176,172,139,159,79,127"/>
+</map>

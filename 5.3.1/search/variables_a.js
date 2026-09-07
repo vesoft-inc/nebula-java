@@ -1,0 +1,28 @@
+var searchData=
+[
+  ['kill_5fquery_5ffailed_0',['KILL_QUERY_FAILED',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#a2756040db0ad210658369bb3cc0135ef',1,'com::vesoft::nebula::driver::graph::ErrorCode']]],
+  ['kill_5fsession_5ffailed_1',['KILL_SESSION_FAILED',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#ab9cb57c79b1f3b7e302d270d4d98b615',1,'com::vesoft::nebula::driver::graph::ErrorCode']]],
+  ['known_2',['KNOWN',['../d2/d18/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1data_1_1Edge_1_1Direction.html#affd091612b598869ba7a0ee6dfbc038c',1,'com::vesoft::nebula::driver::graph::data::Edge::Direction']]],
+  ['kvstore_5fbatch_5fwrite_5ffailed_3',['KVSTORE_BATCH_WRITE_FAILED',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#a2ea976440bf3cfa11718b878d5f80212',1,'com::vesoft::nebula::driver::graph::ErrorCode']]],
+  ['kvstore_5fcheckpoint_5ffailed_4',['KVSTORE_CHECKPOINT_FAILED',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#a8e676c417291dbcf89180e305da9493f',1,'com::vesoft::nebula::driver::graph::ErrorCode']]],
+  ['kvstore_5fcolumn_5ffamily_5fnot_5ffound_5',['KVSTORE_COLUMN_FAMILY_NOT_FOUND',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#aa089ad954f38c5d16ff30801fe39911c',1,'com::vesoft::nebula::driver::graph::ErrorCode']]],
+  ['kvstore_5fcommit_5ffailed_6',['KVSTORE_COMMIT_FAILED',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#a8be9f00256d9fa85facbe302a077db35',1,'com::vesoft::nebula::driver::graph::ErrorCode']]],
+  ['kvstore_5fcompact_5ffailed_7',['KVSTORE_COMPACT_FAILED',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#a6121edef911fcf573457c257863c27a7',1,'com::vesoft::nebula::driver::graph::ErrorCode']]],
+  ['kvstore_5ferror_8',['KVSTORE_ERROR',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#aa4c7dcceed131472400d76891e37cdbd',1,'com::vesoft::nebula::driver::graph::ErrorCode']]],
+  ['kvstore_5fexport_5ftable_5ffailed_9',['KVSTORE_EXPORT_TABLE_FAILED',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#a6acc36fc03906a294034d5b9a7f17226',1,'com::vesoft::nebula::driver::graph::ErrorCode']]],
+  ['kvstore_5fflush_5ffailed_10',['KVSTORE_FLUSH_FAILED',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#ac79b7bfd701d24c0ebac674f8d444631',1,'com::vesoft::nebula::driver::graph::ErrorCode']]],
+  ['kvstore_5fget_5ffailed_11',['KVSTORE_GET_FAILED',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#a828bd05ffd20e86be829c99aad3a5ee5',1,'com::vesoft::nebula::driver::graph::ErrorCode']]],
+  ['kvstore_5fget_5fproperty_5ffailed_12',['KVSTORE_GET_PROPERTY_FAILED',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#a6ff3912430646550f07252bd20085ac4',1,'com::vesoft::nebula::driver::graph::ErrorCode']]],
+  ['kvstore_5fingest_5ffailed_13',['KVSTORE_INGEST_FAILED',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#a0ea40e82f5a1b5923ad31c4be35fa918',1,'com::vesoft::nebula::driver::graph::ErrorCode']]],
+  ['kvstore_5fkey_5fnot_5ffound_14',['KVSTORE_KEY_NOT_FOUND',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#acb6cdaf0cb708eceec5808524c53b1b2',1,'com::vesoft::nebula::driver::graph::ErrorCode']]],
+  ['kvstore_5flock_5ffailed_15',['KVSTORE_LOCK_FAILED',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#ac8360177c8d864bea1bfd371615235d9',1,'com::vesoft::nebula::driver::graph::ErrorCode']]],
+  ['kvstore_5fno_5fspace_16',['KVSTORE_NO_SPACE',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#a8b432c37d70cd7c61d67631977e2d202',1,'com::vesoft::nebula::driver::graph::ErrorCode']]],
+  ['kvstore_5fopen_5ffailed_17',['KVSTORE_OPEN_FAILED',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#a60540411221671785dae6449c50ba206',1,'com::vesoft::nebula::driver::graph::ErrorCode']]],
+  ['kvstore_5fopen_5fsst_5ffailed_18',['KVSTORE_OPEN_SST_FAILED',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#a1d5e6b57f30cfd97ede892f5142b7df1',1,'com::vesoft::nebula::driver::graph::ErrorCode']]],
+  ['kvstore_5foptions_5finvalid_19',['KVSTORE_OPTIONS_INVALID',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#a8fd6afd8445ff693e05acb19338367b8',1,'com::vesoft::nebula::driver::graph::ErrorCode']]],
+  ['kvstore_5fprefix_5finvalid_20',['KVSTORE_PREFIX_INVALID',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#ab3cecc4b7164467db4293d6ff84480e4',1,'com::vesoft::nebula::driver::graph::ErrorCode']]],
+  ['kvstore_5fput_5ffailed_21',['KVSTORE_PUT_FAILED',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#a5f4d52f4f1bc92675450d9decf332c42',1,'com::vesoft::nebula::driver::graph::ErrorCode']]],
+  ['kvstore_5fremove_5ffailed_22',['KVSTORE_REMOVE_FAILED',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#a737fc7eb8e09d535c9ee6afd36cc353a',1,'com::vesoft::nebula::driver::graph::ErrorCode']]],
+  ['kvstore_5fset_5foption_5ffailed_23',['KVSTORE_SET_OPTION_FAILED',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#a9cab2f032acf4de7adcd3c63069c9b01',1,'com::vesoft::nebula::driver::graph::ErrorCode']]],
+  ['kvstore_5fshutdown_5fin_5fprogress_24',['KVSTORE_SHUTDOWN_IN_PROGRESS',['../dd/dd3/enumcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1ErrorCode.html#a6d1307d2afdf54b743a0887690c9009d',1,'com::vesoft::nebula::driver::graph::ErrorCode']]]
+];

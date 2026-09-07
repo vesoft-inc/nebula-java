@@ -1,0 +1,5 @@
+<map id="getNodeProperties" name="getNodeProperties">
+<area shape="rect" id="Node000001" title="get node type&#39;s properties" alt="" coords="140,5,283,31"/>
+<area shape="rect" id="Node000002" href="$dd/daf/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1net_1_1NebulaClient.html#a4eed1482f2e129d3524753ff6ccf48b8" title="scan the data of specific nodeType the result will contain primary key and specific return properties..." alt="" coords="5,5,92,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="126,21,92,21,92,15,126,15"/>
+</map>

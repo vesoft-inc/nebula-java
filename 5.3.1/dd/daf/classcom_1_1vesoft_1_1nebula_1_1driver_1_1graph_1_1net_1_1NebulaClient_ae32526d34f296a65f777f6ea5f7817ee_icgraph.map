@@ -1,0 +1,20 @@
+<map id="scanEdge" name="scanEdge">
+<area shape="rect" id="Node000001" title=" " alt="" coords="137,179,221,204"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="201,167,195,160,179,157,166,159,159,164,158,170,162,177,157,180,152,170,155,161,164,154,179,152,197,155,205,164"/>
+<area shape="rect" id="Node000002" href="$dd/daf/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1net_1_1NebulaClient.html#a3607885a23b02a027e04f73060ab2ab5" title=" " alt="" coords="5,5,89,31"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="165,167,135,107,113,74,87,44,73,33,77,29,91,40,117,71,139,104,170,165"/>
+<area shape="rect" id="Node000003" href="$dd/daf/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1net_1_1NebulaClient.html#a4324a51f5a0ab8395b527f91775a2a07" title="scan the data of specific edgeType the result will contain src node&#39;s primary key,..." alt="" coords="5,55,89,80"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="158,169,127,132,88,93,72,82,75,78,91,89,131,128,163,166"/>
+<area shape="rect" id="Node000004" href="$dd/daf/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1net_1_1NebulaClient.html#abfb22e39f809d527ac9f41494e4fbb13" title="scan the data of specific edgeType" alt="" coords="5,104,89,129"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="142,174,70,132,72,127,145,169"/>
+<area shape="rect" id="Node000005" href="$dd/daf/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1net_1_1NebulaClient.html#a1a6c2128bd78596fedeee5433e94376c" title="scan the data of specific edgeType" alt="" coords="5,153,89,179"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="123,183,89,177,90,171,124,178"/>
+<area shape="rect" id="Node000006" href="$dd/daf/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1net_1_1NebulaClient.html#a5b80a3f829c174687a96b13983c551e1" title=" " alt="" coords="5,203,89,228"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="124,204,90,210,89,205,123,199"/>
+<area shape="rect" id="Node000007" href="$dd/daf/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1net_1_1NebulaClient.html#a02200f463ea8040c10dcd2ef0eeb1582" title=" " alt="" coords="5,252,89,277"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="145,213,73,254,70,249,142,209"/>
+<area shape="rect" id="Node000008" href="$dd/daf/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1net_1_1NebulaClient.html#aae735ccb83456547c312ae72eb4e8cc2" title=" " alt="" coords="5,301,89,327"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="162,217,130,253,91,291,73,303,70,299,88,287,126,249,158,213"/>
+<area shape="rect" id="Node000009" href="$dd/daf/classcom_1_1vesoft_1_1nebula_1_1driver_1_1graph_1_1net_1_1NebulaClient.html#a746669351fb4ee59f0412d1c5f246739" title=" " alt="" coords="5,351,89,376"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="170,218,139,277,117,310,91,340,75,353,72,348,87,336,113,306,134,274,165,215"/>
+</map>
