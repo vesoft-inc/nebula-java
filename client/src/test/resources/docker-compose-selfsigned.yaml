@@ -1,10 +1,30 @@
 version: '3.4'
 services:
+  data-init:
+    # Docker creates missing bind-mount source directories as root. Initialize
+    # their ownership before Nebula services run as the image's non-root user.
+    image: vesoft/nebula-metad:nightly
+    user: root
+    entrypoint: ["/bin/sh", "-ec"]
+    command:
+      - |
+        mkdir -p /data/meta_self /data/storage_self /data/graph_self
+        mkdir -p /logs/meta /logs/storage /logs/graph
+        chown 10001:10001 /data/meta_self /data/storage_self /data/graph_self
+        chown 10001:10001 /logs/meta /logs/storage /logs/graph
+    volumes:
+      - ./data:/data/
+      - ./logs:/logs/
+    restart: "no"
+
   metad-selfsigned:
     image: vesoft/nebula-metad:nightly
+    user: "10001:10001"
     environment:
-      USER: root
       TZ:   "${TZ}"
+    depends_on:
+      data-init:
+        condition: service_completed_successfully
     command:
       - --meta_server_addrs=172.30.1.1:9559
       - --local_ip=172.30.1.1
@@ -43,8 +63,8 @@ services:
 
   storaged-selfsigned:
     image: vesoft/nebula-storaged:nightly
+    user: "10001:10001"
     environment:
-      USER: root
       TZ:   "${TZ}"
     command:
       - --meta_server_addrs=172.30.1.1:9559
@@ -62,7 +82,10 @@ services:
       - --password_path=/share/resources/server.password
       - --enable_ssl=true
     depends_on:
-      - metad-selfsigned
+      data-init:
+        condition: service_completed_successfully
+      metad-selfsigned:
+        condition: service_started
     healthcheck:
       test: ["CMD", "curl", "-f", "http://172.30.2.1:12000/status"]
       interval: 30s
@@ -86,8 +109,8 @@ services:
 
   graphd-selfsigned:
     image: vesoft/nebula-graphd:nightly
+    user: "10001:10001"
     environment:
-      USER: root
       TZ:   "${TZ}"
     command:
       - --meta_server_addrs=172.30.1.1:9559
@@ -103,7 +126,10 @@ services:
       - --password_path=/share/resources/server.password
       - --enable_ssl=true
     depends_on:
-      - metad-selfsigned
+      data-init:
+        condition: service_completed_successfully
+      metad-selfsigned:
+        condition: service_started
     healthcheck:
       test: ["CMD", "curl", "-f", "http://172.30.3.1:13000/status"]
       interval: 30s
