@@ -9,9 +9,9 @@ services:
     command:
       - |
         mkdir -p /data/meta0 /data/meta1 /data/meta2 /data/storage0 /data/storage1 /data/storage2
-        mkdir -p /logs/meta0 /logs/meta1 /logs/meta2 /logs/storage0 /logs/storage1 /logs/storage2 /logs/graph /logs/graph1 /logs/graph2
+        mkdir -p /logs/meta0 /logs/meta1 /logs/meta2 /logs/storage0 /logs/storage1 /logs/storage2 /logs/graph0 /logs/graph1 /logs/graph2
         chown 10001:10001 /data/meta0 /data/meta1 /data/meta2 /data/storage0 /data/storage1 /data/storage2
-        chown 10001:10001 /logs/meta0 /logs/meta1 /logs/meta2 /logs/storage0 /logs/storage1 /logs/storage2 /logs/graph /logs/graph1 /logs/graph2
+        chown 10001:10001 /logs/meta0 /logs/meta1 /logs/meta2 /logs/storage0 /logs/storage1 /logs/storage2 /logs/graph0 /logs/graph1 /logs/graph2
     volumes:
       - ./data:/data/
       - ./logs:/logs/
