@@ -1,10 +1,30 @@
 version: '3.4'
 services:
+  data-init:
+    # Docker creates missing bind-mount source directories as root. Initialize
+    # their ownership before Nebula services run as the image's non-root user.
+    image: vesoft/nebula-metad:nightly
+    user: root
+    entrypoint: ["/bin/sh", "-ec"]
+    command:
+      - |
+        mkdir -p /data/meta /data/storage /data/graph
+        mkdir -p /logs/meta /logs/storage /logs/graph
+        chown 10001:10001 /data/meta /data/storage /data/graph
+        chown 10001:10001 /logs/meta /logs/storage /logs/graph
+    volumes:
+      - ./data:/data/
+      - ./logs:/logs/
+    restart: "no"
+
   metad-casigned:
     image: vesoft/nebula-metad:nightly
+    user: "10001:10001"
     environment:
-      USER: root
       TZ:   "${TZ}"
+    depends_on:
+      data-init:
+        condition: service_completed_successfully
     command:
       - --meta_server_addrs=172.29.1.1:9559
       - --local_ip=172.29.1.1
@@ -43,8 +63,8 @@ services:
 
   storaged-casigned:
     image: vesoft/nebula-storaged:nightly
+    user: "10001:10001"
     environment:
-      USER: root
       TZ:   "${TZ}"
     command:
       - --meta_server_addrs=172.29.1.1:9559
@@ -62,7 +82,10 @@ services:
       - --ca_path=/share/resources/root.crt
       - --enable_ssl=true
     depends_on:
-      - metad-casigned
+      data-init:
+        condition: service_completed_successfully
+      metad-casigned:
+        condition: service_started
     healthcheck:
       test: ["CMD", "curl", "-f", "http://172.29.2.1:12000/status"]
       interval: 30s
@@ -86,8 +109,8 @@ services:
 
   graphd-casigned:
     image: vesoft/nebula-graphd:nightly
+    user: "10001:10001"
     environment:
-      USER: root
       TZ:   "${TZ}"
     command:
       - --meta_server_addrs=172.29.1.1:9559
@@ -104,7 +127,10 @@ services:
       - --ca_path=/share/resources/root.crt
       - --enable_ssl=true
     depends_on:
-      - metad-casigned
+      data-init:
+        condition: service_completed_successfully
+      metad-casigned:
+        condition: service_started
     healthcheck:
       test: ["CMD", "curl", "-f", "http://172.29.3.1:13000/status"]
       interval: 30s
