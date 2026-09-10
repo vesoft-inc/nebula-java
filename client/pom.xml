@@ -13,7 +13,7 @@
 
     <properties>
         <commons-lang.version>2.6</commons-lang.version>
-        <commons-lang3.version>3.18.0</commons-lang3.version>
+        <commons-lang3.version>3.20.0</commons-lang3.version>
         <slf4j-log4j12.version>1.7.25</slf4j-log4j12.version>
         <slf4j-api.version>1.7.25</slf4j-api.version>
         <junit.version>4.13.1</junit.version>
