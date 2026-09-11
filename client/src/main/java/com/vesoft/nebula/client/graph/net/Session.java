@@ -532,7 +532,7 @@ public class Session implements Serializable, AutoCloseable {
             put(Boolean.class, (Setter<Boolean>) Value::bVal);
             put(Integer.class, (Setter<Integer>) Value::iVal);
             put(Short.class, (Setter<Short>) Value::iVal);
-            put(Byte.class, (Setter<Short>) Value::iVal);
+            put(Byte.class, (Setter<Byte>) Value::iVal);
             put(Long.class, (Setter<Long>) Value::iVal);
             put(Float.class, (Setter<Float>) Value::fVal);
             put(Double.class, (Setter<Double>) Value::fVal);
