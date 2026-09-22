@@ -180,6 +180,7 @@ public class DataTest {
                                                     .setTotalServerTimeUs(5000)
                                                     .setBuildTimeUs(2000)
                                                     .setOptimizeTimeUs(1000)
+                                                    .setExecutionTimeUs(3000)
                                                     .build()))
                 .setStatus(Status.newBuilder()
                                .setCode(ByteString.copyFrom("00000", Charsets.UTF_8))
@@ -190,6 +191,7 @@ public class DataTest {
             assert resultSet.getErrorCode() == ErrorCode.SUCCESSFUL_COMPLETION;
             assert !resultSet.isEmpty();
             Assert.assertEquals(5000, resultSet.getLatency());
+            Assert.assertEquals(3000, resultSet.getExtraInfo().getExecutionTimeUs());
             List<String> expectColNames = Arrays.asList("p1", "p2", "p3", "p4", "p5");
             assert Objects.equals(resultSet.getColumnNames(), expectColNames);
 
