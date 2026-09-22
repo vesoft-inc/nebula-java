@@ -274,6 +274,7 @@ public class ResultSet {
         extraInfo.setParseTimeUs(response.getSummary().getElapsedTime().getParseTimeUs());
         extraInfo.setBuildTimeUs(response.getSummary().getElapsedTime().getBuildTimeUs());
         extraInfo.setOptimizeTimeUs(response.getSummary().getElapsedTime().getOptimizeTimeUs());
+        extraInfo.setExecutionTimeUs(response.getSummary().getElapsedTime().getExecutionTimeUs());
         extraInfo.setSerializeTimeUs(response.getSummary().getElapsedTime().getSerializeTimeUs());
         extraInfo.setTotalServerTimeUs(response.getSummary()
                                            .getElapsedTime()
