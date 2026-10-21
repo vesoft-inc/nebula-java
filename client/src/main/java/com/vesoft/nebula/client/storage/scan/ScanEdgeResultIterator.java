@@ -81,8 +81,8 @@ public class ScanEdgeResultIterator extends ScanResultIterator {
                 PartScanInfo partInfo = partScanQueue.getPart(leader);
                 // no part need to scan
                 if (partInfo == null) {
-                    countDownLatch.countDown();
                     existSuccess.addAndGet(1);
+                    countDownLatch.countDown();
                     return;
                 }
 
