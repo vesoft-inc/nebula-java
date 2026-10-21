@@ -144,7 +144,6 @@ public class ScanEdgeResultIterator extends ScanResultIterator {
                 } else {
                     handleNullResult(partInfo, exceptions);
                 }
-                pool.release(new HostAddress(addr.getHost(), addr.getPort()), connection);
                 countDownLatch.countDown();
             });
 
